@@ -6,7 +6,7 @@ import (
 
 type User struct {
 	gorm.Model
-	Email    string `json:"email"`
+	Username string `json:"username" gorm:"uniqueIndex;not null;size:50"`
 	Password string `json:"password"`
 }
 
@@ -30,9 +30,9 @@ func FindUser(id string) (*User, error) {
 	return &user, nil
 }
 
-func FindUserByEmail(email string) (*User, error) {
+func FindUserByEmail(username string) (*User, error) {
 	var user User
-	err := Database.Where("email = ?", email).First(&user).Error
+	err := Database.Where("username = ?", username).First(&user).Error
 
 	if err != nil {
 		return &User{}, err

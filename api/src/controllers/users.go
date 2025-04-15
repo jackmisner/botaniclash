@@ -16,7 +16,7 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	if newUser.Email == "" || newUser.Password == "" {
+	if newUser.Password == "" {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Must supply username and password"})
 		return
 	}
