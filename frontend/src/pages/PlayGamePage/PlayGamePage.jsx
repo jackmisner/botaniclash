@@ -18,10 +18,10 @@ export const PlayGamePage = () => {
             "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg",
           year: "1990",
           edible: "Yes",
-          light: "9",
-          growth_rate: "Slow",
-
-          average_height: "100",
+          average_pH: "6.1",
+          light: "8",
+          nutrients_required: "medium",
+          water_required: "high",
         },
         {
           id: 2,
@@ -31,10 +31,10 @@ export const PlayGamePage = () => {
             "https://en-gb.bakker.com/cdn/shop/products/90524-01-BAKI.jpg?v=1647965545&width=1946",
           year: "1462",
           edible: "Yes",
-          light: "4",
-          growth_rate: "Medium",
-
-          average_height: "75",
+          average_pH: "6.8",
+          light: "7",
+          nutrients_required: "high",
+          water_required: "low",
         },
         {
           id: 3,
@@ -44,10 +44,10 @@ export const PlayGamePage = () => {
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvZbWViaXGSVNNDnAKNm9DxDrh2i2TfQjjFQ&s",
           year: "1820",
           edible: "No",
-          light: "6",
-          growth_rate: "Fast",
-
-          average_height: "60",
+          average_pH: "5.5",
+          light: "4",
+          nutrients_required: "medium",
+          water_required: "very high",
         },
         {
           id: 4,
@@ -57,10 +57,10 @@ export const PlayGamePage = () => {
             "https://www.gardenia.net/wp-content/uploads/2023/04/8bFQwltHPdt6PD72z5Uqp0mBtBDBuvWeEdWIBOMn-780x520.webp",
           year: "1775",
           edible: "Yes",
-          light: "8",
-          growth_rate: "Medium",
-
-          average_height: "45",
+          average_pH: "7.2",
+          light: "10",
+          nutrients_required: "low",
+          water_required: "very low",
         },
         {
           id: 5,
@@ -70,10 +70,10 @@ export const PlayGamePage = () => {
             "https://www.thompson-morgan.com/product_images/100/sollya2.jpg",
           year: "1934",
           edible: "Yes",
-          light: "7",
-          growth_rate: "Fast",
-
-          average_height: "30",
+          average_pH: "6.3",
+          light: "6",
+          nutrients_required: "medium",
+          water_required: "medium",
         },
         {
           id: 6,
@@ -83,10 +83,10 @@ export const PlayGamePage = () => {
             "https://upload.wikimedia.org/wikipedia/commons/d/dd/Omphalotus_nidiformis_Binnamittalong_2_email.jpg",
           year: "1870",
           edible: "No",
+          average_pH: "5.9",
           light: "2",
-          growth_rate: "Slow",
-
-          average_height: "15",
+          nutrients_required: "very low",
+          water_required: "high",
         },
         {
           id: 7,
@@ -96,10 +96,10 @@ export const PlayGamePage = () => {
             "https://www.south-florida-plant-guide.com/images/sky-vine-1-500.jpg",
           year: "1500",
           edible: "No",
-          light: "10",
-          growth_rate: "Medium",
-
-          average_height: "120",
+          average_pH: "7.0",
+          light: "5",
+          nutrients_required: "very high",
+          water_required: "medium",
         },
         {
           id: 8,
@@ -109,24 +109,23 @@ export const PlayGamePage = () => {
             "https://images.immediate.co.uk/production/volatile/sites/10/2018/08/e7b91e43-e0e2-4c53-9d19-1110fa700346-c9db5e7.jpg",
           year: "1750",
           edible: "Yes",
-          light: "9",
-          growth_rate: "Slow",
-
-          average_height: "55",
+          average_pH: "6.7",
+          light: "3",
+          nutrients_required: "medium-high",
+          water_required: "low",
         },
         {
           id: 9,
-
           common_name: "Velvet Moss",
           scientific_name: "Bryum softia",
           image_url:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGuxgeWDI7KUPdQ364Xx2nIPH_R78CTZCEPQ&s",
           year: "1620",
           edible: "No",
-          light: "3",
-          growth_rate: "Slow",
-
-          average_height: "5",
+          average_pH: "5.2",
+          light: "1",
+          nutrients_required: "very low",
+          water_required: "extreme",
         },
         {
           id: 10,
@@ -136,13 +135,12 @@ export const PlayGamePage = () => {
             "https://www.gardeningexpress.co.uk/media/catalog/product/cache/fa4e57de89a0fb1427d2c82c53fb200f/p/h/phyllostachys-aurea-aureocaulis2_1.jpg",
           year: "1895",
           edible: "Yes",
-          light: "8",
-          growth_rate: "Very Fast",
-
-          average_height: "90",
+          average_pH: "7.5",
+          light: "9",
+          nutrients_required: "medium",
+          water_required: "low",
         },
       ];
-
       myResolve(mockPlants); // when successful
       myReject("Error"); // when error
     });
