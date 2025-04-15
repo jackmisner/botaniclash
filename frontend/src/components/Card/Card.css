@@ -18,10 +18,11 @@
   background-image: url("../../assets/card-mockup-blank.png");
   background-size: cover;
   background-repeat: no-repeat;
-  font-family: "Georgia", serif;
   color: #543c24;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 /* Common name styling */
