@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/env"
@@ -14,17 +11,16 @@ import (
 func main() {
 	env.LoadEnv()
 
+	// set up the database connection
 	app := setupApp()
 
+	// set up the database connection
 	models.OpenDatabaseConnection()
+
+	// migrate the database
 	models.AutoMigrateModels()
 
-	// Create a test testPost. Delete these lines when you are creating posts of your own.
-	testPost := models.Post{
-		Message: fmt.Sprintf("This is a test message created at %v!", time.Now()),
-	}
-	testPost.Save()
-
+	// run the server
 	app.Run(":8082")
 }
 
