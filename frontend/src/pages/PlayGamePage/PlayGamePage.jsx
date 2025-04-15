@@ -189,10 +189,10 @@ export const PlayGamePage = () => {
 
   return (
     <>
-      <h1 data-testid="play-game">Play game</h1>
+      {/* <h1 data-testid="play-game">Play game</h1> */}
       {/* <CardContainer plants={initialTenCards} /> */}
 
-      <h1>Two cards</h1>
+      {twoCardsChoice && twoCardsChoice.length > 0 && <h1>Pick a card</h1>}
       {twoCardsChoice && twoCardsChoice.length > 0 && (
         <CardContainer
           onClickHandle={onClickHandle}
@@ -201,7 +201,7 @@ export const PlayGamePage = () => {
         />
       )}
 
-      <h1>Opening hand</h1>
+      {openingHand && openingHand.length > 0 && <h1>Opening hand</h1>}
       {openingHand && openingHand.length > 0 && (
         <CardContainer plants={openingHand} />
       )}
