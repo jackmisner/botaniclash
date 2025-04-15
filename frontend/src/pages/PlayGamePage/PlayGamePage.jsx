@@ -164,14 +164,7 @@ export const PlayGamePage = () => {
 
       setInitialTenCards(rest);
       setTwoCardsChoice([first, second]);
-      // console.log(initialTenCards);
-      // return data;
     });
-
-    // setInitialTenCards((prev) => {
-    //     [prev.pop()];
-    // });
-    // console.log("two cards choice", twoCardsChoice);
   }, []);
 
   const onClickHandle = () => {
