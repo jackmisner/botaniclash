@@ -111,7 +111,7 @@ export const PlayGamePage = () => {
           edible: "Yes",
           average_pH: "6.7",
           light: "3",
-          nutrients_required: "medium-high",
+          nutrients_required: "medium",
           water_required: "low",
         },
         {
