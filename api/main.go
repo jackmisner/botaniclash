@@ -1,26 +1,47 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/env"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 	"github.com/makersacademy/go-react-acebook-template/api/src/routes"
+	"github.com/makersacademy/go-react-acebook-template/api/src/seeds"
 )
 
 func main() {
+	// Load environment variables
 	env.LoadEnv()
 
-	// set up the database connection
+	// Set Gin to release mode to hide messy/unhelpful debug logs when running "go run main.go"
+	gin.SetMode(gin.ReleaseMode) // Comment this out to see debug logs
+
+	// Setup the application
 	app := setupApp()
 
-	// set up the database connection
+	// Open the database connection
 	models.OpenDatabaseConnection()
 
-	// migrate the database
+	// Check if the seed argument is provided
+	// if so, reseed the database
+	args := os.Args[1:]
+	for _, arg := range args {
+		if arg == "seed" {
+			seeds.Reseed(models.Database)
+			return // Exit after seeding
+		} else if len(args) > 0 {
+			fmt.Println("INCORRECT COMMAND LINE ARGUMENT, did you mean 'seed'?")
+			return
+		}
+	}
+
+	// Migrate the database
 	models.AutoMigrateModels()
 
-	// run the server
+	// Start the server
 	app.Run(":8082")
 }
 
