@@ -46,7 +46,7 @@ type PlantDetails struct {
 	} `json:"data"`
 }
 
-// PlantSeeds seeds the plant table with data from the trefle.io API
+// PlantSeeds seeds the plant table with data from the trefle.io API (2 endpoints are used)
 func PlantSeeds(db *gorm.DB) {
 	fmt.Println("Seeding plants...")
 
