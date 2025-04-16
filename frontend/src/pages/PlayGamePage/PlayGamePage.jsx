@@ -180,7 +180,7 @@ export const PlayGamePage = () => {
 
   return (
     <>
-      {/* <h1 data-testid="play-game">Play game</h1> */}
+      <h1 data-testid="play-game">Play game</h1>
       {/* <CardContainer plants={initialTenCards} /> */}
 
       {twoCardsChoice && twoCardsChoice.length > 0 && <h1>Pick a card</h1>}
