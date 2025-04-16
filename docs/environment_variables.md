@@ -29,7 +29,7 @@ There are two common ways to set environment variables when running an app.
    called `dotenv`.
 
    ```
-   POSTGRES_URL="postgresql://localhost:5432/acebook"
+   POSTGRES_URL="postgresql://localhost:5432/botaniclash"
    JWT_SECRET="secret"
    ```
 

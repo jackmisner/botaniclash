@@ -1,12 +1,17 @@
 import "./Card.css";
 
 export const Card = ({ plant, onClick, setOpeningHand }) => {
+
+  const onStatContainerClick = (event) => {
+    console.log(event.target.textContent)
+    console.log(event.target.dataset["stat"])
+  }
+
   return (
     <article
       onClick={() => {
         onClick();
         setOpeningHand((prev) => {
-          console.log("previous state", prev);
           return [...prev, plant];
         });
       }}
@@ -19,12 +24,24 @@ export const Card = ({ plant, onClick, setOpeningHand }) => {
         src={plant.image_url}
         alt={plant.common_name}
       />
-      <p data-testid="year">{plant.year}</p>
-      <p data-testid="edible">{plant.edible ? "Yes" : "No"}</p>
-      <p data-testid="average-ph">{plant.average_pH}</p>
-      <p data-testid="light">{plant.light}</p>
-      <p data-testid="nutrients-required">{plant.nutrients_required}</p>
-      <p data-testid="water-required">{plant.water_required}</p>
+      <div className="year-container" data-stat = "plant.year" onClick={onStatContainerClick}>
+        <p data-testid="year-text">{plant.year}</p>
+      </div>
+      <div className="edible-container" data-stat = "plant.edible" onClick={onStatContainerClick}>
+        <p  data-testid="edible-text">{plant.edible ? "Yes" : "No"}</p>
+      </div>
+      <div className="average-ph-container" data-stat = "plant.average-ph" onClick={onStatContainerClick}>
+        <p data-testid="average-ph-text">{plant.average_pH}</p>
+      </div>
+      <div className="light-container" data-stat = "plant.light" onClick={onStatContainerClick}>
+        <p data-testid="light-text">{plant.light}</p>
+      </div>
+      <div className="nutrients-container" data-stat = "plant.nutrients-required" onClick={onStatContainerClick}>
+        <p data-testid="nutrients-text">{plant.nutrients_required}</p>
+      </div>
+      <div className="water-required-container" data-stat = "plant.water-required" onClick={onStatContainerClick}>
+        <p data-testid="water-text">{plant.water_required}</p>
+      </div>
     </article>
   );
 };

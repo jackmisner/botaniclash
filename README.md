@@ -84,7 +84,7 @@ VITE_BACKEND_URL="http://localhost:8082"
 Create a file `api/.env` with the following contents:
 
 ```
-POSTGRES_URL="postgresql://localhost:5432/acebook"
+POSTGRES_URL="postgresql://localhost:5432/botaniclash"
 JWT_SECRET="secret"
 ```
 

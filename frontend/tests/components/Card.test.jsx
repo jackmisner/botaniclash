@@ -32,12 +32,12 @@ describe("Card", () => {
     const pCommonName = screen.getByTestId("common-name");
     const pScientificName = screen.getByTestId("scientific-name");
     const pImageUrl = screen.getByTestId("image-url");
-    const pYear = screen.getByTestId("year");
-    const pEdible = screen.getByTestId("edible");
-    const pLight = screen.getByTestId("light");
-    const pWater = screen.getByTestId("water-required");
-    const pNutrients = screen.getByTestId("nutrients-required");
-    const pAveragePh = screen.getByTestId("average-ph");
+    const pYear = screen.getByTestId("year-text");
+    const pEdible = screen.getByTestId("edible-text");
+    const pLight = screen.getByTestId("light-text");
+    const pWater = screen.getByTestId("water-text");
+    const pNutrients = screen.getByTestId("nutrients-text");
+    const pAveragePh = screen.getByTestId("average-ph-text");
     expect(pCommonName.textContent).toBe("Common Dandelion");
     expect(pScientificName.textContent).toBe("Taraxacum officinale");
     expect(pImageUrl.src).toBe(
@@ -112,7 +112,7 @@ describe("Card", () => {
       </MemoryRouter>,
     );
 
-    const pEdible = screen.getByTestId("edible");
+    const pEdible = screen.getByTestId("edible-text");
     expect(pEdible.textContent).toBe("No");
   });
 
@@ -134,9 +134,9 @@ describe("Card", () => {
       </MemoryRouter>,
     );
 
-    const pNutrients = screen.getByTestId("nutrients-required");
-    const pWater = screen.getByTestId("water-required");
-    const pAveragePh = screen.getByTestId("average-ph");
+    const pNutrients = screen.getByTestId("nutrients-text");
+    const pWater = screen.getByTestId("water-text");
+    const pAveragePh = screen.getByTestId("average-ph-text");
 
     expect(pNutrients.textContent).toBe("");
     expect(pWater.textContent).toBe("");

@@ -3,7 +3,8 @@ import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState } from "react";
 
 export const PlayGamePage = () => {
-  const [initialTenCards, setInitialTenCards] = useState([]); // 10 cards array
+  const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]); // 10 cards array
+  const [computerHand, setComputerHand] = useState([]); // 10 cards array
   const [twoCardsChoice, setTwoCardsChoice] = useState([]); // 2 cards array
   const [openingHand, setOpeningHand] = useState([]); // 5 cards array
 
@@ -140,6 +141,136 @@ export const PlayGamePage = () => {
           nutrients_required: "medium",
           water_required: "low",
         },
+        {
+          id: 11,
+          common_name: "Silver Birch",
+          scientific_name: "Betula pendula",
+          image_url:
+            "https://www.rjtreesandhedging.co.uk/images/silver-birch-betula-pendula-p54-329_image.jpg",
+          year: "1753",
+          edible: "No",
+          average_pH: "5.8",
+          light: "9",
+          nutrients_required: "low",
+          water_required: "medium",
+        },
+        {
+          id: 12,
+          common_name: "Lamb's Ear",
+          scientific_name: "Stachys byzantina",
+          image_url:
+            "https://thenunheadgardener.com/wp-content/uploads/images/28000000000000717-1.jpg",
+          year: "1782",
+          edible: "No",
+          average_pH: "6.4",
+          light: "7",
+          nutrients_required: "medium",
+          water_required: "low",
+        },
+        {
+          id: 13,
+          common_name: "Pineapple Sage",
+          scientific_name: "Salvia elegans",
+          image_url:
+            "https://images.immediate.co.uk/production/volatile/sites/10/2018/08/8e39f451-b449-4d0e-9b0d-e289ba3bb98f-5dcf420.jpg",
+          year: "1877",
+          edible: "Yes",
+          average_pH: "6.5",
+          light: "8",
+          nutrients_required: "medium",
+          water_required: "medium",
+        },
+        {
+          id: 14,
+          common_name: "Dragon Tree",
+          scientific_name: "Dracaena draco",
+          image_url:
+            "https://www.gardenia.net/wp-content/uploads/2023/04/Dragon-tree-Dracaena-draco5.webp",
+          year: "1768",
+          edible: "No",
+          average_pH: "6.0",
+          light: "5",
+          nutrients_required: "low",
+          water_required: "low",
+        },
+        {
+          id: 15,
+          common_name: "Oyster Plant",
+          scientific_name: "Tradescantia spathacea",
+          image_url:
+            "https://www.nparks.gov.sg/-/media/ffw/migrated/round2/flora/2524/0981e04ef5974513853d46ebc918cce4.jpg",
+          year: "1851",
+          edible: "Yes",
+          average_pH: "6.2",
+          light: "6",
+          nutrients_required: "medium",
+          water_required: "medium",
+        },
+        {
+          id: 16,
+          common_name: "Foxglove",
+          scientific_name: "Digitalis purpurea",
+          image_url:
+            "https://www.gardenia.net/wp-content/uploads/2023/05/digitalis-purpurea-common-foxglove.webp",
+          year: "1650",
+          edible: "No",
+          average_pH: "6.1",
+          light: "7",
+          nutrients_required: "high",
+          water_required: "medium",
+        },
+        {
+          id: 17,
+          common_name: "Butterfly Weed",
+          scientific_name: "Asclepias tuberosa",
+          image_url:
+            "https://apps.rhs.org.uk/plantselectorimages/detail/vaem09211.jpg",
+          year: "1805",
+          edible: "No",
+          average_pH: "6.7",
+          light: "10",
+          nutrients_required: "medium",
+          water_required: "low",
+        },
+        {
+          id: 18,
+          common_name: "Watercress",
+          scientific_name: "Nasturtium officinale",
+          image_url:
+            "https://www.plant-world-seeds.com/images/item_images/000/009/483/large_square/NASTURTIUM_OFFICINALE.JPG?1669475514",
+          year: "1501",
+          edible: "Yes",
+          average_pH: "6.3",
+          light: "4",
+          nutrients_required: "high",
+          water_required: "very high",
+        },
+        {
+          id: 19,
+          common_name: "Stonecrop",
+          scientific_name: "Sedum acre",
+          image_url:
+            "https://www.gardenia.net/wp-content/uploads/2023/05/Sedum-acre-780x520.webp",
+          year: "1725",
+          edible: "Yes",
+          average_pH: "5.6",
+          light: "9",
+          nutrients_required: "low",
+          water_required: "very low",
+        },
+        {
+          id: 20,
+          common_name: "Black Tulip Magnolia",
+          scientific_name: "Magnolia × soulangeana",
+          image_url:
+            "https://www.gardeningexpress.co.uk/media/catalog/product/cache/fa4e57de89a0fb1427d2c82c53fb200f/m/a/magnolia-soulangeana-750x750.jpg",
+          year: "1826",
+          edible: "No",
+          average_pH: "6.9",
+          light: "8",
+          nutrients_required: "high",
+          water_required: "medium",
+        },
       ];
       myResolve(mockPlants); // when successful
       myReject("Error"); // when error
@@ -158,25 +289,28 @@ export const PlayGamePage = () => {
   useEffect(() => {
     returnServerData().then((data) => {
       const shuffled = shuffle(data);
-      const [first, second, ...rest] = shuffled;
-
-      setInitialTenCards(rest);
+      const shuffledCardsPlayer = shuffled.slice(0, 10);
+      setComputerHand(shuffled.slice(11, 16));
+      const [first, second, ...rest] = shuffledCardsPlayer;
+      setPlayerInitialTenCards(rest);
       setTwoCardsChoice([first, second]);
+      console.log("opponent's hand", computerHand);
+      console.log("player's hand", playerInitialTenCards);
     });
   }, []);
 
   const onClickHandle = () => {
-    if (initialTenCards.length > 1) {
-      const shuffled = shuffle(initialTenCards);
-      const [first, second, ...rest] = shuffled;
+    if (playerInitialTenCards.length > 1) {
+      const [first, second, ...rest] = playerInitialTenCards;
 
-      setInitialTenCards(rest);
+      setPlayerInitialTenCards(rest);
       setTwoCardsChoice([first, second]);
     } else {
       // No more cards left, clear the twoCardsChoice array
       setTwoCardsChoice([]);
     }
   };
+
 
   return (
     <>
@@ -196,6 +330,8 @@ export const PlayGamePage = () => {
       {openingHand && openingHand.length > 0 && (
         <CardContainer plants={openingHand} />
       )}
+      <h1> Opponent hand</h1>
+      <CardContainer plants={computerHand} />
     </>
   );
 };
