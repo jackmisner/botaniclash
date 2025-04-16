@@ -8,6 +8,7 @@ export const Card = ({
   setPlayerStatValue,
   setOpponentStatValue,
   owner,
+  isTwoCardsChoice,
 }) => {
   const onStatContainerClick = (event) => {
     setStatInPlay(event.target.dataset["stat"]);
@@ -16,10 +17,13 @@ export const Card = ({
   return (
     <article
       onClick={() => {
-        onClick();
-        setOpeningHand((prev) => {
-          return [...prev, plant];
-        });
+        if (isTwoCardsChoice) {
+          // Only allow onClick if isTwoCardsChoice is true
+          onClick();
+          setOpeningHand((prev) => {
+            return [...prev, plant];
+          });
+        }
       }}
       className="card"
     >

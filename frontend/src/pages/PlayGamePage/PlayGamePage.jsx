@@ -323,8 +323,8 @@ export const PlayGamePage = () => {
 
   const pickTopCards = () => {
     setCardsInPlay([playerHand[0], opponentHand[0]]);
-    setPlayerHand((prev) => prev.slice(1));
-    setOpponentHand((prev) => prev.slice(1));
+    setPlayerHand((prev) => prev.slice(1)); // remove the first card
+    setOpponentHand((prev) => prev.slice(1)); // remove the first card
   };
   const playerOneWinsComparison = () => {
     opponentHand.length === 0 && setGameWinner("Player1");
@@ -371,12 +371,12 @@ export const PlayGamePage = () => {
         />
       )}
 
-      {twoCardsChoice && twoCardsChoice.length > 0 && <h1>Pick a card</h1>}
       {twoCardsChoice && twoCardsChoice.length > 0 && (
         <CardContainer
           onClickHandle={onClickHandle}
           setOpeningHand={setPlayerHand}
           plants={twoCardsChoice}
+          isTwoCardsChoice={true} // Indicate this is the twoCardsChoice container
         />
       )}
 
