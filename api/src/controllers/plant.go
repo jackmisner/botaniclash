@@ -78,7 +78,7 @@ func GetAllPlants(c *gin.Context) {
 		Cards: randomCards,
 	} 
 	c.JSON(http.StatusOK, response) // Sends a JSON response with the status code 200 OK alongside the plant data needed
-}
+} 
 
 
 
