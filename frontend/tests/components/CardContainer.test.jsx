@@ -79,11 +79,11 @@ describe("CardContainer", () => {
     expect(scientificNames[0].textContent).toBe("Taraxacum officinale");
     expect(scientificNames[1].textContent).toBe("Helianthus annuus");
 
-    const years = screen.getAllByTestId("year");
+    const years = screen.getAllByTestId("year-text");
     expect(years[0].textContent).toBe("1990");
     expect(years[1].textContent).toBe("1982");
 
-    const lights = screen.getAllByTestId("light");
+    const lights = screen.getAllByTestId("light-text");
     expect(lights[0].textContent).toBe("8");
     expect(lights[1].textContent).toBe("9");
   });
