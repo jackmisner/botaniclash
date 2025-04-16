@@ -136,8 +136,8 @@ func PlantSeeds(db *gorm.DB) {
 				Year:                plantDetails.Data.Year,
 				Observations:        plantDetails.Data.Observations,
 				Edible:              plantDetails.Data.Edible,
-				PhMinimum:           int(plantDetails.Data.Growth.PhMinimum * 10), // Convert float to int (store as tenths)
-				PhMaxiumum:          int(plantDetails.Data.Growth.PhMaximum * 10), // Convert float to int (store as tenths)
+				PhMinimum:           int(plantDetails.Data.Growth.PhMinimum * 10), // Convert float to int
+				PhMaxiumum:          int(plantDetails.Data.Growth.PhMaximum * 10), // Convert float to int
 				Light:               plantDetails.Data.Growth.Light,
 				SoilNutriments:      plantDetails.Data.Growth.SoilNutriments,
 				AtmosphericHumidity: plantDetails.Data.Growth.AtmosphericHumidity,
