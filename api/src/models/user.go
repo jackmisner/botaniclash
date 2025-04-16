@@ -30,7 +30,7 @@ func FindUser(id string) (*User, error) {
 	return &user, nil
 }
 
-func FindUserByEmail(username string) (*User, error) {
+func FindUserByUsername(username string) (*User, error) {
 	var user User
 	err := Database.Where("username = ?", username).First(&user).Error
 
