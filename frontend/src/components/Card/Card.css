@@ -25,6 +25,31 @@
   overflow: hidden;
 }
 
+/* Common name styling */
+.card p[data-testid="common-name"] {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* Scientific name styling */
+.card p[data-testid="scientific-name"] {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-style: italic;
+  color: #5a7743;
+  margin: 0;
+}
+
 /* Plant image */
 .card img {
   position: absolute;
@@ -40,8 +65,8 @@
 .year-container {
   position: absolute;
   top: 288px;
-  left:20px;
-  width:285px;
+  left: 20px;
+  width: 285px;
   height: 30px;
   text-align: right;
   align-self: center;
@@ -52,14 +77,14 @@
 
 .year-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color:  rgba(180, 165, 0, 0.2)
+  background-color: rgba(180, 165, 0, 0.2);
 }
 
 .edible-container {
   position: absolute;
   top: 320px;
-  left:20px;
-  width:285px;
+  left: 20px;
+  width: 285px;
   height: 30px;
   text-align: right;
   align-self: center;
@@ -70,14 +95,14 @@
 
 .edible-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color:  rgba(180, 165, 0, 0.2)
+  background-color: rgba(180, 165, 0, 0.2);
 }
 
 .light-container {
   position: absolute;
   top: 382px;
-  left:20px;
-  width:285px;
+  left: 20px;
+  width: 285px;
   height: 30px;
   text-align: right;
   align-self: center;
@@ -88,14 +113,14 @@
 
 .light-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color:  rgba(180, 165, 0, 0.2)
+  background-color: rgba(180, 165, 0, 0.2);
 }
 
 .water-required-container {
   position: absolute;
   top: 445px;
-  left:20px;
-  width:285px;
+  left: 20px;
+  width: 285px;
   height: 30px;
   text-align: right;
   align-self: center;
@@ -106,14 +131,14 @@
 
 .water-required-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color:  rgba(180, 165, 0, 0.2)
+  background-color: rgba(180, 165, 0, 0.2);
 }
 
 .nutrients-container {
   position: absolute;
   top: 413px;
-  left:20px;
-  width:285px;
+  left: 20px;
+  width: 285px;
   height: 30px;
   text-align: right;
   align-self: center;
@@ -124,14 +149,14 @@
 
 .nutrients-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color:  rgba(180, 165, 0, 0.2)
+  background-color: rgba(180, 165, 0, 0.2);
 }
 
 .average-ph-container {
   position: absolute;
   top: 352px;
-  left:20px;
-  width:285px;
+  left: 20px;
+  width: 285px;
   height: 30px;
   text-align: right;
   align-self: center;
@@ -142,7 +167,7 @@
 
 .average-ph-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color:  rgba(180, 165, 0, 0.2)
+  background-color: rgba(180, 165, 0, 0.2);
 }
 
 .card:hover {
