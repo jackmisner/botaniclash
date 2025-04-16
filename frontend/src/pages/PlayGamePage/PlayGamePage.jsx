@@ -361,8 +361,8 @@ export const PlayGamePage = () => {
       <button onClick={playerTwoWinsComparison}>
         Player 2 wins comparison
       </button>
-      <h1>Cards in Play</h1>
-      {cardsInPlay && (
+      {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
+      {cardsInPlay.length > 0 && (
         <CardContainer
           plants={cardsInPlay}
           setStatInPlay={setStatInPlay}
@@ -372,12 +372,15 @@ export const PlayGamePage = () => {
       )}
 
       {twoCardsChoice && twoCardsChoice.length > 0 && (
-        <CardContainer
-          onClickHandle={onClickHandle}
-          setOpeningHand={setPlayerHand}
-          plants={twoCardsChoice}
-          isTwoCardsChoice={true} // Indicate this is the twoCardsChoice container
-        />
+        <>
+          <h1>Choose your opening hand</h1>
+          <CardContainer
+            onClickHandle={onClickHandle}
+            setOpeningHand={setPlayerHand}
+            plants={twoCardsChoice}
+            isTwoCardsChoice={true} // Indicate this is the twoCardsChoice container
+          />
+        </>
       )}
 
       {playerHand && playerHand.length > 0 && <h1>Opening hand</h1>}
