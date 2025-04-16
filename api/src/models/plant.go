@@ -16,3 +16,12 @@ type Plant struct {
 	SoilNutriments      int    `json:"soil_nutriments"`
 	AtmosphericHumidity int    `json:"atmospheric_humidity"`
 }
+
+
+func FetchAllPlants() ([]Plant, error) {
+	var plants []Plant
+	if err := Database.Find(&plants).Error; err != nil {
+		return nil, err
+	}
+	return plants, nil
+}
