@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Card } from "../../src/components/Card/Card";
 import { vi } from "vitest";
@@ -61,13 +61,15 @@ describe("Card", () => {
           plant={defaultPlant}
           onClick={mockOnClick}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
 
     const card = screen.getByRole("article");
-    fireEvent.click(card);
-
+    act(() => {
+      fireEvent.click(card);
+    });
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
 
@@ -84,6 +86,7 @@ describe("Card", () => {
           plant={defaultPlant}
           onClick={mockOnClick}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );

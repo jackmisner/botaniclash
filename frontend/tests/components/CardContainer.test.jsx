@@ -98,6 +98,7 @@ describe("CardContainer", () => {
           plants={mockPlants}
           onClickHandle={mockOnClickHandle}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
@@ -118,6 +119,7 @@ describe("CardContainer", () => {
           plants={mockPlants}
           onClickHandle={mockOnClickHandle}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
