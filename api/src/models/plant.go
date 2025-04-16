@@ -11,7 +11,7 @@ type Plant struct {
 	Observations        string `json:"observations"`
 	Edible              bool   `json:"edible"`
 	PhMinimum           int    `json:"ph_minimum"`
-	PhMaxiumum          int    `json:"ph_maximum"`
+	PhMaximum          int    `json:"ph_maximum"`
 	Light               int    `json:"light"`
 	SoilNutriments      int    `json:"soil_nutriments"`
 	AtmosphericHumidity int    `json:"atmospheric_humidity"`

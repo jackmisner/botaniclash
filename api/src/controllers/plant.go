@@ -49,4 +49,37 @@ func GetAllPlants(c *gin.Context) {
 		plants[i], plants[j] = plants[j], plants[i]
 	}	) // Shuffle the plants slice in place using the random number generator.
 
-	
+	var randomCards []PlantData
+	for i := 0; i < 20 && i < len(plants); i++ { // Selects the first 20 plants from the shuffled slice 
+		p := plants[i] // Creating a new plant object for each plant in the slice 
+		phRange := p.PhMaximum - p.PhMinimum // Calculating the pH range by subtracting the minimum pH from the maximum pH
+		phAverage := float64(p.PhMinimum + p.PhMaximum) / 2.0 // Calculating the average pH by adding the minimum and maximum pH values and dividing by 2.0 
+
+		randomCards = append(randomCards, PlantData{ // Creates a new plant object and adds it to the randomcard slice 
+			CommonName:          p.CommonName,
+			ScientificName:      p.ScientificName,
+			ImageUrl:            p.ImageUrl,
+			Year:                p.Year,
+			Observations:        p.Observations,
+			Edible:              p.Edible,
+			PhLevels:
+				PhLevels{
+					PhMinimum: p.PhMinimum,
+					PhMaximum: p.PhMaximum,
+					PhRange:   phRange,
+					PhAverage: phAverage,
+				},
+			Light:               p.Light,
+			SoilNutriments:      p.SoilNutriments,
+			AtmosphericHumidity: p.AtmosphericHumidity,
+		})
+	}
+	response := PlantCards{ // creates a new plant cards object and adds the random cards slice to it
+		Cards: randomCards,
+	} 
+	c.JSON(http.StatusOK, response) // Sends a JSON response with the status code 200 OK alongside the plant data needed
+}
+
+
+
+
