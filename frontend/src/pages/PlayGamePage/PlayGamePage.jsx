@@ -311,6 +311,7 @@ export const PlayGamePage = () => {
     }
   };
 
+
   return (
     <>
       <h1 data-testid="play-game">Play game</h1>
