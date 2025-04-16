@@ -1,11 +1,23 @@
 import { Card } from "../Card/Card";
 
-export const CardContainer = ({ plants, onClickHandle, setOpeningHand }) => {
+export const CardContainer = ({
+  plants,
+  onClickHandle,
+  setOpeningHand,
+  setStatInPlay,
+  setPlayerStatValue,
+  setOpponentStatValue,
+  owner,
+}) => {
   return (
     <div data-testid="cards-container" className="cards-container">
       {plants.length > 0 &&
         plants.map((plant) => (
           <Card
+            owner={owner}
+            setPlayerStatValue={setPlayerStatValue}
+            setOpponentStatValue={setOpponentStatValue}
+            setStatInPlay={setStatInPlay}
             setOpeningHand={setOpeningHand}
             onClick={onClickHandle}
             key={plant.id}
