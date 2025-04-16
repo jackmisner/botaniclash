@@ -322,18 +322,9 @@ export const PlayGamePage = () => {
   };
 
   const pickTopCards = () => {
-    console.log("playerHand[0]:", playerHand[0]);
-    console.log("opponentHand[0]:", opponentHand[0]);
-
     setCardsInPlay([playerHand[0], opponentHand[0]]);
-    setPlayerHand((prev) => {
-      const [first, ...rest] = prev;
-      return rest;
-    });
-    setOpponentHand((prev) => {
-      const [first, ...rest] = prev;
-      return rest;
-    });
+    setPlayerHand((prev) => prev.slice(1));
+    setOpponentHand((prev) => prev.slice(1));
   };
   const playerOneWinsComparison = () => {
     opponentHand.length === 0 && setGameWinner("Player1");
