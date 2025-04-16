@@ -301,10 +301,6 @@ export const PlayGamePage = () => {
         });
     }, []);
 
-    // useEffect(()=> {
-    //     setGameFinished()
-    // }, [gameFinished])
-
     const onClickHandle = () => {
         if (playerInitialTenCards.length > 1) {
             const [first, second, ...rest] = playerInitialTenCards;
