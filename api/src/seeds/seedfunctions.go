@@ -10,7 +10,8 @@ import (
 func SeedDatabase(db *gorm.DB) {
 	fmt.Println("Seeding database...")
 
-	// Call all seed functions here (we only have one for now, but can add users, and plant_ownership later)
+	// Call all seed functions here
+	UserSeeds(db)
 	PlantSeeds(db)
 }
 
