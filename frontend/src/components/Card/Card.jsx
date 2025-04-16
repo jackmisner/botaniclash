@@ -6,7 +6,6 @@ export const Card = ({ plant, onClick, setOpeningHand }) => {
       onClick={() => {
         onClick();
         setOpeningHand((prev) => {
-          console.log("previous state", prev);
           return [...prev, plant];
         });
       }}
