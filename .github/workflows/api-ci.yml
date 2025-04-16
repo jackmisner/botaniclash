@@ -40,10 +40,3 @@ jobs:
           else
             echo "Coverage threshold met: $total_coverage% >= 0%"
           fi
-
-      - name: Upload coverage to Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: backend-coverage
-          path: coverage.out
-          retention-days: 5

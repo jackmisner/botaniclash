@@ -48,10 +48,3 @@ jobs:
           else
             echo "Coverage threshold met: $COVERAGE% >= 25%"
           fi
-
-      - name: Upload coverage reports to Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: frontend-coverage
-          path: ./frontend/coverage/
-          retention-days: 5
