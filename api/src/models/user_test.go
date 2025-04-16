@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// This re useable function gets the test database from the .test.env file, 
+// This re useable function gets the test database from the .test.env file,
 // uses it to open a DB connection and then autmigrates all tables to get ready for the test
 func OpenConnection()  {
 	err := godotenv.Load("../../.test.env")
@@ -17,6 +17,14 @@ func OpenConnection()  {
 	}
 	OpenDatabaseConnection()
 	AutoMigrateModels()
+}
+
+// All tests should end with this function. 
+// It drops all tables and the test data in the test database, ready for the next test
+func DropAllTables()  {
+	Database.Exec("DROP TABLE plant_ownerships")
+	Database.Exec("DROP TABLE plants")
+	Database.Exec("DROP TABLE users")
 }
 
 // Creates and saves a user, then checks if the user can be retrieved by Username
@@ -35,4 +43,5 @@ func TestFindUserbyUsername(t *testing.T)  {
 	assert.Equal(t, savedUser.Username, fetchedUser.Username)  //Compare the user we created to the data we retreieved
 	assert.Equal(t, savedUser.Password, fetchedUser.Password) // This may need to be rewritten if password hashing is introduced
 
+	DropAllTables()
 }
