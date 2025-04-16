@@ -11,7 +11,7 @@ import (
 func UserSeeds(db *gorm.DB) {
 	fmt.Println("Seeding users...")
 
-	// Create sample users
+	// sample users
 	users := []models.User{
 		{Username: "luke", Password: "password123"},
 		{Username: "imogen", Password: "password123"},
@@ -25,7 +25,7 @@ func UserSeeds(db *gorm.DB) {
 		{Username: "testuser", Password: "password123"},
 	}
 
-	// Insert the users into the database
+	// Insert the users into the database using Gorm
 	for i, user := range users {
 		result := db.Create(&user)
 		if result.Error != nil {
