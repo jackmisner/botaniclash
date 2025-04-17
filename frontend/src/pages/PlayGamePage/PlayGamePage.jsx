@@ -66,8 +66,6 @@ export const PlayGamePage = () => {
 
   const pickTopCards = () => {
     setCardsInPlay([playerHand[0], opponentHand[0]]);
-    // const playerCardId = playerHand[0].id
-    // const opponentCardId = opponentHand[0].id
     setPlayerHand((prev) => prev.slice(1)); // remove the first card
     setOpponentHand((prev) => prev.slice(1)); // remove the first card
   };
@@ -106,15 +104,9 @@ export const PlayGamePage = () => {
 
   return (
     <>
-      <h1 data-testid="play-game">Play game</h1>
+      {/* <h1 data-testid="play-game">Play game</h1> */}
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
-      <button onClick={pickTopCards}>Test top cards</button>
-      <button onClick={playerOneWinsComparison}>
-        Player 1 wins comparison
-      </button>
-      <button onClick={playerTwoWinsComparison}>
-        Player 2 wins comparison
-      </button>
+      <button onClick={pickTopCards}>Next Round</button>
       {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
       {cardsInPlay.length > 0 && (
         <CardContainer

@@ -23,6 +23,7 @@ export const Card = ({
         }
       }}
       className="card"
+      data-in-play={isCardInPlay ? "true" : "false"}
     >
       <p data-testid="common-name">{plant.common_name}</p>
       <p data-testid="scientific-name">{plant.scientific_name}</p>
