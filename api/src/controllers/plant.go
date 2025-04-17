@@ -107,7 +107,7 @@ func ComparePlants(c *gin.Context) {
 	if winner == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error":       fmt.Sprintf("Invalid stat to compare: %s", statToCompare),
-			"valid_stats": []string{"year", "light", "soil_nutriments", "atmospheric_humidity", "ph_minimum", "ph_maximum", "edible", "ph_range"},
+			"valid_stats": []string{"year", "light", "soil_nutriments", "atmospheric_humidity", "edible", "ph_range"},
 		})
 		return
 	}
