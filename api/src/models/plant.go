@@ -24,3 +24,16 @@ func FetchAllPlants() ([]Plant, error) {
 	}
 	return plants, nil
 }
+
+func FetchPlantById(id uint) (*Plant, error) {
+	var plant Plant
+	err := Database.Find(&plant, id).Error
+	if err != nil {
+		return &Plant{}, err
+	}
+	return &plant, nil
+}
+
+func (p Plant) CalculatePhRange() uint {
+	return uint(p.PhMaximum) - uint(p.PhMinimum)
+}
