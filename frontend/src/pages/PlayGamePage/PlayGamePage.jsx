@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState } from "react";
-import { getPlants } from "../../services/plants";
+import { getPlants, postPlantForComparison } from "../../services/plants";
 
 export const PlayGamePage = () => {
   const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]); // 10 cards array
@@ -10,7 +10,6 @@ export const PlayGamePage = () => {
   const [playerHand, setPlayerHand] = useState([]); // 5 cards array
   const [cardsInPlay, setCardsInPlay] = useState([]); // top cards from both opponent and player
   const [gameWinner, setGameWinner] = useState("");
-  const [statInPlay, setStatInPlay] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,13 +37,21 @@ export const PlayGamePage = () => {
         // Optionally, you can set an error state to display an error message to the user
       }
     };
-
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("statInPlay:", statInPlay);
-  }, [statInPlay]);
+  const selectStat = (stat) => {
+    postPlantForComparison(cardsInPlay[0].id, cardsInPlay[1].id, stat)
+    .then((response) => {
+      if (response === "player") {
+        playerOneWinsComparison()
+      } else if (response === "opponent") {
+        playerTwoWinsComparison()
+      } else if (response === "draw") {
+        drawOutcome();
+      }
+    })
+  };
 
   const onClickHandle = () => {
     if (playerInitialTenCards.length > 1) {
@@ -59,8 +66,12 @@ export const PlayGamePage = () => {
 
   const pickTopCards = () => {
     setCardsInPlay([playerHand[0], opponentHand[0]]);
+    // const playerCardId = playerHand[0].id
+    // const opponentCardId = opponentHand[0].id
     setPlayerHand((prev) => prev.slice(1)); // remove the first card
     setOpponentHand((prev) => prev.slice(1)); // remove the first card
+    console.log("player hand", playerHand[0].id)
+    console.log("opponent hand", opponentHand[0])
   };
   const playerOneWinsComparison = () => {
     opponentHand.length === 0 && setGameWinner("Player1");
@@ -85,6 +96,16 @@ export const PlayGamePage = () => {
     });
   };
 
+  const drawOutcome = () => {
+    setPlayerHand((prev) => {
+      return [...prev, cardsInPlay[0]];
+    })
+    setOpponentHand((prev) => {
+      return [...prev, cardsInPlay[1]];
+    })
+    setCardsInPlay([]);
+  }
+
   return (
     <>
       <h1 data-testid="play-game">Play game</h1>
@@ -98,7 +119,7 @@ export const PlayGamePage = () => {
       </button>
       {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
       {cardsInPlay.length > 0 && (
-        <CardContainer plants={cardsInPlay} setStatInPlay={setStatInPlay} />
+        <CardContainer plants={cardsInPlay} isCardInPlay={true} selectStat = {selectStat}/>
       )}
 
       {twoCardsChoice && twoCardsChoice.length > 0 && (

@@ -4,11 +4,12 @@ export const CardContainer = ({
   plants,
   onClickHandle,
   setOpeningHand,
-  setStatInPlay,
   setPlayerStatValue,
   setOpponentStatValue,
   owner,
   isTwoCardsChoice = false,
+  isCardInPlay = false,
+  selectStat
 }) => {
   return (
     <div data-testid="cards-container" className="cards-container">
@@ -18,12 +19,13 @@ export const CardContainer = ({
             owner={owner}
             setPlayerStatValue={setPlayerStatValue}
             setOpponentStatValue={setOpponentStatValue}
-            setStatInPlay={setStatInPlay}
             setOpeningHand={setOpeningHand}
             onClick={onClickHandle}
             key={plant.id}
             plant={plant}
             isTwoCardsChoice={isTwoCardsChoice}
+            isCardInPlay={isCardInPlay}
+            selectStat={selectStat}
           />
         ))}
     </div>

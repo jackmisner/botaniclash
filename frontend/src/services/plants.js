@@ -19,3 +19,30 @@ export const getPlants = async () => {
   const data = await response.json();
   return data;
 };
+
+export const postPlantForComparison = async (player_card_id, opponent_card_id, stat_to_compare) => {
+  // add token in later
+  const cardData = {
+    player_card: player_card_id,
+    opponent_card: opponent_card_id,
+    stat_to_compare: stat_to_compare
+  }
+  console.log("card data: ", cardData)
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      // Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(cardData)
+  };
+
+  const response = await fetch(`${BACKEND_URL}/plants`, requestOptions);
+
+  if (response.status !== 201) {
+    throw new Error("Unable to send cards to compare");
+  }
+  const winner = await response.json();
+
+  return winner;
+}
