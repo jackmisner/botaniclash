@@ -11,12 +11,11 @@ type Plant struct {
 	Observations        string `json:"observations"`
 	Edible              bool   `json:"edible"`
 	PhMinimum           int    `json:"ph_minimum"`
-	PhMaximum          int    `json:"ph_maximum"`
+	PhMaximum           int    `json:"ph_maximum"`
 	Light               int    `json:"light"`
 	SoilNutriments      int    `json:"soil_nutriments"`
 	AtmosphericHumidity int    `json:"atmospheric_humidity"`
 }
-
 
 func FetchAllPlants() ([]Plant, error) {
 	var plants []Plant
@@ -24,4 +23,17 @@ func FetchAllPlants() ([]Plant, error) {
 		return nil, err
 	}
 	return plants, nil
+}
+
+func FetchPlantById(id uint) (*Plant, error) {
+	var plant Plant
+	err := Database.Find(&plant, id).Error
+	if err != nil {
+		return &Plant{}, err
+	}
+	return &plant, nil
+}
+
+func (p Plant) CalculatePhRange() uint {
+	return uint(p.PhMaximum) - uint(p.PhMinimum)
 }
