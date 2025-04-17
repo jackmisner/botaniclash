@@ -4,24 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authentication";
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const token = await login(email, password);
+      const token = await login(username, password);
       localStorage.setItem("token", token);
-      navigate("/posts");
+      navigate("/");
     } catch (err) {
       console.error(err);
       navigate("/login");
     }
   };
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
@@ -32,12 +32,12 @@ export const LoginPage = () => {
     <>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="username">Username:</label>
         <input
-          id="email"
+          id="username"
           type="text"
-          value={email}
-          onChange={handleEmailChange}
+          value={username}
+          onChange={handleUsernameChange}
         />
         <label htmlFor="password">Password:</label>
         <input
