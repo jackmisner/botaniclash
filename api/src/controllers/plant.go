@@ -88,7 +88,6 @@ type ComparisonSruct struct {
 }
 
 func ComparePlants(c *gin.Context) {
-
 	// Step 1: Grabbing plant IDs & stat to compare
 	var requestBody ComparisonSruct
 	err := c.BindJSON(&requestBody)
@@ -102,34 +101,41 @@ func ComparePlants(c *gin.Context) {
 	playerPlant, _ := models.FetchPlantById(requestBody.PlayerCard)
 	opponentPlant, _ := models.FetchPlantById(requestBody.OpponentCard)
 
-	// Step 3: Calculate who wins (or draws)
+	// Step 3: Calculate who wins (or draws) using the helper function
+	winner := DeterminePlantWinner(playerPlant, opponentPlant, statToCompare)
+
+	if winner == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":       fmt.Sprintf("Invalid stat to compare: %s", statToCompare),
+			"valid_stats": []string{"year", "light", "soil_nutriments", "atmospheric_humidity", "ph_minimum", "ph_maximum", "edible", "ph_range"},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"winner": winner})
+}
+
+func DeterminePlantWinner(playerPlant, opponentPlant *models.Plant, statToCompare string) string {
 	if statToCompare == "edible" {
 		if playerPlant.Edible && !opponentPlant.Edible {
-			c.JSON(http.StatusOK, gin.H{"winner": "player"})
-			return
+			return "player"
 		} else if !playerPlant.Edible && opponentPlant.Edible {
-			c.JSON(http.StatusOK, gin.H{"winner": "opponent"})
-			return
+			return "opponent"
 		} else {
-			c.JSON(http.StatusOK, gin.H{"winner": "draw"})
-			return
+			return "draw"
 		}
 	} else if statToCompare == "ph_range" {
 		playerPhRange := playerPlant.CalculatePhRange()
 		opponentPhRange := opponentPlant.CalculatePhRange()
 
 		if playerPhRange > opponentPhRange {
-			c.JSON(http.StatusOK, gin.H{"winner": "player"})
-			return
+			return "player"
 		} else if opponentPhRange > playerPhRange {
-			c.JSON(http.StatusOK, gin.H{"winner": "opponent"})
-			return
+			return "opponent"
 		} else {
-			c.JSON(http.StatusOK, gin.H{"winner": "draw"})
-			return
+			return "draw"
 		}
 	} else {
-
 		// Convert snake_case (json) to PascalCase (needed for struct field access)
 		fieldMap := map[string]string{
 			"year":                 "Year",
@@ -143,25 +149,18 @@ func ComparePlants(c *gin.Context) {
 		// Get the correct field name
 		fieldName, exists := fieldMap[statToCompare]
 		if !exists {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error":       fmt.Sprintf("Invalid stat to compare: %s", statToCompare),
-				"valid_stats": []string{"year", "light", "soil_nutriments", "atmospheric_humidity", "ph_minimum", "ph_maximum", "edible", "ph_range"},
-			})
-			return
+			return "" // Invalid stat
 		}
 
 		playerValue := reflect.ValueOf(*playerPlant).FieldByName(fieldName)
 		opponentValue := reflect.ValueOf(*opponentPlant).FieldByName(fieldName)
 
 		if playerValue.Int() < opponentValue.Int() {
-			c.JSON(http.StatusOK, gin.H{"winner": "player"})
-			return
+			return "player"
 		} else if opponentValue.Int() < playerValue.Int() {
-			c.JSON(http.StatusOK, gin.H{"winner": "opponent"})
-			return
+			return "opponent"
 		} else {
-			c.JSON(http.StatusOK, gin.H{"winner": "draw"})
-			return
+			return "draw"
 		}
 	}
 }
