@@ -12,7 +12,6 @@ export const SignupPage = () => {
     event.preventDefault();
     try {
       await signup(username, password);
-      console.log("redirecting...:");
       navigate("/login");
     } catch (err) {
       console.error(err);

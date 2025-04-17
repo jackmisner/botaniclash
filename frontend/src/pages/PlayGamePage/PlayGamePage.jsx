@@ -15,7 +15,6 @@ export const PlayGamePage = () => {
     const fetchData = async () => {
       try {
         const data = await getPlants();
-        console.log("data:", data);
         const cards = data.cards;
 
         const shuffledCardsPlayer = cards.slice(0, 10).map((card) => ({
@@ -41,16 +40,17 @@ export const PlayGamePage = () => {
   }, []);
 
   const selectStat = (stat) => {
-    postPlantForComparison(cardsInPlay[0].id, cardsInPlay[1].id, stat)
-    .then((response) => {
-      if (response === "player") {
-        playerOneWinsComparison()
-      } else if (response === "opponent") {
-        playerTwoWinsComparison()
-      } else if (response === "draw") {
-        drawOutcome();
-      }
-    })
+    postPlantForComparison(cardsInPlay[0].id, cardsInPlay[1].id, stat).then(
+      (response) => {
+        if (response === "player") {
+          playerOneWinsComparison();
+        } else if (response === "opponent") {
+          playerTwoWinsComparison();
+        } else if (response === "draw") {
+          drawOutcome();
+        }
+      },
+    );
   };
 
   const onClickHandle = () => {
@@ -70,8 +70,6 @@ export const PlayGamePage = () => {
     // const opponentCardId = opponentHand[0].id
     setPlayerHand((prev) => prev.slice(1)); // remove the first card
     setOpponentHand((prev) => prev.slice(1)); // remove the first card
-    console.log("player hand", playerHand[0].id)
-    console.log("opponent hand", opponentHand[0])
   };
   const playerOneWinsComparison = () => {
     opponentHand.length === 0 && setGameWinner("Player1");
@@ -99,12 +97,12 @@ export const PlayGamePage = () => {
   const drawOutcome = () => {
     setPlayerHand((prev) => {
       return [...prev, cardsInPlay[0]];
-    })
+    });
     setOpponentHand((prev) => {
       return [...prev, cardsInPlay[1]];
-    })
+    });
     setCardsInPlay([]);
-  }
+  };
 
   return (
     <>
@@ -119,7 +117,11 @@ export const PlayGamePage = () => {
       </button>
       {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
       {cardsInPlay.length > 0 && (
-        <CardContainer plants={cardsInPlay} isCardInPlay={true} selectStat = {selectStat}/>
+        <CardContainer
+          plants={cardsInPlay}
+          isCardInPlay={true}
+          selectStat={selectStat}
+        />
       )}
 
       {twoCardsChoice && twoCardsChoice.length > 0 && (
