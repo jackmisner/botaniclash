@@ -10,7 +10,7 @@ import (
 )
 
 type CreateTokenRequestBody struct {
-	Email    string
+	Username    string
 	Password string
 }
 
@@ -23,7 +23,7 @@ func CreateToken(ctx *gin.Context) {
 
 	fmt.Println(input)
 
-	user, err := models.FindUserByEmail(input.Email)
+	user, err := models.FindUserByUsername(input.Username)
 	if err != nil {
 		SendInternalError(ctx, err)
 	}
