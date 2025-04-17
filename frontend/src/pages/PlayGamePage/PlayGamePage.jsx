@@ -13,23 +13,33 @@ export const PlayGamePage = () => {
   const [statInPlay, setStatInPlay] = useState("");
 
   useEffect(() => {
-    getPlants().then((data) => {
-      console.log("data:", data);
-      const cards = data.cards;
-      const shuffledCardsPlayer = cards.slice(0, 10).map((card) => ({
-        ...card,
-        owner: " player",
-      })); // Assign owner to player cards
-      const shuffledCardsOpponent = cards.slice(11, 16).map((card) => ({
-        ...card,
-        owner: " opponent",
-      })); // Assign owner to opponent cards
+    const fetchData = async () => {
+      try {
+        const data = await getPlants();
+        console.log("data:", data);
+        const cards = data.cards;
 
-      setOpponentHand(shuffledCardsOpponent);
-      const [first, second, ...rest] = shuffledCardsPlayer;
-      setPlayerInitialTenCards(rest);
-      setTwoCardsChoice([first, second]);
-    });
+        const shuffledCardsPlayer = cards.slice(0, 10).map((card) => ({
+          ...card,
+          owner: " player",
+        })); // Assign owner to player cards
+
+        const shuffledCardsOpponent = cards.slice(11, 16).map((card) => ({
+          ...card,
+          owner: " opponent",
+        })); // Assign owner to opponent cards
+
+        setOpponentHand(shuffledCardsOpponent);
+        const [first, second, ...rest] = shuffledCardsPlayer;
+        setPlayerInitialTenCards(rest);
+        setTwoCardsChoice([first, second]);
+      } catch (error) {
+        console.error("Error fetching or processing plant data:", error);
+        // Optionally, you can set an error state to display an error message to the user
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
