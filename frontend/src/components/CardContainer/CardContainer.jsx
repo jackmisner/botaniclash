@@ -8,7 +8,8 @@ export const CardContainer = ({
   setOpponentStatValue,
   owner,
   isTwoCardsChoice = false,
-  cards_ids
+  isCardInPlay = false,
+  selectStat
 }) => {
   return (
     <div data-testid="cards-container" className="cards-container">
@@ -23,7 +24,8 @@ export const CardContainer = ({
             key={plant.id}
             plant={plant}
             isTwoCardsChoice={isTwoCardsChoice}
-            cards_ids={cards_ids}
+            isCardInPlay={isCardInPlay}
+            selectStat={selectStat}
           />
         ))}
     </div>

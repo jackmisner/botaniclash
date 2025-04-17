@@ -27,7 +27,7 @@ export const postPlantForComparison = async (player_card_id, opponent_card_id, s
     opponent_card: opponent_card_id,
     stat_to_compare: stat_to_compare
   }
-  console.log(cardData)
+  console.log("card data: ", cardData)
   const requestOptions = {
     method: "POST",
     headers: {
@@ -37,11 +37,12 @@ export const postPlantForComparison = async (player_card_id, opponent_card_id, s
     body: JSON.stringify(cardData)
   };
 
-  const response = await fetch(`${BACKEND_URL}/comparison`, requestOptions);
+  const response = await fetch(`${BACKEND_URL}/plants`, requestOptions);
 
   if (response.status !== 201) {
     throw new Error("Unable to send cards to compare");
   }
   const winner = await response.json();
+
   return winner;
 }

@@ -1,18 +1,17 @@
 import "./Card.css";
-import { postPlantForComparison } from "../../services/plants";
 
 export const Card = ({
   plant,
   onClick,
   setOpeningHand,
   isTwoCardsChoice,
-  cards_ids
+  isCardInPlay,
+  selectStat
 }) => {
   const onStatContainerClick = (event) => {
-    const statInPlay = event.target.dataset["stat"];
-    postPlantForComparison(cards_ids[0], cards_ids[1], statInPlay)
+    console.log("On stat container click")
+    selectStat(event.target.dataset["stat"])
   };
-
   return (
     <article
       onClick={() => {
@@ -35,9 +34,9 @@ export const Card = ({
       />
       <div
         className="year-container"
-        data-stat="plant.year"
+        data-stat="year"
         onClick={((event) =>{
-          if (cards_ids && cards_ids.length > 0) {
+          if (isCardInPlay) {
             onStatContainerClick(event)
           }
         })}
@@ -46,9 +45,9 @@ export const Card = ({
       </div>
       <div
         className="edible-container"
-        data-stat="plant.edible"
+        data-stat="edible"
         onClick={((event) =>{
-          if (cards_ids && cards_ids.length > 0) {
+          if (isCardInPlay) {
             onStatContainerClick(event)
           }
         })}
@@ -58,9 +57,9 @@ export const Card = ({
       </div>
       <div
         className="average-ph-container"
-        data-stat="plant.ph_levels.ph_range"
+        data-stat="ph_levels.ph_range"
         onClick={((event) =>{
-          if (cards_ids && cards_ids.length > 0) {
+          if (isCardInPlay) {
             onStatContainerClick(event)
           }
         })}
@@ -69,9 +68,9 @@ export const Card = ({
       </div>
       <div
         className="light-container"
-        data-stat="plant.light"
+        data-stat="light"
         onClick={((event) =>{
-          if (cards_ids && cards_ids.length > 0) {
+          if (isCardInPlay) {
             onStatContainerClick(event)
           }
         })}
@@ -80,9 +79,9 @@ export const Card = ({
       </div>
       <div
         className="nutrients-container"
-        data-stat="plant.soil_nutriments"
+        data-stat="soil_nutriments"
         onClick={((event) =>{
-          if (cards_ids && cards_ids.length > 0) {
+          if (isCardInPlay) {
             onStatContainerClick(event)
           }
         })}
@@ -91,9 +90,9 @@ export const Card = ({
       </div>
       <div
         className="water-required-container"
-        data-stat="plant.atmospheric_humidity"
+        data-stat="atmospheric_humidity"
         onClick={((event) =>{
-          if (cards_ids && cards_ids.length > 0) {
+          if (isCardInPlay) {
             onStatContainerClick(event)
           }
         })}
