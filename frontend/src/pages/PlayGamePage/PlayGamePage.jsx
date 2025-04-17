@@ -353,7 +353,6 @@ export const PlayGamePage = () => {
     <>
       <h1 data-testid="play-game">Play game</h1>
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
-      {/* <CardContainer plants={initialTenCards} /> */}
       <button onClick={pickTopCards}>Test top cards</button>
       <button onClick={playerOneWinsComparison}>
         Player 1 wins comparison
@@ -378,7 +377,7 @@ export const PlayGamePage = () => {
             onClickHandle={onClickHandle}
             setOpeningHand={setPlayerHand}
             plants={twoCardsChoice}
-            isTwoCardsChoice={true} // Indicate this is the twoCardsChoice container
+            isTwoCardsChoice={true}
           />
         </>
       )}

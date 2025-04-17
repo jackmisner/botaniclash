@@ -95,7 +95,6 @@ describe("Card", () => {
     fireEvent.click(card);
 
     expect(mockSetOpeningHand).toHaveBeenCalledTimes(1);
-    // The mock implementation should return the updated state
     expect(mockSetOpeningHand.mock.results[0].value).toEqual([defaultPlant]);
   });
 

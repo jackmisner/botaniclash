@@ -128,7 +128,6 @@ describe("CardContainer", () => {
     fireEvent.click(cards[1]); // Click the second card
 
     expect(mockSetOpeningHand).toHaveBeenCalledTimes(1);
-    // Should have called setOpeningHand with a function that adds the second plant to the array
     expect(mockSetOpeningHand.mock.results[0].value).toEqual([mockPlants[1]]);
   });
 
@@ -151,8 +150,6 @@ describe("CardContainer", () => {
   });
 
   test("CardContainer provides correct key prop to each Card", () => {
-    // This is mostly testing React's internal behavior, but we can at least verify
-    // there are no console warnings about missing keys
     const consoleSpy = vi.spyOn(console, "error");
 
     render(

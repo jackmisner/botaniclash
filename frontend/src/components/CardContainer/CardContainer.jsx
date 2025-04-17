@@ -8,7 +8,7 @@ export const CardContainer = ({
   setPlayerStatValue,
   setOpponentStatValue,
   owner,
-  isTwoCardsChoice = false, // New prop to indicate if this is the twoCardsChoice container
+  isTwoCardsChoice = false,
 }) => {
   return (
     <div data-testid="cards-container" className="cards-container">
@@ -23,7 +23,7 @@ export const CardContainer = ({
             onClick={onClickHandle}
             key={plant.id}
             plant={plant}
-            isTwoCardsChoice={isTwoCardsChoice} // Pass the flag to the Card
+            isTwoCardsChoice={isTwoCardsChoice}
           />
         ))}
     </div>
