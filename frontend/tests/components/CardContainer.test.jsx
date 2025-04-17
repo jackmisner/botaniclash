@@ -9,13 +9,14 @@ describe("CardContainer", () => {
       id: 1,
       common_name: "Common Dandelion",
       scientific_name: "Taraxacum officinale",
-      image_url: "https://example.com/dandelion.jpg",
+      image_url:
+        "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg",
       year: "1990",
       edible: true,
-      average_pH: "6.1",
+      ph_levels: { ph_range: "6.1" },
       light: "8",
-      nutrients_required: "medium",
-      water_required: "high",
+      soil_nutriments: "medium",
+      atmospheric_humidity: "high",
     },
     {
       id: 2,
@@ -24,10 +25,10 @@ describe("CardContainer", () => {
       image_url: "https://example.com/sunflower.jpg",
       year: "1982",
       edible: true,
-      average_pH: "5.8",
+      ph_levels: { ph_range: "5.8" },
       light: "9",
-      nutrients_required: "high",
-      water_required: "medium",
+      soil_nutriments: "high",
+      atmospheric_humidityq: "medium",
     },
   ];
 
@@ -98,6 +99,7 @@ describe("CardContainer", () => {
           plants={mockPlants}
           onClickHandle={mockOnClickHandle}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
@@ -118,6 +120,7 @@ describe("CardContainer", () => {
           plants={mockPlants}
           onClickHandle={mockOnClickHandle}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
@@ -126,7 +129,6 @@ describe("CardContainer", () => {
     fireEvent.click(cards[1]); // Click the second card
 
     expect(mockSetOpeningHand).toHaveBeenCalledTimes(1);
-    // Should have called setOpeningHand with a function that adds the second plant to the array
     expect(mockSetOpeningHand.mock.results[0].value).toEqual([mockPlants[1]]);
   });
 
@@ -149,8 +151,6 @@ describe("CardContainer", () => {
   });
 
   test("CardContainer provides correct key prop to each Card", () => {
-    // This is mostly testing React's internal behavior, but we can at least verify
-    // there are no console warnings about missing keys
     const consoleSpy = vi.spyOn(console, "error");
 
     render(
