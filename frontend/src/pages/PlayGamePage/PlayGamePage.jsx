@@ -104,7 +104,6 @@ export const PlayGamePage = () => {
 
   return (
     <>
-      {/* <h1 data-testid="play-game">Play game</h1> */}
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
       <button onClick={pickTopCards}>Next Round</button>
       {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}

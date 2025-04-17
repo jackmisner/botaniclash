@@ -36,17 +36,6 @@ describe("PlayGamePage", () => {
     vi.clearAllMocks();
   });
 
-  test("playGamePage displays correct title", () => {
-    render(
-      <MemoryRouter>
-        <PlayGamePage />
-      </MemoryRouter>,
-    );
-
-    const h1PlayGamePageTitle = screen.getByTestId("play-game");
-    expect(h1PlayGamePageTitle.textContent).to.equal("Play game");
-  });
-
   test("displays opponent hand section", () => {
     render(
       <MemoryRouter>
@@ -65,41 +54,9 @@ describe("PlayGamePage", () => {
       </MemoryRouter>,
     );
 
-    const testTopCardsButton = screen.getByText("Test top cards");
-    const player1WinsButton = screen.getByText("Player 1 wins comparison");
-    const player2WinsButton = screen.getByText("Player 2 wins comparison");
+    const testTopCardsButton = screen.getByText("Next Round");
 
     expect(testTopCardsButton).to.exist;
-    expect(player1WinsButton).to.exist;
-    expect(player2WinsButton).to.exist;
-  });
-
-  test("handles click on Player 1 wins comparison button", () => {
-    render(
-      <MemoryRouter>
-        <PlayGamePage />
-      </MemoryRouter>,
-    );
-
-    const player1WinsButton = screen.getByText("Player 1 wins comparison");
-    fireEvent.click(player1WinsButton);
-
-    // Verify the component doesn't crash
-    expect(player1WinsButton).to.exist;
-  });
-
-  test("handles click on Player 2 wins comparison button", () => {
-    render(
-      <MemoryRouter>
-        <PlayGamePage />
-      </MemoryRouter>,
-    );
-
-    const player2WinsButton = screen.getByText("Player 2 wins comparison");
-    fireEvent.click(player2WinsButton);
-
-    // Verify the component doesn't crash
-    expect(player2WinsButton).to.exist;
   });
 
   test("renders the game UI structure correctly", () => {
@@ -110,8 +67,8 @@ describe("PlayGamePage", () => {
     );
 
     // Check for main UI elements
-    expect(screen.getByTestId("play-game")).to.exist;
+
     expect(screen.getByText("Opponent hand")).to.exist;
-    expect(screen.getByText("Test top cards")).to.exist;
+    expect(screen.getByText("Next Round")).to.exist;
   });
 });
