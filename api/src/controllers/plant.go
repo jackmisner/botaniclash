@@ -18,6 +18,7 @@ type PlantCards struct {
 
 // PlantData represents detailed information about a plant.
 type PlantData struct {
+	ID                  uint     `json:"id"`
 	CommonName          string   `json:"common_name"`
 	ScientificName      string   `json:"scientific_name"`
 	ImageUrl            string   `json:"image_url"`
@@ -58,6 +59,7 @@ func GetAllPlants(c *gin.Context) {
 		phAverage := float64(p.PhMinimum+p.PhMaximum) / 2.0 // Calculating the average pH by adding the minimum and maximum pH values and dividing by 2.0
 
 		randomCards = append(randomCards, PlantData{ // Creates a new plant object and adds it to the randomcard slice
+			ID:             p.ID,
 			CommonName:     p.CommonName,
 			ScientificName: p.ScientificName,
 			ImageUrl:       p.ImageUrl,
