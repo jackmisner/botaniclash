@@ -11,6 +11,43 @@ import (
 	"gorm.io/gorm"
 )
 
+var ediblePlants = []string{
+	"Alfalfa",
+	"Amphibious bistort",
+	"Ash-leaf maple",
+	"Barley",
+	"Belgium endive",
+	"Bog blueberry",
+	"Bog-bean",
+	"Bog-myrtle",
+	"Bouncing-bet",
+	"Carpathian walnut",
+	"Cleavers",
+	"Common fireweed",
+	"Common horsetail",
+	"Common plantain",
+	"Cowberry",
+	"Crampbark",
+	"Dutch clover",
+	"European bird cherry",
+	"European corn mint",
+	"European white birch",
+	"Hawthorn",
+	"Heal-all",
+	"Linden",
+	"Maize",
+	"Northern red oak",
+	"Quickbeam",
+	"Raspberry",
+	"Rum cherry",
+	"Scotch pine",
+	"Silverweed",
+	"Sycamore maple",
+	"Water avens",
+	"Wheat",
+	"Common lilac",
+}
+
 // PlantData represents the structure of data from the first API endpoint
 // (the one we used to mainly grab the ID to pass to the second API endpoint)
 type PlantData struct {
@@ -63,7 +100,7 @@ func PlantSeeds(db *gorm.DB) {
 	maxPlants := 100
 
 	// Iterate through pages 1-5
-	for page := 1; page <= 5; page++ {
+	for page := 1; page <= 6; page++ {
 		// Break the loop if we've already created enough plants
 		if plantCount >= maxPlants {
 			break
@@ -137,10 +174,22 @@ func PlantSeeds(db *gorm.DB) {
 				Observations:        plantDetails.Data.Observations,
 				Edible:              plantDetails.Data.Edible,
 				PhMinimum:           int(plantDetails.Data.Growth.PhMinimum * 10), // Convert float to int
-				PhMaximum:          int(plantDetails.Data.Growth.PhMaximum * 10), // Convert float to int
+				PhMaximum:           int(plantDetails.Data.Growth.PhMaximum * 10), // Convert float to int
 				Light:               plantDetails.Data.Growth.Light,
 				SoilNutriments:      plantDetails.Data.Growth.SoilNutriments,
 				AtmosphericHumidity: plantDetails.Data.Growth.AtmosphericHumidity,
+			}
+
+			if newPlant.CommonName == "" {
+				fmt.Printf("Skipping plant with no common name (ID: %d)\n", plant.ID)
+				continue
+			}
+
+			for _, ediblePlant := range ediblePlants {
+				if newPlant.CommonName == ediblePlant {
+					newPlant.Edible = true
+					continue
+				}
 			}
 
 			result := db.Create(&newPlant)
