@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Card } from "../../src/components/Card/Card";
 import { vi } from "vitest";
@@ -12,10 +12,10 @@ describe("Card", () => {
       "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg",
     year: "1990",
     edible: true,
-    average_pH: "6.1",
+    ph_levels: { ph_range: "6.1" },
     light: "8",
-    nutrients_required: "medium",
-    water_required: "high",
+    soil_nutriments: "medium",
+    atmospheric_humidity: "high",
   };
 
   test("card displays correct measures", () => {
@@ -61,13 +61,15 @@ describe("Card", () => {
           plant={defaultPlant}
           onClick={mockOnClick}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
 
     const card = screen.getByRole("article");
-    fireEvent.click(card);
-
+    act(() => {
+      fireEvent.click(card);
+    });
     expect(mockOnClick).toHaveBeenCalledTimes(1);
   });
 
@@ -84,6 +86,7 @@ describe("Card", () => {
           plant={defaultPlant}
           onClick={mockOnClick}
           setOpeningHand={mockSetOpeningHand}
+          isTwoCardsChoice={true}
         />
       </MemoryRouter>,
     );
@@ -92,7 +95,6 @@ describe("Card", () => {
     fireEvent.click(card);
 
     expect(mockSetOpeningHand).toHaveBeenCalledTimes(1);
-    // The mock implementation should return the updated state
     expect(mockSetOpeningHand.mock.results[0].value).toEqual([defaultPlant]);
   });
 
@@ -119,9 +121,9 @@ describe("Card", () => {
   test("card handles null properties gracefully", () => {
     const plantWithNullProps = {
       ...defaultPlant,
-      nutrients_required: null,
-      water_required: null,
-      average_pH: null,
+      soil_nutriments: null,
+      atmospheric_humidity: null,
+      ph_levels: { ph_range: null },
     };
 
     render(

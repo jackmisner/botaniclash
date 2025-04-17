@@ -1,19 +1,26 @@
 import "./Card.css";
 
-export const Card = ({ plant, onClick, setOpeningHand }) => {
-
+export const Card = ({
+  plant,
+  onClick,
+  setOpeningHand,
+  setStatInPlay,
+  isTwoCardsChoice,
+}) => {
   const onStatContainerClick = (event) => {
-    console.log(event.target.textContent)
-    console.log(event.target.dataset["stat"])
-  }
+    setStatInPlay(event.target.dataset["stat"]);
+  };
 
   return (
     <article
       onClick={() => {
-        onClick();
-        setOpeningHand((prev) => {
-          return [...prev, plant];
-        });
+        if (isTwoCardsChoice) {
+          // Only allow onClick if isTwoCardsChoice is true
+          onClick();
+          setOpeningHand((prev) => {
+            return [...prev, plant];
+          });
+        }
       }}
       className="card"
     >
@@ -24,23 +31,47 @@ export const Card = ({ plant, onClick, setOpeningHand }) => {
         src={plant.image_url}
         alt={plant.common_name}
       />
-      <div className="year-container" data-stat = "plant.year" onClick={onStatContainerClick}>
+      <div
+        className="year-container"
+        data-stat="plant.year"
+        onClick={onStatContainerClick}
+      >
         <p data-testid="year-text">{plant.year}</p>
       </div>
-      <div className="edible-container" data-stat = "plant.edible" onClick={onStatContainerClick}>
-        <p  data-testid="edible-text">{plant.edible ? "Yes" : "No"}</p>
+      <div
+        className="edible-container"
+        data-stat="plant.edible"
+        onClick={onStatContainerClick}
+      >
+        <p data-testid="edible-text">{plant.edible ? "Yes" : "No"}</p>
       </div>
-      <div className="average-ph-container" data-stat = "plant.average-ph" onClick={onStatContainerClick}>
-        <p data-testid="average-ph-text">{plant.average_pH}</p>
+      <div
+        className="average-ph-container"
+        data-stat="plant.ph_levels.ph_range"
+        onClick={onStatContainerClick}
+      >
+        <p data-testid="average-ph-text">{plant.ph_levels.ph_range}</p>
       </div>
-      <div className="light-container" data-stat = "plant.light" onClick={onStatContainerClick}>
+      <div
+        className="light-container"
+        data-stat="plant.light"
+        onClick={onStatContainerClick}
+      >
         <p data-testid="light-text">{plant.light}</p>
       </div>
-      <div className="nutrients-container" data-stat = "plant.nutrients-required" onClick={onStatContainerClick}>
-        <p data-testid="nutrients-text">{plant.nutrients_required}</p>
+      <div
+        className="nutrients-container"
+        data-stat="plant.soil_nutriments"
+        onClick={onStatContainerClick}
+      >
+        <p data-testid="nutrients-text">{plant.soil_nutriments}</p>
       </div>
-      <div className="water-required-container" data-stat = "plant.water-required" onClick={onStatContainerClick}>
-        <p data-testid="water-text">{plant.water_required}</p>
+      <div
+        className="water-required-container"
+        data-stat="plant.atmospheric_humidity"
+        onClick={onStatContainerClick}
+      >
+        <p data-testid="water-text">{plant.atmospheric_humidity}</p>
       </div>
     </article>
   );
