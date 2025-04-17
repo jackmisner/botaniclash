@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState } from "react";
-import { getPlants } from "../../services/plants";
+import { getPlants, postPlantForComparison } from "../../services/plants";
 
 export const PlayGamePage = () => {
   const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]); // 10 cards array
@@ -10,7 +10,6 @@ export const PlayGamePage = () => {
   const [playerHand, setPlayerHand] = useState([]); // 5 cards array
   const [cardsInPlay, setCardsInPlay] = useState([]); // top cards from both opponent and player
   const [gameWinner, setGameWinner] = useState("");
-  const [statInPlay, setStatInPlay] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,10 +41,6 @@ export const PlayGamePage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("statInPlay:", statInPlay);
-  }, [statInPlay]);
-
   const onClickHandle = () => {
     if (playerInitialTenCards.length > 1) {
       const [first, second, ...rest] = playerInitialTenCards;
@@ -61,6 +56,8 @@ export const PlayGamePage = () => {
     setCardsInPlay([playerHand[0], opponentHand[0]]);
     setPlayerHand((prev) => prev.slice(1)); // remove the first card
     setOpponentHand((prev) => prev.slice(1)); // remove the first card
+    console.log("player hand", playerHand[0].id)
+    console.log("opponent hand", opponentHand[0])
   };
   const playerOneWinsComparison = () => {
     opponentHand.length === 0 && setGameWinner("Player1");
@@ -98,7 +95,7 @@ export const PlayGamePage = () => {
       </button>
       {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
       {cardsInPlay.length > 0 && (
-        <CardContainer plants={cardsInPlay} setStatInPlay={setStatInPlay} />
+        <CardContainer plants={cardsInPlay} cards_ids={[cardsInPlay[0].id, cardsInPlay[1].id]}/>
       )}
 
       {twoCardsChoice && twoCardsChoice.length > 0 && (
