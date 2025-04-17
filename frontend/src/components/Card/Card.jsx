@@ -5,9 +5,6 @@ export const Card = ({
   onClick,
   setOpeningHand,
   setStatInPlay,
-  setPlayerStatValue,
-  setOpponentStatValue,
-  owner,
   isTwoCardsChoice,
 }) => {
   const onStatContainerClick = (event) => {
@@ -50,10 +47,10 @@ export const Card = ({
       </div>
       <div
         className="average-ph-container"
-        data-stat="plant.average-ph"
+        data-stat="plant.ph_levels.ph_range"
         onClick={onStatContainerClick}
       >
-        <p data-testid="average-ph-text">{plant.average_pH}</p>
+        <p data-testid="average-ph-text">{plant.ph_levels.ph_range}</p>
       </div>
       <div
         className="light-container"
@@ -64,17 +61,17 @@ export const Card = ({
       </div>
       <div
         className="nutrients-container"
-        data-stat="plant.nutrients-required"
+        data-stat="plant.soil_nutriments"
         onClick={onStatContainerClick}
       >
-        <p data-testid="nutrients-text">{plant.nutrients_required}</p>
+        <p data-testid="nutrients-text">{plant.soil_nutriments}</p>
       </div>
       <div
         className="water-required-container"
-        data-stat="plant.water-required"
+        data-stat="plant.atmospheric_humidity"
         onClick={onStatContainerClick}
       >
-        <p data-testid="water-text">{plant.water_required}</p>
+        <p data-testid="water-text">{plant.atmospheric_humidity}</p>
       </div>
     </article>
   );
