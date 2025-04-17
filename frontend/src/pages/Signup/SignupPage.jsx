@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { signup } from "../../services/authentication";
 
 export const SignupPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await signup(email, password);
+      await signup(username, password);
       console.log("redirecting...:");
       navigate("/login");
     } catch (err) {
@@ -20,8 +20,8 @@ export const SignupPage = () => {
     }
   };
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
@@ -32,12 +32,12 @@ export const SignupPage = () => {
     <>
       <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="username">Username:</label>
         <input
-          id="email"
+          id="username"
           type="text"
-          value={email}
-          onChange={handleEmailChange}
+          value={username}
+          onChange={handleUsernameChange}
         />
         <label htmlFor="password">Password:</label>
         <input
