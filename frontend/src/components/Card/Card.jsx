@@ -1,4 +1,5 @@
 import "./Card.css";
+import fallbackPlantImage from "../../assets/plant-fallback.png";
 
 export const Card = ({
   plant,
@@ -11,6 +12,13 @@ export const Card = ({
   const onStatContainerClick = (event) => {
     selectStat(event.target.dataset["stat"]);
   };
+
+  // Handle image loading error
+  const handleImageError = (e) => {
+    e.target.src = fallbackPlantImage; // Replace with fallback image
+    e.target.onerror = null; // Prevent infinite loop if fallback also fails
+  };
+
   return (
     <article
       onClick={() => {
@@ -23,6 +31,7 @@ export const Card = ({
         }
       }}
       className="card"
+      data-in-play={isCardInPlay ? "true" : "false"}
     >
       <p data-testid="common-name">{plant.common_name}</p>
       <p data-testid="scientific-name">{plant.scientific_name}</p>
@@ -30,6 +39,7 @@ export const Card = ({
         data-testid="image-url"
         src={plant.image_url}
         alt={plant.common_name}
+        onError={handleImageError}
       />
       <div
         className="year-container"

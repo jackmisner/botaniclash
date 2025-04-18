@@ -8,7 +8,7 @@ export const HomePage = () => {
       <h1>Welcome to BotaniClash!</h1>
       <Link to="/signup">Sign Up</Link>
       <Link to="/login">Log In</Link>
-      <Link to="/playgame">Play game</Link>
+      <Link to="/setupgame">Setup game</Link>
     </div>
   );
 };

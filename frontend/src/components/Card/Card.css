@@ -75,7 +75,8 @@
   justify-content: right;
 }
 
-.year-container:hover {
+/* Only show hover effects when card is in play */
+.card[data-in-play="true"] .year-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background-color: rgba(180, 165, 0, 0.2);
 }
@@ -93,7 +94,7 @@
   justify-content: right;
 }
 
-.edible-container:hover {
+.card[data-in-play="true"] .edible-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background-color: rgba(180, 165, 0, 0.2);
 }
@@ -111,7 +112,7 @@
   justify-content: right;
 }
 
-.light-container:hover {
+.card[data-in-play="true"] .light-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background-color: rgba(180, 165, 0, 0.2);
 }
@@ -129,7 +130,7 @@
   justify-content: right;
 }
 
-.water-required-container:hover {
+.card[data-in-play="true"] .water-required-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background-color: rgba(180, 165, 0, 0.2);
 }
@@ -147,7 +148,7 @@
   justify-content: right;
 }
 
-.nutrients-container:hover {
+.card[data-in-play="true"] .nutrients-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background-color: rgba(180, 165, 0, 0.2);
 }
@@ -165,7 +166,7 @@
   justify-content: right;
 }
 
-.average-ph-container:hover {
+.card[data-in-play="true"] .average-ph-container:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   background-color: rgba(180, 165, 0, 0.2);
 }
