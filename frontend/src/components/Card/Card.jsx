@@ -1,5 +1,5 @@
 import "./Card.css";
-import fallbackPlantImage from "../../assets/plant-fallback.png"; // Import your fallback image
+import fallbackPlantImage from "../../assets/plant-fallback.png";
 
 export const Card = ({
   plant,
