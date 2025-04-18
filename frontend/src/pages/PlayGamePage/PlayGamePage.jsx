@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState } from "react";
 import { getPlants, postPlantForComparison } from "../../services/plants";
+import "./PlayGamePage.css";
 
 export const PlayGamePage = () => {
   const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]); // 10 cards array
@@ -102,10 +103,19 @@ export const PlayGamePage = () => {
     setCardsInPlay([]);
   };
 
+  const isInitialSelectionComplete =
+    playerInitialTenCards.length === 0 && twoCardsChoice.length === 0;
+
   return (
     <>
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
-      <button onClick={pickTopCards}>Next Round</button>
+      {isInitialSelectionComplete &&
+        playerHand.length > 0 &&
+        opponentHand.length > 0 && (
+          <button onClick={pickTopCards} className="next-round-button">
+            Next Round
+          </button>
+        )}
       {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
       {cardsInPlay.length > 0 && (
         <CardContainer
@@ -127,12 +137,18 @@ export const PlayGamePage = () => {
         </>
       )}
 
-      {playerHand && playerHand.length > 0 && <h1>Opening hand</h1>}
       {playerHand && playerHand.length > 0 && (
-        <CardContainer plants={playerHand} />
+        <>
+          <h1>Player Hand</h1>
+          <CardContainer plants={playerHand} />
+        </>
       )}
-      <h1> Opponent hand</h1>
-      <CardContainer plants={opponentHand} />
+      {opponentHand && opponentHand.length > 0 && (
+        <>
+          <h1>Opponent Hand</h1>
+          <CardContainer plants={opponentHand} />
+        </>
+      )}
     </>
   );
 };
