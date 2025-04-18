@@ -111,7 +111,8 @@ export const PlayGamePage = () => {
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
       {isInitialSelectionComplete &&
         playerHand.length > 0 &&
-        opponentHand.length > 0 && (
+        opponentHand.length > 0 &&
+        cardsInPlay.length == 0 && (
           <button onClick={pickTopCards} className="next-round-button">
             Next Round
           </button>
