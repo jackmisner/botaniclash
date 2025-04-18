@@ -1,44 +1,21 @@
-import { useEffect } from "react";
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState } from "react";
-import { getPlants, postPlantForComparison } from "../../services/plants";
+import { postPlantForComparison } from "../../services/plants";
+import { useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 
 export const PlayGamePage = () => {
-  const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]); // 10 cards array
-  const [opponentHand, setOpponentHand] = useState([]); // 10 cards array
-  const [twoCardsChoice, setTwoCardsChoice] = useState([]); // 2 cards array
-  const [playerHand, setPlayerHand] = useState([]); // 5 cards array
+  const location = useLocation();
+  const { startingPlayerHand, startingOpponentHand } = location.state || {
+    startingPlayerHand: [],
+    startingOpponentHand: [],
+  };
+  const [playerHand, setPlayerHand] = useState(startingPlayerHand); // should be getting passed from GameSetupPage
+  const [opponentHand, setOpponentHand] = useState(startingOpponentHand); // should be getting passed from GameSetupPage
   const [cardsInPlay, setCardsInPlay] = useState([]); // top cards from both opponent and player
   const [gameWinner, setGameWinner] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getPlants();
-        const cards = data.cards;
-
-        const shuffledCardsPlayer = cards.slice(0, 10).map((card) => ({
-          ...card,
-          owner: " player",
-        })); // Assign owner to player cards
-
-        const shuffledCardsOpponent = cards.slice(11, 16).map((card) => ({
-          ...card,
-          owner: " opponent",
-        })); // Assign owner to opponent cards
-
-        setOpponentHand(shuffledCardsOpponent);
-        const [first, second, ...rest] = shuffledCardsPlayer;
-        setPlayerInitialTenCards(rest);
-        setTwoCardsChoice([first, second]);
-      } catch (error) {
-        console.error("Error fetching or processing plant data:", error);
-        // Optionally, you can set an error state to display an error message to the user
-      }
-    };
-    fetchData();
-  }, []);
+  console.log("opponentHand:", opponentHand);
+  console.log("playerHand:", playerHand);
 
   const selectStat = (stat) => {
     postPlantForComparison(cardsInPlay[0].id, cardsInPlay[1].id, stat).then(
@@ -52,17 +29,6 @@ export const PlayGamePage = () => {
         }
       },
     );
-  };
-
-  const onClickHandle = () => {
-    if (playerInitialTenCards.length > 1) {
-      const [first, second, ...rest] = playerInitialTenCards;
-      setPlayerInitialTenCards(rest);
-      setTwoCardsChoice([first, second]);
-    } else {
-      // No more cards left, clear the twoCardsChoice array
-      setTwoCardsChoice([]);
-    }
   };
 
   const pickTopCards = () => {
@@ -103,14 +69,10 @@ export const PlayGamePage = () => {
     setCardsInPlay([]);
   };
 
-  const isInitialSelectionComplete =
-    playerInitialTenCards.length === 0 && twoCardsChoice.length === 0;
-
   return (
     <>
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
-      {isInitialSelectionComplete &&
-        playerHand.length > 0 &&
+      {playerHand.length > 0 &&
         opponentHand.length > 0 &&
         cardsInPlay.length == 0 && (
           <button onClick={pickTopCards} className="next-round-button">
@@ -124,18 +86,6 @@ export const PlayGamePage = () => {
           isCardInPlay={true}
           selectStat={selectStat}
         />
-      )}
-
-      {twoCardsChoice && twoCardsChoice.length > 0 && (
-        <>
-          <h1>Choose your opening hand</h1>
-          <CardContainer
-            onClickHandle={onClickHandle}
-            setOpeningHand={setPlayerHand}
-            plants={twoCardsChoice}
-            isTwoCardsChoice={true}
-          />
-        </>
       )}
 
       {playerHand && playerHand.length > 0 && (
