@@ -15,21 +15,34 @@ export const PlayGamePage = () => {
     const [opponentHand, setOpponentHand] = useState(startingOpponentHand); // should be getting passed from GameSetupPage
     const [cardsInPlay, setCardsInPlay] = useState([]); // top cards from both opponent and player
     const [gameWinner, setGameWinner] = useState("");
+    const [opponentCardShow, setOpponentCardShow] = useState(false);
     console.log("opponentHand:", opponentHand);
     console.log("playerHand:", playerHand);
 
     const selectStat = (stat) => {
-        postPlantForComparison(cardsInPlay[0].id, cardsInPlay[1].id, stat).then(
-            (response) => {
+        setOpponentCardShow(true);
+        setTimeout(() => {
+            postPlantForComparison(
+                cardsInPlay[0].id,
+                cardsInPlay[1].id,
+                stat
+            ).then((response) => {
                 if (response === "player") {
                     playerOneWinsComparison();
+                    alert("You won");
                 } else if (response === "opponent") {
                     playerTwoWinsComparison();
+                    alert("Opponent won");
                 } else if (response === "draw") {
                     drawOutcome();
+                    alert("Draw");
                 }
-            }
-        );
+            });
+        }, 1000);
+    };
+
+    const onClickNextRoundHandle = () => {
+        setOpponentCardShow(false);
     };
 
     const pickTopCards = () => {
@@ -42,7 +55,7 @@ export const PlayGamePage = () => {
         setPlayerHand((prev) => {
             const updatedCards = cardsInPlay.map((card) => ({
                 ...card,
-                owner: " player",
+                owner: "player",
             }));
             setCardsInPlay([]);
             return [...prev, ...updatedCards];
@@ -53,7 +66,7 @@ export const PlayGamePage = () => {
         setOpponentHand((prev) => {
             const updatedCards = cardsInPlay.map((card) => ({
                 ...card,
-                owner: " opponent",
+                owner: "opponent",
             }));
             setCardsInPlay([]);
             return [...prev, ...updatedCards];
@@ -77,7 +90,10 @@ export const PlayGamePage = () => {
                 opponentHand.length > 0 &&
                 cardsInPlay.length == 0 && (
                     <button
-                        onClick={pickTopCards}
+                        onClick={() => {
+                            pickTopCards();
+                            onClickNextRoundHandle();
+                        }}
                         className="next-round-button"
                     >
                         Next Round
@@ -88,13 +104,14 @@ export const PlayGamePage = () => {
                 <CardContainer
                     plants={cardsInPlay}
                     isCardInPlay={true}
+                    opponentCardShow={opponentCardShow}
                     selectStat={selectStat}
                 />
             )}
             <div className="decks-in-hand-container">
                 {playerHand && playerHand.length > 0 && (
                     <div className="deck-cards">
-                        <h1>Your Hand</h1>
+                        <h1>Player Hand</h1>
                         <DeckInHand plants={playerHand} />
                     </div>
                 )}

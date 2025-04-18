@@ -1,4 +1,4 @@
-import cardBack from "../../assets/card-back.png";
+import cardBackImage from "../../assets/card-back.png";
 import "./DeckInHand.css";
 
 export const DeckInHand = ({ plants }) => {
@@ -7,7 +7,7 @@ export const DeckInHand = ({ plants }) => {
             {plants.map((plant, index) => {
                 return (
                     <div className="card-in-hand" key={index}>
-                        <img src={cardBack} width="200px" height="250px" />
+                        <img src={cardBackImage} width="200px" height="250px" />
                     </div>
                 );
             })}
