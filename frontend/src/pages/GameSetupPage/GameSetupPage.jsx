@@ -88,12 +88,6 @@ export const GameSetupPage = () => {
           <CardContainer plants={playerHand} />
         </>
       )}
-      {opponentHand && opponentHand.length > 0 && (
-        <>
-          <h1>Opponent Hand</h1>
-          <CardContainer plants={opponentHand} />
-        </>
-      )}
     </>
   );
 };
