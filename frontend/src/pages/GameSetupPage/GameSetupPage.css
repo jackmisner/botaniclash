@@ -1,4 +1,4 @@
-.next-round-button {
+.nav-link {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
@@ -10,15 +10,16 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  width: 100px;
 }
 
-.next-round-button:hover {
+.nav-link:hover {
   background-color: #415632;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.next-round-button:active {
+.nav-link:active {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
