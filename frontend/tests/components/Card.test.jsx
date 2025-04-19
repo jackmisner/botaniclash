@@ -4,144 +4,147 @@ import { Card } from "../../src/components/Card/Card";
 import { vi } from "vitest";
 
 describe("Card", () => {
-  const defaultPlant = {
-    id: 1,
-    common_name: "Common Dandelion",
-    scientific_name: "Taraxacum officinale",
-    image_url:
-      "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg",
-    year: "1990",
-    edible: true,
-    ph_levels: { ph_range: "6.1" },
-    light: "8",
-    soil_nutriments: "medium",
-    atmospheric_humidity: "high",
-  };
-
-  test("card displays correct measures", () => {
-    render(
-      <MemoryRouter>
-        <Card
-          plant={defaultPlant}
-          onClick={() => {}}
-          setOpeningHand={() => {}}
-        />
-      </MemoryRouter>,
-    );
-
-    const pCommonName = screen.getByTestId("common-name");
-    const pScientificName = screen.getByTestId("scientific-name");
-    const pImageUrl = screen.getByTestId("image-url");
-    const pYear = screen.getByTestId("year-text");
-    const pEdible = screen.getByTestId("edible-text");
-    const pLight = screen.getByTestId("light-text");
-    const pWater = screen.getByTestId("water-text");
-    const pNutrients = screen.getByTestId("nutrients-text");
-    const pAveragePh = screen.getByTestId("average-ph-text");
-    expect(pCommonName.textContent).toBe("Common Dandelion");
-    expect(pScientificName.textContent).toBe("Taraxacum officinale");
-    expect(pImageUrl.src).toBe(
-      "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg",
-    );
-    expect(pYear.textContent).toBe("1990");
-    expect(pEdible.textContent).toBe("Yes");
-    expect(pLight.textContent).toBe("8");
-    expect(pWater.textContent).toBe("high");
-    expect(pNutrients.textContent).toBe("medium");
-    expect(pAveragePh.textContent).toBe("6.1");
-  });
-
-  test("onClick function is called when card is clicked", () => {
-    const mockOnClick = vi.fn();
-    const mockSetOpeningHand = vi.fn();
-
-    render(
-      <MemoryRouter>
-        <Card
-          plant={defaultPlant}
-          onClick={mockOnClick}
-          setOpeningHand={mockSetOpeningHand}
-          isTwoCardsChoice={true}
-        />
-      </MemoryRouter>,
-    );
-
-    const card = screen.getByRole("article");
-    act(() => {
-      fireEvent.click(card);
-    });
-    expect(mockOnClick).toHaveBeenCalledTimes(1);
-  });
-
-  test("setOpeningHand function is called and updates state when card is clicked", () => {
-    const mockOnClick = vi.fn();
-    const mockSetOpeningHand = vi.fn((fn) => {
-      const prev = [];
-      return fn(prev);
-    });
-
-    render(
-      <MemoryRouter>
-        <Card
-          plant={defaultPlant}
-          onClick={mockOnClick}
-          setOpeningHand={mockSetOpeningHand}
-          isTwoCardsChoice={true}
-        />
-      </MemoryRouter>,
-    );
-
-    const card = screen.getByRole("article");
-    fireEvent.click(card);
-
-    expect(mockSetOpeningHand).toHaveBeenCalledTimes(1);
-    expect(mockSetOpeningHand.mock.results[0].value).toEqual([defaultPlant]);
-  });
-
-  test("card displays 'No' when plant is not edible", () => {
-    const nonEdiblePlant = {
-      ...defaultPlant,
-      edible: false,
+    const defaultPlant = {
+        id: 1,
+        common_name: "Common Dandelion",
+        scientific_name: "Taraxacum officinale",
+        image_url:
+            "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg",
+        year: "1990",
+        edible: true,
+        ph_levels: { ph_range: "6.1" },
+        light: "8",
+        soil_nutriments: "medium",
+        atmospheric_humidity: "high",
+        owner: "player",
     };
 
-    render(
-      <MemoryRouter>
-        <Card
-          plant={nonEdiblePlant}
-          onClick={() => {}}
-          setOpeningHand={() => {}}
-        />
-      </MemoryRouter>,
-    );
+    test("card displays correct measures", () => {
+        render(
+            <MemoryRouter>
+                <Card
+                    plant={defaultPlant}
+                    onClick={() => {}}
+                    setOpeningHand={() => {}}
+                />
+            </MemoryRouter>
+        );
 
-    const pEdible = screen.getByTestId("edible-text");
-    expect(pEdible.textContent).toBe("No");
-  });
+        const pCommonName = screen.getByTestId("common-name");
+        const pScientificName = screen.getByTestId("scientific-name");
+        const pImageUrl = screen.getByTestId("image-url");
+        const pYear = screen.getByTestId("year-text");
+        const pEdible = screen.getByTestId("edible-text");
+        const pLight = screen.getByTestId("light-text");
+        const pWater = screen.getByTestId("water-text");
+        const pNutrients = screen.getByTestId("nutrients-text");
+        const pAveragePh = screen.getByTestId("average-ph-text");
+        expect(pCommonName.textContent).toBe("Common Dandelion");
+        expect(pScientificName.textContent).toBe("Taraxacum officinale");
+        expect(pImageUrl.src).toBe(
+            "https://images.immediate.co.uk/production/volatile/sites/10/2018/02/61078405-281c-4a49-8d1e-2e445fe64960-378bd75.jpg"
+        );
+        expect(pYear.textContent).toBe("1990");
+        expect(pEdible.textContent).toBe("Yes");
+        expect(pLight.textContent).toBe("8");
+        expect(pWater.textContent).toBe("high");
+        expect(pNutrients.textContent).toBe("medium");
+        expect(pAveragePh.textContent).toBe("6.1");
+    });
 
-  test("card handles null properties gracefully", () => {
-    const plantWithNullProps = {
-      ...defaultPlant,
-      soil_nutriments: null,
-      atmospheric_humidity: null,
-      ph_levels: { ph_range: null },
-    };
+    test("onClick function is called when card is clicked", () => {
+        const mockOnClick = vi.fn();
+        const mockSetOpeningHand = vi.fn();
 
-    render(
-      <MemoryRouter>
-        <Card
-          plant={plantWithNullProps}
-          onClick={() => {}}
-          setOpeningHand={() => {}}
-        />
-      </MemoryRouter>,
-    );
+        render(
+            <MemoryRouter>
+                <Card
+                    plant={defaultPlant}
+                    onClick={mockOnClick}
+                    setOpeningHand={mockSetOpeningHand}
+                    isTwoCardsChoice={true}
+                />
+            </MemoryRouter>
+        );
 
-    const pNutrients = screen.getByTestId("nutrients-text");
-    const pWater = screen.getByTestId("water-text");
-    const pAveragePh = screen.getByTestId("average-ph-text");
+        const card = screen.getByRole("article");
+        act(() => {
+            fireEvent.click(card);
+        });
+        expect(mockOnClick).toHaveBeenCalledTimes(1);
+    });
 
-    expect(pNutrients.textContent).toBe("");
-    expect(pWater.textContent).toBe("");
-    expect(pAveragePh.textContent).toBe("");
-  });
+    test("setOpeningHand function is called and updates state when card is clicked", () => {
+        const mockOnClick = vi.fn();
+        const mockSetOpeningHand = vi.fn((fn) => {
+            const prev = [];
+            return fn(prev);
+        });
+
+        render(
+            <MemoryRouter>
+                <Card
+                    plant={defaultPlant}
+                    onClick={mockOnClick}
+                    setOpeningHand={mockSetOpeningHand}
+                    isTwoCardsChoice={true}
+                />
+            </MemoryRouter>
+        );
+
+        const card = screen.getByRole("article");
+        fireEvent.click(card);
+
+        expect(mockSetOpeningHand).toHaveBeenCalledTimes(1);
+        expect(mockSetOpeningHand.mock.results[0].value).toEqual([
+            defaultPlant,
+        ]);
+    });
+
+    test("card displays 'No' when plant is not edible", () => {
+        const nonEdiblePlant = {
+            ...defaultPlant,
+            edible: false,
+        };
+
+        render(
+            <MemoryRouter>
+                <Card
+                    plant={nonEdiblePlant}
+                    onClick={() => {}}
+                    setOpeningHand={() => {}}
+                />
+            </MemoryRouter>
+        );
+
+        const pEdible = screen.getByTestId("edible-text");
+        expect(pEdible.textContent).toBe("No");
+    });
+
+    test("card handles null properties gracefully", () => {
+        const plantWithNullProps = {
+            ...defaultPlant,
+            soil_nutriments: null,
+            atmospheric_humidity: null,
+            ph_levels: { ph_range: null },
+        };
+
+        render(
+            <MemoryRouter>
+                <Card
+                    plant={plantWithNullProps}
+                    onClick={() => {}}
+                    setOpeningHand={() => {}}
+                />
+            </MemoryRouter>
+        );
+
+        const pNutrients = screen.getByTestId("nutrients-text");
+        const pWater = screen.getByTestId("water-text");
+        const pAveragePh = screen.getByTestId("average-ph-text");
+
+        expect(pNutrients.textContent).toBe("");
+        expect(pWater.textContent).toBe("");
+        expect(pAveragePh.textContent).toBe("");
+    });
 });

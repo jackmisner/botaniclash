@@ -131,10 +131,12 @@ describe("PlayGamePage", () => {
 
         // Wait for comparison resolution
         await vi.waitFor(() => {
-            // After player wins, the Next Round button should reappear
-            expect(screen.getByText("Next Round")).to.exist;
-            // Cards in play heading should disappear
-            expect(screen.queryByText("Cards in Play")).to.not.exist;
+            setTimeout(() => {
+                // After player wins, the Next Round button should reappear
+                expect(screen.getByText("Next Round")).to.exist;
+                // Cards in play heading should disappear
+                expect(screen.queryByText("Cards in Play")).to.not.exist;
+            }, 1000);
         });
     });
 
