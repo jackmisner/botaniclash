@@ -3,7 +3,6 @@ import { MemoryRouter } from "react-router-dom";
 import { Card } from "../../src/components/Card/Card";
 import { vi, expect } from "vitest";
 
-// Correctly mock the image imports with default exports
 vi.mock("../../src/assets/plant-fallback.png", () => {
   return {
     default: "mocked-fallback-image-path",
