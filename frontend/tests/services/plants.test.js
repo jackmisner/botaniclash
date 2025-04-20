@@ -7,7 +7,7 @@ import {
 // Mock the environment variable
 vi.stubGlobal("import.meta", {
   env: {
-    VITE_BACKEND_URL: "http://localhost:8082/plants",
+    VITE_BACKEND_URL: "http://localhost:8082/",
   },
 });
 

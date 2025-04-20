@@ -31,7 +31,7 @@ export const postPlantForComparison = async (
     opponent_card: opponent_card_id,
     stat_to_compare: stat_to_compare,
   };
-  console.log("card data: ", cardData);
+
   const requestOptions = {
     method: "POST",
     headers: {
@@ -47,6 +47,6 @@ export const postPlantForComparison = async (
     throw new Error("Unable to send cards to compare");
   }
   const winner = await response.json();
-  console.log("winner:", winner);
+
   return winner.winner;
 };
