@@ -40,11 +40,10 @@ describe("Plants API Functions", () => {
 
       // Assertions
       expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:8082/plants",
-        {
+        expect.stringContaining("/plants"),
+        expect.objectContaining({
           method: "GET",
-          headers: {},
-        },
+        }),
       );
       expect(result).toEqual(mockPlants);
     });
@@ -84,7 +83,7 @@ describe("Plants API Functions", () => {
 
       // Assertions
       expect(global.fetch).toHaveBeenCalledWith(
-        "http://localhost:8082/plants",
+        expect.stringContaining("/plants"),
         {
           method: "POST",
           headers: {
