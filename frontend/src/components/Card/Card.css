@@ -1,178 +1,178 @@
 @font-face {
-  font-family: WonderLight;
-  src: url(../../../src/assets/Font/Wonder-Light.otf);
+    font-family: WonderLight;
+    src: url(../../../src/assets/Font/Wonder-Light.otf);
 }
 
 .cards-container {
-  display: flex;
-  font-family: "WonderLight";
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+    display: flex;
+    font-family: "WonderLight";
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
 
 .card {
-  width: 333px;
-  height: 500px;
-  position: relative;
-  background-image: url("../../assets/card-mockup-blank.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  color: #543c24;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  flex-shrink: 0;
-  border-radius: 20px;
-  overflow: hidden;
+    width: 333px;
+    height: 500px;
+    position: relative;
+    background-image: url("../../assets/card-mockup-blank.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #543c24;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 /* Common name styling */
 .card p[data-testid="common-name"] {
-  position: absolute;
-  top: 20px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
 }
 
 /* Scientific name styling */
 .card p[data-testid="scientific-name"] {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  font-style: italic;
-  color: #5a7743;
-  margin: 0;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    font-style: italic;
+    color: #5a7743;
+    margin: 0;
 }
 
 /* Plant image */
 .card img {
-  position: absolute;
-  top: 95px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 187px;
-  object-fit: cover;
-  border-radius: 4px;
+    position: absolute;
+    top: 95px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 187px;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
 .year-container {
-  position: absolute;
-  top: 288px;
-  left: 20px;
-  width: 285px;
-  height: 30px;
-  text-align: right;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    position: absolute;
+    top: 288px;
+    left: 20px;
+    width: 285px;
+    height: 30px;
+    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 /* Only show hover effects when card is in play */
 .card[data-in-play="true"] .year-container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(180, 165, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(180, 165, 0, 0.2);
 }
 
 .edible-container {
-  position: absolute;
-  top: 320px;
-  left: 20px;
-  width: 285px;
-  height: 30px;
-  text-align: right;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    position: absolute;
+    top: 320px;
+    left: 20px;
+    width: 285px;
+    height: 30px;
+    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 .card[data-in-play="true"] .edible-container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(180, 165, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(180, 165, 0, 0.2);
 }
 
 .light-container {
-  position: absolute;
-  top: 382px;
-  left: 20px;
-  width: 285px;
-  height: 30px;
-  text-align: right;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    position: absolute;
+    top: 382px;
+    left: 20px;
+    width: 285px;
+    height: 30px;
+    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 .card[data-in-play="true"] .light-container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(180, 165, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(180, 165, 0, 0.2);
 }
 
 .water-required-container {
-  position: absolute;
-  top: 445px;
-  left: 20px;
-  width: 285px;
-  height: 30px;
-  text-align: right;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    position: absolute;
+    top: 445px;
+    left: 20px;
+    width: 285px;
+    height: 30px;
+    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 .card[data-in-play="true"] .water-required-container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(180, 165, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(180, 165, 0, 0.2);
 }
 
 .nutrients-container {
-  position: absolute;
-  top: 413px;
-  left: 20px;
-  width: 285px;
-  height: 30px;
-  text-align: right;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    position: absolute;
+    top: 413px;
+    left: 20px;
+    width: 285px;
+    height: 30px;
+    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 .card[data-in-play="true"] .nutrients-container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(180, 165, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(180, 165, 0, 0.2);
 }
 
 .average-ph-container {
-  position: absolute;
-  top: 352px;
-  left: 20px;
-  width: 285px;
-  height: 30px;
-  text-align: right;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+    position: absolute;
+    top: 352px;
+    left: 20px;
+    width: 285px;
+    height: 30px;
+    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 .card[data-in-play="true"] .average-ph-container:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  background-color: rgba(180, 165, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(180, 165, 0, 0.2);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }

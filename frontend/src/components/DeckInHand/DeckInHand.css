@@ -1,0 +1,66 @@
+.cards-in-hand-container {
+    margin-top: 2rem;
+    /* margin-left: 50px; */
+    display: flex;
+    justify-content: center;
+    width: 350px;
+    transform: rotate(-18deg);
+    min-height: 260px;
+}
+
+.cards-in-hand-container > * {
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    transform-origin: bottom center;
+}
+.cards-in-hand-container > :nth-child(1) {
+    transform: rotate(0deg);
+}
+
+.cards-in-hand-container > :nth-child(2) {
+    transform: rotate(5deg);
+}
+
+.cards-in-hand-container > :nth-child(3) {
+    transform: rotate(10deg);
+}
+
+.cards-in-hand-container > :nth-child(4) {
+    transform: rotate(15deg);
+}
+
+.cards-in-hand-container > :nth-child(5) {
+    transform: rotate(20deg);
+}
+
+.cards-in-hand-container > :nth-child(6) {
+    transform: rotate(25deg);
+}
+
+.cards-in-hand-container > :nth-child(7) {
+    transform: rotate(30deg);
+}
+
+.cards-in-hand-container > :nth-child(8) {
+    transform: rotate(35deg);
+}
+
+.cards-in-hand-container > :nth-child(9) {
+    transform: rotate(40deg);
+}
+
+.cards-in-hand-container > :nth-child(10) {
+    transform: rotate(45deg);
+}
+
+.card-in-hand {
+    width: 275px;
+    position: absolute;
+}
+/* 
+@media screen and (max-width: 1000px) {
+    .cards-in-hand-container > * {
+        left: 35%;
+    }
+} */
