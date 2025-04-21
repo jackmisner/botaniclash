@@ -2,40 +2,47 @@ import { useEffect, useState } from "react";
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { Link } from "react-router-dom";
 import { getPlants } from "../../services/plants";
-import { prefetchPlantImages } from "../../services/imagePrefetcher";
+import { preloadPlantImages } from "../../services/imagePreloader";
 import "./GameSetupPage.css";
 
 export const GameSetupPage = () => {
-  const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]); // 10 cards array
-  const [opponentHand, setOpponentHand] = useState([]); // 10 cards array
-  const [twoCardsChoice, setTwoCardsChoice] = useState([]); // 2 cards array
-  const [playerHand, setPlayerHand] = useState([]); // 5 cards array
+  const [playerInitialTenCards, setPlayerInitialTenCards] = useState([]);
+  const [opponentHand, setOpponentHand] = useState([]);
+  const [twoCardsChoice, setTwoCardsChoice] = useState([]);
+  const [playerHand, setPlayerHand] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
+        setError("");
+
+        // Get plants from API
         const data = await getPlants();
         const cards = data.cards;
 
+        // Prepare player and opponent hands
         const shuffledCardsPlayer = cards.slice(0, 10).map((card) => ({
           ...card,
           owner: "player",
-        })); // Assign owner to player cards
+        }));
 
         const shuffledCardsOpponent = cards.slice(11, 16).map((card) => ({
           ...card,
           owner: "opponent",
-        })); // Assign owner to opponent cards
+        }));
 
-        // Prefetch all plant images
+        // Preload all images before showing the cards
         const allPlants = [...shuffledCardsPlayer, ...shuffledCardsOpponent];
-        await prefetchPlantImages(allPlants, (loaded, total) => {
+
+        await preloadPlantImages(allPlants, (loaded, total) => {
           setLoadingProgress(Math.floor((loaded / total) * 100));
         });
 
+        // Now that images are preloaded, set the state
         setOpponentHand(shuffledCardsOpponent);
         const [first, second, ...rest] = shuffledCardsPlayer;
         setPlayerInitialTenCards(rest);
@@ -43,10 +50,11 @@ export const GameSetupPage = () => {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching or processing plant data:", error);
+        setError("Failed to load plants. Please try again.");
         setIsLoading(false);
-        // Optionally, you can set an error state to display an error message to the user
       }
     };
+
     fetchData();
   }, []);
 
@@ -76,6 +84,12 @@ export const GameSetupPage = () => {
             ></div>
           </div>
           <p>{loadingProgress}% complete</p>
+        </div>
+      ) : error ? (
+        <div className="error-container">
+          <h2>Error</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Try Again</button>
         </div>
       ) : (
         <>

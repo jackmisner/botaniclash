@@ -4,7 +4,7 @@ import { postPlantForComparison } from "../../services/plants";
 import { useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
-import { prefetchPlantImages } from "../../services/imagePrefetcher";
+import { preloadPlantImages } from "../../services/imagePreloader";
 
 export const PlayGamePage = () => {
   const location = useLocation();
@@ -12,47 +12,47 @@ export const PlayGamePage = () => {
     startingPlayerHand: [],
     startingOpponentHand: [],
   };
-  const [playerHand, setPlayerHand] = useState(startingPlayerHand); // should be getting passed from GameSetupPage
-  const [opponentHand, setOpponentHand] = useState(startingOpponentHand); // should be getting passed from GameSetupPage
-  const [cardsInPlay, setCardsInPlay] = useState([]); // top cards from both opponent and player
+  const [playerHand, setPlayerHand] = useState(startingPlayerHand);
+  const [opponentHand, setOpponentHand] = useState(startingOpponentHand);
+  const [cardsInPlay, setCardsInPlay] = useState([]);
   const [gameWinner, setGameWinner] = useState("");
   const [opponentCardShow, setOpponentCardShow] = useState(true);
   const [isPlayersTurn, setIsPlayersTurn] = useState(true);
-  const [imagesReady, setImagesReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // Ensure images are in cache when the component mounts
+  // Preload all images when the component mounts
   useEffect(() => {
-    const ensureImagesAreCached = async () => {
-      // Combine all cards that might be shown during the game
+    const loadAllImages = async () => {
+      setIsLoading(true);
+
+      // Combine all cards
       const allCards = [...playerHand, ...opponentHand];
 
-      // Re-prefetch to ensure all images are in cache
-      // This is a quick operation if images are already cached
-      await prefetchPlantImages(allCards);
+      // Preload all images
+      await preloadPlantImages(allCards, (loaded, total) => {
+        setLoadingProgress(Math.floor((loaded / total) * 100));
+      });
 
-      setImagesReady(true);
+      setIsLoading(false);
     };
 
-    ensureImagesAreCached();
-  }, [playerHand, opponentHand]);
+    loadAllImages();
+  }, []);
 
-  // Pre-fetch images for next cards that will be in play
+  // Pre-cache the next cards to be played
   useEffect(() => {
-    // If there are cards in both hands, prefetch the next cards that will be in play
-    if (
-      playerHand.length > 0 &&
-      opponentHand.length > 0 &&
-      cardsInPlay.length === 0
-    ) {
-      prefetchPlantImages([playerHand[0], opponentHand[0]]);
-    }
-  }, [playerHand, opponentHand, cardsInPlay]);
+    const preloadNextCards = async () => {
+      if (playerHand.length > 0 && opponentHand.length > 0 && !isLoading) {
+        // Preload the next cards in each deck
+        await preloadPlantImages([playerHand[0], opponentHand[0]]);
+      }
+    };
 
-  const selectStat = (
-    stat,
-    card1 = cardsInPlay[0], // set default card, if function is not provided any value
-    card2 = cardsInPlay[1], // set default card, if function is not provided any value
-  ) => {
+    preloadNextCards();
+  }, [playerHand, opponentHand, isLoading]);
+
+  const selectStat = (stat, card1 = cardsInPlay[0], card2 = cardsInPlay[1]) => {
     setOpponentCardShow(true);
     setTimeout(() => {
       postPlantForComparison(card1.id, card2.id, stat).then((response) => {
@@ -94,18 +94,25 @@ export const PlayGamePage = () => {
     }
   };
 
-  const pickTopCards = () => {
+  const pickTopCards = async () => {
+    if (playerHand.length === 0 || opponentHand.length === 0) return;
+
     const latestCardsInPlay = [playerHand[0], opponentHand[0]];
+
+    // Ensure these cards' images are loaded before displaying them
+    await preloadPlantImages(latestCardsInPlay);
+
     setCardsInPlay(latestCardsInPlay);
-    setPlayerHand((prev) => prev.slice(1)); // remove the first card
-    setOpponentHand((prev) => prev.slice(1)); // remove the first card
+    setPlayerHand((prev) => prev.slice(1));
+    setOpponentHand((prev) => prev.slice(1));
 
     // Select random stat - computer turn
     selectRandomStat(latestCardsInPlay);
   };
 
   const playerOneWinsComparison = (cards) => {
-    opponentHand.length === 0 && setGameWinner("Player1");
+    if (opponentHand.length === 0) setGameWinner("Player1");
+
     setPlayerHand((prev) => {
       const updatedCards = cards.map((card) => ({
         ...card,
@@ -117,7 +124,8 @@ export const PlayGamePage = () => {
   };
 
   const playerTwoWinsComparison = (cards) => {
-    playerHand.length === 0 && setGameWinner("Player2");
+    if (playerHand.length === 0) setGameWinner("Player2");
+
     setOpponentHand((prev) => {
       const updatedCards = cards.map((card) => ({
         ...card,
@@ -129,19 +137,22 @@ export const PlayGamePage = () => {
   };
 
   const drawOutcome = (cards) => {
-    setPlayerHand((prev) => {
-      return [...prev, cards[0]];
-    });
-    setOpponentHand((prev) => {
-      return [...prev, cards[1]];
-    });
+    setPlayerHand((prev) => [...prev, cards[0]]);
+    setOpponentHand((prev) => [...prev, cards[1]]);
     setCardsInPlay([]);
   };
 
-  if (!imagesReady) {
+  if (isLoading) {
     return (
       <div className="loading-container">
-        <h2>Preparing game...</h2>
+        <h2>Preparing Game...</h2>
+        <div className="progress-bar">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${loadingProgress}%` }}
+          ></div>
+        </div>
+        <p>{loadingProgress}% complete</p>
       </div>
     );
   }
@@ -151,7 +162,7 @@ export const PlayGamePage = () => {
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
       {playerHand.length > 0 &&
         opponentHand.length > 0 &&
-        cardsInPlay.length == 0 && (
+        cardsInPlay.length === 0 && (
           <button
             onClick={() => {
               pickTopCards();
