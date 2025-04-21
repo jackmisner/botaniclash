@@ -15,45 +15,72 @@ export const PlayGamePage = () => {
     const [opponentHand, setOpponentHand] = useState(startingOpponentHand); // should be getting passed from GameSetupPage
     const [cardsInPlay, setCardsInPlay] = useState([]); // top cards from both opponent and player
     const [gameWinner, setGameWinner] = useState("");
-    const [opponentCardShow, setOpponentCardShow] = useState(false);
-    console.log("opponentHand:", opponentHand);
-    console.log("playerHand:", playerHand);
+    const [opponentCardShow, setOpponentCardShow] = useState(true);
+    const [isPlayersTurn, setIsPlayersTurn] = useState(true);
 
-    const selectStat = (stat) => {
+    const selectStat = (
+        stat,
+        card1 = cardsInPlay[0], // set default card, if function is not provided any value
+        card2 = cardsInPlay[1] // set default card, if function is not provided any value
+    ) => {
         setOpponentCardShow(true);
         setTimeout(() => {
-            postPlantForComparison(
-                cardsInPlay[0].id,
-                cardsInPlay[1].id,
-                stat
-            ).then((response) => {
-                if (response === "player") {
-                    playerOneWinsComparison();
-                    alert("You won");
-                } else if (response === "opponent") {
-                    playerTwoWinsComparison();
-                    alert("Opponent won");
-                } else if (response === "draw") {
-                    drawOutcome();
-                    alert("Draw");
+            postPlantForComparison(card1.id, card2.id, stat).then(
+                (response) => {
+                    if (response === "player") {
+                        playerOneWinsComparison([card1, card2]);
+                        alert("You won - compared stat: " + stat);
+                    } else if (response === "opponent") {
+                        playerTwoWinsComparison([card1, card2]);
+                        alert("Opponent won - compared stat: " + stat);
+                    } else if (response === "draw") {
+                        drawOutcome([card1, card2]);
+                        alert("Draw - compared stat: " + stat);
+                    }
                 }
-            });
+            );
         }, 1000);
     };
 
     const onClickNextRoundHandle = () => {
-        setOpponentCardShow(false);
+        if (isPlayersTurn) {
+            setOpponentCardShow(false);
+        }
+        setIsPlayersTurn((prev) => !prev);
+    };
+
+    const selectRandomStat = (latestCardsInPlay) => {
+        // Select random stat - computer turn
+        if (!isPlayersTurn) {
+            const POSSIBLE_STATS = [
+                "year",
+                "edible",
+                "ph_range",
+                "light",
+                "soil_nutriments",
+                "atmospheric_humidity",
+            ];
+            const randomStat =
+                POSSIBLE_STATS[
+                    Math.floor(Math.random() * POSSIBLE_STATS.length)
+                ];
+            selectStat(randomStat, latestCardsInPlay[0], latestCardsInPlay[1]);
+        }
     };
 
     const pickTopCards = () => {
-        setCardsInPlay([playerHand[0], opponentHand[0]]);
+        const latestCardsInPlay = [playerHand[0], opponentHand[0]];
+        setCardsInPlay(latestCardsInPlay);
         setPlayerHand((prev) => prev.slice(1)); // remove the first card
         setOpponentHand((prev) => prev.slice(1)); // remove the first card
+
+        // Select random stat - computer turn
+        selectRandomStat(latestCardsInPlay);
     };
-    const playerOneWinsComparison = () => {
+    const playerOneWinsComparison = (cards) => {
         opponentHand.length === 0 && setGameWinner("Player1");
         setPlayerHand((prev) => {
-            const updatedCards = cardsInPlay.map((card) => ({
+            const updatedCards = cards.map((card) => ({
                 ...card,
                 owner: "player",
             }));
@@ -61,10 +88,10 @@ export const PlayGamePage = () => {
             return [...prev, ...updatedCards];
         });
     };
-    const playerTwoWinsComparison = () => {
+    const playerTwoWinsComparison = (cards) => {
         playerHand.length === 0 && setGameWinner("Player2");
         setOpponentHand((prev) => {
-            const updatedCards = cardsInPlay.map((card) => ({
+            const updatedCards = cards.map((card) => ({
                 ...card,
                 owner: "opponent",
             }));
@@ -73,12 +100,12 @@ export const PlayGamePage = () => {
         });
     };
 
-    const drawOutcome = () => {
+    const drawOutcome = (cards) => {
         setPlayerHand((prev) => {
-            return [...prev, cardsInPlay[0]];
+            return [...prev, cards[0]];
         });
         setOpponentHand((prev) => {
-            return [...prev, cardsInPlay[1]];
+            return [...prev, cards[1]];
         });
         setCardsInPlay([]);
     };

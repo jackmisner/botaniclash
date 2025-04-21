@@ -10,6 +10,7 @@ export const CardContainer = ({
     isCardInPlay = false,
     selectStat,
     opponentCardShow,
+    cardsInPlay,
 }) => {
     return (
         <div data-testid="cards-container" className="cards-container">
@@ -26,6 +27,7 @@ export const CardContainer = ({
                         isCardInPlay={isCardInPlay}
                         selectStat={selectStat}
                         opponentCardShow={opponentCardShow}
+                        cardsInPlay={cardsInPlay}
                     />
                 ))}
         </div>

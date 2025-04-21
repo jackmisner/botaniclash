@@ -20,10 +20,7 @@ export const Card = ({
         e.target.src = fallbackPlantImage; // Replace with fallback image
         e.target.onerror = null; // Prevent infinite loop if fallback also fails
     };
-    console.log(
-        "opponentCardShow",
-        plant.owner.trim() === "opponent" && opponentCardShow
-    );
+
     return (
         <>
             {plant.owner.trim() === "opponent" && !opponentCardShow ? (
