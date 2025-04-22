@@ -99,11 +99,17 @@ func ComparePlants(c *gin.Context) {
 	}
 	statToCompare := requestBody.StatToCompare
 
-	// Step 2: Grabbing those plants from the DB
+	// Step 3: Checking if it is the user or computer's turn 
+	if statToCompare == "null" {
+		c.JSON(http.StatusOK, gin.H{"turn": "it's the computer's turn!"})
+		return
+	}
+
+	// Step 4: Grabbing those plants from the DB
 	playerPlant, _ := models.FetchPlantById(requestBody.PlayerCard)
 	opponentPlant, _ := models.FetchPlantById(requestBody.OpponentCard)
 
-	// Step 3: Calculate who wins (or draws) using the helper function
+	// Step 5: Calculate who wins (or draws) using the helper function
 	winner := DeterminePlantWinner(playerPlant, opponentPlant, statToCompare)
 
 	if winner == "" {
