@@ -1,36 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import BotaniclashLogo from "../../assets/BotaniClashLogo.png";
+import BotaniclashLogo from "/BotaniClashLogo.svg";
 
 const Header = () => {
-  const token = localStorage.getItem("token");
-  const loggedIn = token !== null;
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn);
+  useEffect(() => {
+    // Initial check
+    setToken(localStorage.getItem("token"));
 
-  const handleClick = () => {
-    return setIsLoggedIn(false);
+    // Create a function to handle storage changes
+    const handleStorageChange = () => {
+      setToken(localStorage.getItem("token"));
+    };
+
+    // Add event listener
+    window.addEventListener("storage", handleStorageChange);
+
+    // Create a custom event listener for login/logout actions
+    const handleAuthChange = () => {
+      setToken(localStorage.getItem("token"));
+    };
+
+    window.addEventListener("authChange", handleAuthChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("authChange", handleAuthChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event("authChange"));
   };
+
   return (
     <>
       <header className="header">
         <Link to="/" className="logo">
-          <img src={BotaniclashLogo} />
+          <img src={BotaniclashLogo} alt="BotaniClash Logo" />
         </Link>
         <nav className="nav">
-          {!isLoggedIn && (
+          {!token && (
             <Link to="/signup" className="nav-link">
               Signup
             </Link>
           )}
-          {!isLoggedIn && (
+          {!token && (
             <Link to="/login" className="nav-link">
               Login
             </Link>
           )}
 
-          {isLoggedIn && (
-            <Link to="/" onClick={handleClick} className="nav-link">
+          {token && (
+            <Link to="/" onClick={handleLogout} className="nav-link">
               Logout
             </Link>
           )}
