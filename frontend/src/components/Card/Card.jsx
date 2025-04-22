@@ -1,3 +1,18 @@
+/**
+ * A component that renders a plant card for the BotaniClash game.
+ * @component
+ * @param {Object} props - The component props
+ * @param {Object} props.plant - The plant data object to display
+ * @param {Function} props.onClick - Click handler for the card
+ * @param {Function} props.setOpeningHand - Function to update the opening hand state
+ * @param {boolean} props.isTwoCardsChoice - Flag indicating if the card is part of the two-card selection phase
+ * @param {boolean} props.isCardInPlay - Flag indicating if the card is currently in play
+ * @param {Function} props.selectStat - Function to handle stat selection
+ * @param {boolean} props.opponentCardShow - Flag indicating if opponent's card should be shown
+ * @param {boolean} props.hints - Flag indicating if stat hints should be displayed
+ * @returns {JSX.Element} A card component displaying plant information or a card back image
+ */
+
 import "./Card.css";
 import fallbackPlantImage from "../../assets/plant-fallback.png";
 import cardBackImage from "../../assets/card-back.png";
