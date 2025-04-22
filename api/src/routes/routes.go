@@ -7,5 +7,6 @@ func SetupRoutes(engine *gin.Engine) {
 	setupPlantRoutes(apiRouter) // sets up the plant routes
 	setupUserRoutes(apiRouter)
 	setupPostRoutes(apiRouter)
+	setupGameStatsRoutes(apiRouter)
 	setupAuthenticationRoutes(apiRouter)
 }
