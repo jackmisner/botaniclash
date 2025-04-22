@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../LoginSignupPage.css";
 import { signup } from "../../services/authentication";
 
 export const SignupPage = () => {
@@ -28,7 +28,7 @@ export const SignupPage = () => {
   };
 
   return (
-    <>
+    <div className="auth-container">
       <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
@@ -48,6 +48,6 @@ export const SignupPage = () => {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-    </>
+    </div>
   );
 };
