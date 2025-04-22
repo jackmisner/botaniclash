@@ -11,8 +11,8 @@ POST /plants
 
 ### Required Headers
 ```
-// We'll soon add a requirement for a JWT (once login is sorted)
 Content-Type: "application/json"
+Authorization: "Bearer {jwt_token}"
 ```
 
 ### Request Body Example
@@ -41,11 +41,12 @@ Valid values for `stat_to_compare` include:
 ## Response
 
 ### Success Response (200 OK)
-Returns a JSON object indicating the winner of the comparison.
+Returns a JSON object indicating the winner of the comparison and a new JWT token.
 
 ```json
 {
-  "winner": "player"
+  "winner": "player",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
 
@@ -53,6 +54,8 @@ The `winner` field can have one of three values:
 - `"player"`: The player's plant card won the comparison
 - `"opponent"`: The opponent's plant card won the comparison
 - `"draw"`: Both plant cards have the same value for the compared statistic
+
+The `token` field contains a new JWT token that should be used for subsequent authenticated requests.
 
 ### Error Responses
 
@@ -69,6 +72,21 @@ The `winner` field can have one of three values:
   {
     "error": "Invalid stat to compare: invalid_stat",
     "valid_stats": ["year", "light", "soil_nutriments", "atmospheric_humidity", "edible", "ph_range"]
+  }
+  ```
+
+- **401 Unauthorized**: If the request does not include a valid authentication token
+  ```json
+  {
+    "error": "Authorization header with JWT token is required"
+  }
+  ```
+
+  OR
+
+  ```json
+  {
+    "error": "Invalid token"
   }
   ```
 
