@@ -28,4 +28,5 @@ func AutoMigrateModels() {
 	Database.AutoMigrate(&User{})
 	Database.AutoMigrate(&Plant{})
 	Database.AutoMigrate(&PlantOwnership{})
+	Database.AutoMigrate(&GameStats{})
 }
