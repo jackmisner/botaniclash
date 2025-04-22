@@ -62,19 +62,22 @@ export const PlayGamePage = () => {
         card2 = cardsInPlay[1]
     ) => {
         setOpponentCardShow(true);
+        const token = localStorage.getItem("token");
         setTimeout(() => {
-            postPlantForComparison(card1.id, card2.id, stat).then(
+            postPlantForComparison(card1.id, card2.id, stat, token).then(
                 (response) => {
-                    if (response === "player") {
+                    if (response.winner === "player") {
                         playerOneWinsComparison([card1, card2]);
                         alert("You won - compared stat: " + stat);
-                    } else if (response === "opponent") {
+                    } else if (response.winner === "opponent") {
                         playerTwoWinsComparison([card1, card2]);
                         alert("Opponent won - compared stat: " + stat);
-                    } else if (response === "draw") {
+                    } else if (response.winner === "draw") {
                         drawOutcome([card1, card2]);
                         alert("Draw - compared stat: " + stat);
                     }
+                    // set a new token
+                    localStorage.setItem("token", response.token);
                 }
             );
         }, 1000);
