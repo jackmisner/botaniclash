@@ -5,8 +5,7 @@ export const HomePage = () => {
   return (
     <div className="home">
       <h1>Welcome to BotaniClash!</h1>
-      <Link to="/signup">Sign Up</Link>
-      <Link to="/login">Log In</Link>
+
       <Link to="/setupgame">Play game</Link>
     </div>
   );
