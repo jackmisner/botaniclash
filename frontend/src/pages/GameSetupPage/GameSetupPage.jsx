@@ -21,7 +21,7 @@ export const GameSetupPage = () => {
         setError("");
 
         // Get plants from API
-        const data = await getPlants();
+        const data = await getPlants(localStorage.getItem("token"));
         const cards = data.cards;
 
         // Prepare player and opponent hands
