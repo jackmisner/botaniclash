@@ -2,7 +2,7 @@ import "./StatHint.css";
 
 export const StatHint = ({ stat }) => {
   const stats = {
-    year: "Older plants beat newer plants",
+    year: "Older discoveries beat newer ones",
     light:
       "A lower light stat is better because it means your plant needs less light to thrive",
     ph_range:
