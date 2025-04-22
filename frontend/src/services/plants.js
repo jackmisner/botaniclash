@@ -2,7 +2,6 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const getPlants = async () => {
-  //add token back in later
   const requestOptions = {
     method: "GET",
     headers: {
@@ -24,8 +23,8 @@ export const postPlantForComparison = async (
   player_card_id,
   opponent_card_id,
   stat_to_compare,
+  // token,
 ) => {
-  // add token in later
   const cardData = {
     player_card: player_card_id,
     opponent_card: opponent_card_id,

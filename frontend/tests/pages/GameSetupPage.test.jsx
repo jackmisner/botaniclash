@@ -5,6 +5,19 @@ import { GameSetupPage } from "../../src/pages/GameSetupPage/GameSetupPage";
 import { vi } from "vitest";
 import { expect } from "chai";
 
+// Mock the image preloader service
+vi.mock("../../src/services/imagePreloader", () => ({
+  preloadPlantImages: vi.fn().mockImplementation((plants, progressCallback) => {
+    // Simulate progress by calling callback if provided
+    if (progressCallback) {
+      progressCallback(5, 10); // 50% progress
+      progressCallback(10, 10); // 100% progress
+    }
+    return Promise.resolve(true);
+  }),
+  getImageUrl: vi.fn().mockImplementation((url) => url || "fallback-image"),
+}));
+
 // Mock the CardContainer component
 vi.mock("../../src/components/CardContainer/CardContainer", () => ({
   CardContainer: ({

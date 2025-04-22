@@ -3,6 +3,12 @@ import { MemoryRouter } from "react-router-dom";
 import { Card } from "../../src/components/Card/Card";
 import { vi, expect } from "vitest";
 
+// Mock the image preloader service
+vi.mock("../../src/services/imagePreloader", () => ({
+  getImageUrl: vi.fn().mockImplementation((url, fallback) => url || fallback),
+  preloadPlantImages: vi.fn().mockResolvedValue(true),
+}));
+
 vi.mock("../../src/assets/plant-fallback.png", () => {
   return {
     default: "mocked-fallback-image-path",
@@ -64,6 +70,7 @@ describe("Card", () => {
     expect(pAveragePh.textContent).toBe("6.1");
   });
 
+  // Rest of the tests remain the same...
   test("onClick function is called when card is clicked", () => {
     const mockOnClick = vi.fn();
     const mockSetOpeningHand = vi.fn();
