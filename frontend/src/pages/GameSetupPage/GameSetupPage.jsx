@@ -27,7 +27,7 @@ export const GameSetupPage = () => {
 
                     // Get plants from API
                     const data = await getPlants(token);
-                    const cards = data.cards;
+                    const cards = data.data.cards;
                     console.log("data", data);
 
                     // Set a new token
