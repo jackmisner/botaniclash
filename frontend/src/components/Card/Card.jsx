@@ -2,6 +2,8 @@ import "./Card.css";
 import fallbackPlantImage from "../../assets/plant-fallback.png";
 import cardBackImage from "../../assets/card-back.png";
 import { getImageUrl } from "../../services/imagePreloader";
+import { StatHint } from "../StatHint/StatHint";
+import { useState } from "react";
 
 export const Card = ({
   plant,
@@ -11,10 +13,19 @@ export const Card = ({
   isCardInPlay,
   selectStat,
   opponentCardShow,
+  hints
 }) => {
   const onStatContainerClick = (event) => {
     selectStat(event.target.dataset["stat"]);
   };
+
+  const [stat, setStat] = useState("")
+  const onStatHover = (event) => {
+    setStat(event.target.dataset["stat"])
+  }
+  const onStatHoverLeave = () => {
+    setStat(null)
+  }
 
   // Get the appropriate image URL (using cached results if available)
   const imageUrl = getImageUrl(plant.image_url, fallbackPlantImage);
@@ -31,17 +42,17 @@ export const Card = ({
         <img className="card" src={cardBackImage} />
       ) : (
         <article
-          onClick={() => {
-            if (isTwoCardsChoice) {
-              // Only allow onClick if isTwoCardsChoice is true
-              onClick();
-              setOpeningHand((prev) => {
-                return [...prev, plant];
-              });
-            }
-          }}
-          className="card"
-          data-in-play={isCardInPlay ? "true" : "false"}
+        onClick={() => {
+          if (isTwoCardsChoice) {
+            // Only allow onClick if isTwoCardsChoice is true
+            onClick();
+            setOpeningHand((prev) => {
+              return [...prev, plant];
+            });
+          }
+        }}
+        className="card"
+        data-in-play={isCardInPlay ? "true" : "false"}
         >
           <p data-testid="common-name">{plant.common_name}</p>
           <p data-testid="scientific-name">{plant.scientific_name}</p>
@@ -50,7 +61,7 @@ export const Card = ({
             src={imageUrl}
             alt={plant.common_name}
             onError={handleImageError}
-          />
+            />
           <div
             className="year-container"
             data-stat="year"
@@ -59,7 +70,17 @@ export const Card = ({
                 onStatContainerClick(event);
               }
             }}
-          >
+            onMouseEnter={(event) => {
+              if (isCardInPlay && hints) {
+                onStatHover(event)
+              }
+            }}
+            onMouseLeave={() => {
+              if (isCardInPlay && hints) {
+                onStatHoverLeave()
+              }
+            }}
+            >
             <p data-testid="year-text">{plant.year}</p>
           </div>
           <div
@@ -70,7 +91,17 @@ export const Card = ({
                 onStatContainerClick(event);
               }
             }}
-          >
+            onMouseEnter={(event) => {
+              if (isCardInPlay && hints) {
+                onStatHover(event)
+              }
+            }}
+            onMouseLeave={() => {
+              if (isCardInPlay && hints) {
+                onStatHoverLeave()
+              }
+            }}
+            >
             <p data-testid="edible-text">{plant.edible ? "Yes" : "No"}</p>
           </div>
           <div
@@ -81,7 +112,17 @@ export const Card = ({
                 onStatContainerClick(event);
               }
             }}
-          >
+            onMouseEnter={(event) => {
+              if (isCardInPlay && hints) {
+                onStatHover(event)
+              }
+            }}
+            onMouseLeave={() => {
+              if (isCardInPlay && hints) {
+                onStatHoverLeave()
+              }
+            }}
+            >
             <p data-testid="average-ph-text">{plant.ph_levels.ph_range}</p>
           </div>
           <div
@@ -92,7 +133,17 @@ export const Card = ({
                 onStatContainerClick(event);
               }
             }}
-          >
+            onMouseEnter={(event) => {
+              if (isCardInPlay && hints) {
+                onStatHover(event)
+              }
+            }}
+            onMouseLeave={() => {
+              if (isCardInPlay && hints) {
+                onStatHoverLeave()
+              }
+            }}
+            >
             <p data-testid="light-text">{plant.light}</p>
           </div>
           <div
@@ -103,7 +154,17 @@ export const Card = ({
                 onStatContainerClick(event);
               }
             }}
-          >
+            onMouseEnter={(event) => {
+              if (isCardInPlay && hints) {
+                onStatHover(event)
+              }
+            }}
+            onMouseLeave={() => {
+              if (isCardInPlay && hints) {
+                onStatHoverLeave()
+              }
+            }}
+            >
             <p data-testid="nutrients-text">{plant.soil_nutriments}</p>
           </div>
           <div
@@ -114,11 +175,22 @@ export const Card = ({
                 onStatContainerClick(event);
               }
             }}
-          >
+            onMouseEnter={(event) => {
+              if (isCardInPlay && hints) {
+                onStatHover(event)
+              }
+            }}
+            onMouseLeave={() => {
+              if (isCardInPlay && hints) {
+                onStatHoverLeave()
+              }
+            }}
+            >
             <p data-testid="water-text">{plant.atmospheric_humidity}</p>
           </div>
         </article>
       )}
+      {hints && <StatHint stat={stat}></StatHint>}
     </>
   );
 };

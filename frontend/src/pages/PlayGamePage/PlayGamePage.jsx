@@ -5,6 +5,8 @@ import { useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
 import { preloadPlantImages } from "../../services/imagePreloader";
+import lightBulbOn from "../../assets/light-bulb-on.png"
+import lightBulbOff from "../../assets/light-bulb-off.png"
 
 export const PlayGamePage = () => {
     const location = useLocation();
@@ -20,6 +22,12 @@ export const PlayGamePage = () => {
     const [isPlayersTurn, setIsPlayersTurn] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingProgress, setLoadingProgress] = useState(0);
+    const [hintsOn, setHintsOn] = useState(true);
+
+    const toggleHints = () => {
+      setHintsOn(!hintsOn);
+
+    }
 
     // Preload all images when the component mounts
     useEffect(() => {
@@ -174,7 +182,10 @@ export const PlayGamePage = () => {
     }
 
     return (
-        <>
+        <div className="background-image">
+        <div className="hints-button-container" onClick={toggleHints}>
+          <img src={hintsOn? lightBulbOn : lightBulbOff}></img>
+        </div>
             {gameWinner && <h1>Winner --- {gameWinner}</h1>}
             {playerHand.length > 0 &&
                 opponentHand.length > 0 &&
@@ -196,6 +207,7 @@ export const PlayGamePage = () => {
                     isCardInPlay={true}
                     opponentCardShow={opponentCardShow}
                     selectStat={selectStat}
+                    hints={hintsOn}
                 />
             )}
             <div className="decks-in-hand-container">
@@ -212,6 +224,6 @@ export const PlayGamePage = () => {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 };

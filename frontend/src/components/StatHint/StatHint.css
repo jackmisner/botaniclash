@@ -1,0 +1,12 @@
+.popup {
+    position: absolute;
+    top: 45%;
+    left: 3px;
+    width: 180px;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }

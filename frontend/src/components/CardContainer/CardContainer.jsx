@@ -11,6 +11,7 @@ export const CardContainer = ({
     selectStat,
     opponentCardShow,
     cardsInPlay,
+    hints
 }) => {
     return (
         <div data-testid="cards-container" className="cards-container">
@@ -28,6 +29,7 @@ export const CardContainer = ({
                         selectStat={selectStat}
                         opponentCardShow={opponentCardShow}
                         cardsInPlay={cardsInPlay}
+                        hints={hints}
                     />
                 ))}
         </div>
