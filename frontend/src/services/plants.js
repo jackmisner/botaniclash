@@ -1,12 +1,11 @@
 // docs: https://vitejs.dev/guide/env-and-mode.html
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export const getPlants = async () => {
-  //add token back in later
+export const getPlants = async (token) => {
   const requestOptions = {
     method: "GET",
     headers: {
-      // Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -24,8 +23,8 @@ export const postPlantForComparison = async (
   player_card_id,
   opponent_card_id,
   stat_to_compare,
+  token,
 ) => {
-  // add token in later
   const cardData = {
     player_card: player_card_id,
     opponent_card: opponent_card_id,
@@ -35,7 +34,7 @@ export const postPlantForComparison = async (
   const requestOptions = {
     method: "POST",
     headers: {
-      // Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(cardData),
