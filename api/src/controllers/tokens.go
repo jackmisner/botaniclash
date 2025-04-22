@@ -10,7 +10,7 @@ import (
 )
 
 type CreateTokenRequestBody struct {
-	Username    string
+	Username string
 	Password string
 }
 
@@ -38,5 +38,5 @@ func CreateToken(ctx *gin.Context) {
 		SendInternalError(ctx, err)
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"token": token, "message": "OK"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "token": token})
 }
