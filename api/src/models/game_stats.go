@@ -6,7 +6,6 @@ import (
 
 type GameStats struct {
 	gorm.Model
-	ID 		   uint   `gorm:"primaryKey"`
 	UserID	   uint   `gorm:"not null"`
 	User       User   `gorm:"foreignKey:UserID"`
 	GamesPlayed   int    `gorm:"default:0"`
