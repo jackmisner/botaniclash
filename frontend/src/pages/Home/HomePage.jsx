@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 import "./HomePage.css";
 
 export const HomePage = () => {
@@ -8,7 +7,7 @@ export const HomePage = () => {
       <h1>Welcome to BotaniClash!</h1>
       <Link to="/signup">Sign Up</Link>
       <Link to="/login">Log In</Link>
-      <Link to="/setupgame">Setup game</Link>
+      <Link to="/setupgame">Play game</Link>
     </div>
   );
 };

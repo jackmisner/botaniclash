@@ -13,6 +13,8 @@ export const LoginPage = () => {
     try {
       const token = await login(username, password);
       localStorage.setItem("token", token);
+      // Dispatch custom event to notify Header component
+      window.dispatchEvent(new Event("authChange"));
       navigate("/");
     } catch (err) {
       console.error(err);
