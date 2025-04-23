@@ -5,7 +5,7 @@ import (
 	"github.com/makersacademy/go-react-acebook-template/api/src/controllers"
 )
 
-func GameStatsRoutes(baseRouter *gin.RouterGroup) {
+func setupGameStatsRoutes(baseRouter *gin.RouterGroup) {
 	gameStatsController := &controllers.GameStatsController{}
 	gameStats := baseRouter.Group("/game_stats")
 
