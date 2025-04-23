@@ -38,6 +38,7 @@ import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
 import { preloadPlantImages } from "../../services/imagePreloader";
 import lightBulbOn from "../../assets/light-bulb-on.png";
 import lightBulbOff from "../../assets/light-bulb-off.png";
+import { postWinner } from "../../services/userStats";
 
 export const PlayGamePage = () => {
   const location = useLocation();
@@ -138,7 +139,11 @@ export const PlayGamePage = () => {
   };
 
   const playerOneWinsComparison = (cards) => {
-    if (opponentHand.length === 0) setGameWinner("Player");
+    const token = localStorage.getItem("token");
+    if (opponentHand.length === 0) {
+      setGameWinner("Player1");
+      postWinner(token, "player");
+    }
 
     setPlayerHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -151,7 +156,12 @@ export const PlayGamePage = () => {
   };
 
   const playerTwoWinsComparison = (cards) => {
-    if (playerHand.length === 0) setGameWinner("Opponent");
+    const token = localStorage.getItem("token");
+
+    if (playerHand.length === 0) {
+      setGameWinner("Player2");
+      postWinner(token, "opponent");
+    }
 
     setOpponentHand((prev) => {
       const updatedCards = cards.map((card) => ({
