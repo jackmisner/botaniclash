@@ -88,7 +88,7 @@ func GetAllPlants(c *gin.Context) {
 type ComparisonSruct struct {
 	PlayerCard    uint   `json:"player_card"`
 	OpponentCard  uint   `json:"opponent_card"`
-	StatToCompare string `json:"stat_to_compare"`
+	StatToCompare *string `json:"stat_to_compare"`
 }
 
 // --------------- Compare player and opponent plants based on stat to compare and return the winner ----------------//
@@ -109,16 +109,18 @@ func ComparePlants(c *gin.Context) {
 	opponentPlant, _ := models.FetchPlantById(requestBody.OpponentCard)
 	
 	// Step 3: Checking if it is the user or computer's turn 
-	if statToCompare == "null" {
-		statToCompare = computerChooseCompetitiveStat(opponentPlant)
+	
+	if statToCompare == nil {
+		computerChoice := computerChooseCompetitiveStat(opponentPlant)
+		statToCompare = &computerChoice
 	}
 
 	// Step 4: Calculate who wins (or draws) using the helper function
-	winner := DeterminePlantWinner(playerPlant, opponentPlant, statToCompare)
+	winner := DeterminePlantWinner(playerPlant, opponentPlant, *statToCompare)
 
 	if winner == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error":       fmt.Sprintf("Invalid stat to compare: %s", statToCompare),
+			"error":       fmt.Sprintf("Invalid stat to compare: %s", *statToCompare),
 			"valid_stats": []string{"year", "light", "soil_nutriments", "atmospheric_humidity", "edible", "ph_range"},
 		})
 		return
