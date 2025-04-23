@@ -40,6 +40,8 @@ type PhLevels struct {
 	PhAverage float64 `json:"ph_average"`
 }
 
+// --------------- Fetch all plants from DB, shuffle them and return twenty random cards ----------------//
+
 func GetAllPlants(c *gin.Context) {
 	// Extract userID from the context (set by AuthenticationMiddleware)
 	val, _ := c.Get("userID")
@@ -91,8 +93,10 @@ func GetAllPlants(c *gin.Context) {
 type ComparisonSruct struct {
 	PlayerCard    uint   `json:"player_card"`
 	OpponentCard  uint   `json:"opponent_card"`
-	StatToCompare string `json:"stat_to_compare"`
+	StatToCompare *string `json:"stat_to_compare"`
 }
+
+// --------------- Compare player and opponent plants based on stat to compare and return the winner ----------------//
 
 func ComparePlants(c *gin.Context) {
 	// Extract userID from the context (set by AuthenticationMiddleware)
@@ -108,25 +112,37 @@ func ComparePlants(c *gin.Context) {
 	}
 	statToCompare := requestBody.StatToCompare
 
+	
 	// Step 2: Grabbing those plants from the DB
 	playerPlant, _ := models.FetchPlantById(requestBody.PlayerCard)
 	opponentPlant, _ := models.FetchPlantById(requestBody.OpponentCard)
+	
+	// Step 3: Checking if it is the user or computer's turn 
+	
+	if statToCompare == nil {
+		computerChoice := computerChooseCompetitiveStat(opponentPlant)
+		statToCompare = &computerChoice
+	}
 
-	// Step 3: Calculate who wins (or draws) using the helper function
-	winner := DeterminePlantWinner(playerPlant, opponentPlant, statToCompare)
+	// Step 4: Calculate who wins (or draws) using the helper function
+	winner := DeterminePlantWinner(playerPlant, opponentPlant, *statToCompare)
 
 	if winner == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error":       fmt.Sprintf("Invalid stat to compare: %s", statToCompare),
+			"error":       fmt.Sprintf("Invalid stat to compare: %s", *statToCompare),
 			"valid_stats": []string{"year", "light", "soil_nutriments", "atmospheric_humidity", "edible", "ph_range"},
 		})
 		return
 	}
 
+
 	// Step 4: Generate a new token for the user & send a response
 	token, _ := auth.GenerateToken(userID)
-	c.JSON(http.StatusOK, gin.H{"winner": winner, "token": token})
+	c.JSON(http.StatusOK, gin.H{"winner": winner, "compared_stat": statToCompare, "token": token})
+
 }
+
+// --------------- Compares two plants based on statToCompare and returns a string saying who has won ----------------//
 
 func DeterminePlantWinner(playerPlant, opponentPlant *models.Plant, statToCompare string) string {
 	if statToCompare == "edible" {
@@ -150,6 +166,94 @@ func DeterminePlantWinner(playerPlant, opponentPlant *models.Plant, statToCompar
 		}
 	} else {
 		// Convert snake_case (json) to PascalCase (needed for struct field access)
+		fieldName := convertSnakeToPascal(statToCompare)
+
+		playerValue := reflect.ValueOf(*playerPlant).FieldByName(fieldName)
+		opponentValue := reflect.ValueOf(*opponentPlant).FieldByName(fieldName)
+
+		if playerValue.Int() < opponentValue.Int() {
+			return "player"
+		} else if opponentValue.Int() < playerValue.Int() {
+			return "opponent"
+		} else {
+			return "draw"
+		}
+	}
+}
+
+// --------------- Choose a competitive stat to play if it is the computer's turn ----------------//
+
+func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
+	// Step 0: Create new rand to be used throughout function
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	// Step 1: Determine if plant is edible, if the plant is edible there is a random chance this will be the return value
+	if r.Intn(10) % 2 == 0 && opponentPlant.Edible  {
+			return "edible"	
+	}
+
+	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which has the lowest score 
+	fieldName, score := findLowestScore(opponentPlant)
+	
+	// Step 3: Calculate ph range, compare ph range to the result of findLowestScore to see which is the most competitive
+	phRange := opponentPlant.CalculatePhRange()
+
+	if phRange > 25 && score >= 5 {
+		return "ph_range"
+	} else if fieldName != "null" && score <= 5 {
+		return fieldName
+	}
+
+	// Step 4: Check if the value of year is competitive
+	if opponentPlant.Year <= 1753 {
+		return "year"
+	}
+
+	// Step 5: If all the comparisons fail a stat is returned at random
+	var randomValue string
+	possiblevalues := [6]string{"year", "edible", "light", "nutriments_required", "humidity_level", "ph_range"}
+	rand.Shuffle((3), func(i, j int) {
+		possiblevalues[i], possiblevalues[j] = possiblevalues[j], possiblevalues[i]
+	})
+
+	randomValue = possiblevalues[0]
+
+	return randomValue
+}
+
+
+// --------------- Find the value with the lowest score, returns the name and score of lowest value ----------------//
+
+func findLowestScore(opponent_card *models.Plant) (string, int) {
+	// Step 1: Define the name of the variables we want to return
+	var lowestFieldName string 
+	var fieldValue int
+
+	// Step 2: Create a map containing the three values we want to check
+	checkValues := make(map[string]int)
+
+	checkValues["light"] = opponent_card.Light
+	checkValues["soil_nutriments"] = opponent_card.SoilNutriments
+	checkValues["atmospheric_humidity"] = opponent_card.AtmosphericHumidity
+	
+	// Step 3: Loop through the map to find value with lowest score
+	for key, val := range checkValues {
+		if lowestFieldName == "" {
+			lowestFieldName = key
+			fieldValue = val
+		} else if val < checkValues[lowestFieldName]{
+			lowestFieldName = key
+			fieldValue = val
+		}
+	}  
+	
+	return lowestFieldName, fieldValue
+}
+
+// -- Converts snake case strings taken from JSON data into a format that can be used to index struct values using the reflect package ----------------//
+
+func convertSnakeToPascal(statToCompare string) string {
+		// Convert snake_case (json) to PascalCase (needed for struct field access)
 		fieldMap := map[string]string{
 			"year":                 "Year",
 			"light":                "Light",
@@ -165,15 +269,5 @@ func DeterminePlantWinner(playerPlant, opponentPlant *models.Plant, statToCompar
 			return "" // Invalid stat
 		}
 
-		playerValue := reflect.ValueOf(*playerPlant).FieldByName(fieldName)
-		opponentValue := reflect.ValueOf(*opponentPlant).FieldByName(fieldName)
-
-		if playerValue.Int() < opponentValue.Int() {
-			return "player"
-		} else if opponentValue.Int() < playerValue.Int() {
-			return "opponent"
-		} else {
-			return "draw"
-		}
-	}
+		return fieldName
 }

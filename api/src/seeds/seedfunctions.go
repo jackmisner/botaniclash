@@ -12,6 +12,7 @@ func SeedDatabase(db *gorm.DB) {
 
 	// Call all seed functions here
 	UserSeeds(db)
+	GameStatsSeeds(db)
 	PlantSeeds(db)
 }
 
@@ -24,6 +25,9 @@ func DropTablesIfExist(db *gorm.DB) {
 
 	// Drop plants table
 	db.Exec("DROP TABLE IF EXISTS plants")
+
+	// Drop game_stats table
+	db.Exec("DROP TABLE IF EXISTS game_stats")
 
 	// Drop users table
 	db.Exec("DROP TABLE IF EXISTS users CASCADE")

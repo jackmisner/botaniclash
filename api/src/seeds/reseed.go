@@ -30,5 +30,6 @@ func MigrateTables(db *gorm.DB) {
 	// Create tables for all models
 	db.AutoMigrate(&models.Plant{})
 	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.GameStats{})
 	// We can do plant_ownership later
 }

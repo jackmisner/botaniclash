@@ -32,12 +32,13 @@
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState, useEffect } from "react";
 import { postPlantForComparison } from "../../services/plants";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
 import { preloadPlantImages } from "../../services/imagePreloader";
 import lightBulbOn from "../../assets/light-bulb-on.png";
 import lightBulbOff from "../../assets/light-bulb-off.png";
+import { postWinner } from "../../services/userStats";
 
 export const PlayGamePage = () => {
   const location = useLocation();
@@ -54,7 +55,7 @@ export const PlayGamePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [hintsOn, setHintsOn] = useState(true);
-
+  console.log("gameWinner:", gameWinner);
   const toggleHints = () => {
     setHintsOn(!hintsOn);
   };
@@ -120,23 +121,6 @@ export const PlayGamePage = () => {
     setIsPlayersTurn((prev) => !prev);
   };
 
-  // const selectRandomStat = (latestCardsInPlay) => {
-  //   // Select random stat - computer turn
-  //   if (!isPlayersTurn) {
-  //     const POSSIBLE_STATS = [
-  //       "year",
-  //       "edible",
-  //       "ph_range",
-  //       "light",
-  //       "soil_nutriments",
-  //       "atmospheric_humidity",
-  //     ];
-  //     const randomStat =
-  //       POSSIBLE_STATS[Math.floor(Math.random() * POSSIBLE_STATS.length)];
-  //     selectStat(randomStat, latestCardsInPlay[0], latestCardsInPlay[1]);
-  //   }
-  // };
-
   const pickTopCards = async () => {
     if (playerHand.length === 0 || opponentHand.length === 0) return;
 
@@ -149,15 +133,17 @@ export const PlayGamePage = () => {
     setPlayerHand((prev) => prev.slice(1));
     setOpponentHand((prev) => prev.slice(1));
 
-    // Select random stat - computer turn
-    // selectRandomStat(latestCardsInPlay);
     if (!isPlayersTurn) {
       selectStat(null, latestCardsInPlay[0], latestCardsInPlay[1]);
     }
   };
 
   const playerOneWinsComparison = (cards) => {
-    if (opponentHand.length === 0) setGameWinner("Player1");
+    const token = localStorage.getItem("token");
+    if (opponentHand.length === 0) {
+      setGameWinner("Player");
+      postWinner(token, "player");
+    }
 
     setPlayerHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -170,7 +156,12 @@ export const PlayGamePage = () => {
   };
 
   const playerTwoWinsComparison = (cards) => {
-    if (playerHand.length === 0) setGameWinner("Player2");
+    const token = localStorage.getItem("token");
+
+    if (playerHand.length === 0) {
+      setGameWinner("Opponent");
+      postWinner(token, "opponent");
+    }
 
     setOpponentHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -203,49 +194,61 @@ export const PlayGamePage = () => {
     );
   }
 
-  return (
-    <div className="background-image">
-      <div className="hints-button-container" onClick={toggleHints}>
-        <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
+  return gameWinner ? (
+    <>
+      <h1>{gameWinner} wins!</h1>
+      <Link to="/setupgame" className="new-game-link">
+        New Game?
+      </Link>
+      <CardContainer
+        plants={gameWinner === "Player" ? playerHand : opponentHand}
+        opponentCardShow={true}
+      ></CardContainer>
+    </>
+  ) : (
+    <>
+      <div className="background-image">
+        <div className="hints-button-container" onClick={toggleHints}>
+          <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
+        </div>
+        {playerHand.length > 0 &&
+          opponentHand.length > 0 &&
+          cardsInPlay.length === 0 && (
+            <button
+              onClick={() => {
+                pickTopCards();
+                onClickNextRoundHandle();
+              }}
+              className="next-round-button"
+            >
+              Next Round
+            </button>
+          )}
+        {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
+        {cardsInPlay.length > 0 && (
+          <CardContainer
+            plants={cardsInPlay}
+            isCardInPlay={true}
+            opponentCardShow={opponentCardShow}
+            selectStat={selectStat}
+            hints={hintsOn}
+          />
+        )}
+        <div className="decks-in-hand-container">
+          {playerHand && playerHand.length > 0 && (
+            <div className="deck-cards">
+              <h1>Player Hand</h1>
+              <DeckInHand plants={playerHand} />
+            </div>
+          )}
+          {opponentHand && opponentHand.length > 0 && (
+            <div className="deck-cards">
+              <h1>Opponent Hand</h1>
+              <DeckInHand plants={opponentHand} />
+            </div>
+          )}
+        </div>
       </div>
-      {gameWinner && <h1>Winner --- {gameWinner}</h1>}
-      {playerHand.length > 0 &&
-        opponentHand.length > 0 &&
-        cardsInPlay.length === 0 && (
-          <button
-            onClick={() => {
-              pickTopCards();
-              onClickNextRoundHandle();
-            }}
-            className="next-round-button"
-          >
-            Next Round
-          </button>
-        )}
-      {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
-      {cardsInPlay.length > 0 && (
-        <CardContainer
-          plants={cardsInPlay}
-          isCardInPlay={true}
-          opponentCardShow={opponentCardShow}
-          selectStat={selectStat}
-          hints={hintsOn}
-        />
-      )}
-      <div className="decks-in-hand-container">
-        {playerHand && playerHand.length > 0 && (
-          <div className="deck-cards">
-            <h1>Player Hand</h1>
-            <DeckInHand plants={playerHand} />
-          </div>
-        )}
-        {opponentHand && opponentHand.length > 0 && (
-          <div className="deck-cards">
-            <h1>Opponent Hand</h1>
-            <DeckInHand plants={opponentHand} />
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 };
