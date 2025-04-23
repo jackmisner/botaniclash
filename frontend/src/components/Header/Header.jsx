@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import BotaniclashLogo from "/BotaniClashLogo.svg";
+import soundOff from "../../assets/soundOff.png"
+import soundOn from "../../assets/soundOn.png"
 import "./Header.css";
 
 const Header = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [sound, setSound] = useState(() => {
+    const saved = localStorage.getItem("sound");
+    localStorage.setItem("sound", true)
+    return saved === null ? true : saved === "true";
+  });
 
   useEffect(() => {
     // Initial check
@@ -32,6 +39,12 @@ const Header = () => {
     };
   }, []);
 
+  const toggleSound = () => {
+    const newSound = !sound;
+    setSound(newSound);
+    localStorage.setItem("sound", newSound);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setToken(null);
@@ -46,6 +59,9 @@ const Header = () => {
           <img src={BotaniclashLogo} alt="BotaniClash Logo" />
         </Link>
         <nav className="nav">
+        <div className="sound-toggle" onClick={toggleSound}>
+          <img src={sound ? soundOn : soundOff}></img>
+        </div>
           {!token && (
             <Link to="/signup" className="nav-link">
               Signup

@@ -40,6 +40,9 @@ import lightBulbOn from "../../assets/light-bulb-on.png";
 import lightBulbOff from "../../assets/light-bulb-off.png";
 import { postWinner } from "../../services/userStats";
 import { RoundWinner } from "../../components/RoundWinner/RoundWinner";
+import cardFlipSound from "../../assets/soundFX/show-card.mp3";
+import loseGameSound from "../../assets/soundFX/lose-game-sound.mp3";
+import winGameSound from "../../assets/soundFX/win-game-sound.mp3";
 
 export const PlayGamePage = () => {
     const location = useLocation();
@@ -57,6 +60,16 @@ export const PlayGamePage = () => {
     const [loadingProgress, setLoadingProgress] = useState(0);
     const [hintsOn, setHintsOn] = useState(true);
     const [roundWinner, setRoundWinner] = useState();
+
+    useEffect(() => {
+        if (gameWinner && localStorage.getItem("sound") === "true") {
+            const sound =
+                gameWinner === "Player" ? winGameSound : loseGameSound;
+            const audio = new Audio(sound);
+            audio.play();
+        }
+    }, [gameWinner]);
+    
 
     const ORIGINAL_STATS_NAMES = {
         year: "Discovery published in",
@@ -167,6 +180,9 @@ export const PlayGamePage = () => {
 
         if (!isPlayersTurn) {
             selectStat(null, latestCardsInPlay[0], latestCardsInPlay[1]);
+            if (localStorage.getItem("sound") === "true") 
+                {const audio = new Audio(cardFlipSound);
+            audio.play();}
         }
     };
 

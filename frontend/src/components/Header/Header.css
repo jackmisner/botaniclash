@@ -21,7 +21,6 @@
 
 .logo {
   position: relative;
-
   display: flex;
   left: 50%;
   transform: translateX(-50%);
@@ -79,6 +78,10 @@
   .logo img {
     height: 32px;
   }
+
+  .sound-toggle {
+    height: 50%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -99,4 +102,17 @@
     text-align: center;
     min-width: 100px;
   }
+}
+
+.sound-toggle img {
+  width: 25px;  /* or any size you prefer */
+  height: 25px;
+  cursor: pointer;
+}
+
+.sound-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
 }
