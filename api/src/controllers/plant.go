@@ -166,22 +166,23 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 	// Step 0:  We're going to be using random choice twice in this function so we set it up here
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	// Step 1: Determine if plant is edible, if the plant is edible there is a random chance this will be the return value
-	if opponentPlant.Edible {
-		if r.Intn(10) % 2 == 0 {
-			return "edible"
-		}
+	if r.Intn(10) % 2 == 0 && opponentPlant.Edible  {
+			return "edible"	
 	}
 	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which is the lowest and therefore most competitive 
 	lowestCompValueName := bestLow(opponentPlant)
+	fmt.Println("Here is lowestCompValueName: ", lowestCompValueName)
 	fieldName := convertSnakeToPascal(lowestCompValueName)
+	fmt.Println("Here is fieldName: ", fieldName)
 	lowestCompValue :=reflect.ValueOf(*opponentPlant).FieldByName(fieldName)
+	fmt.Println("Here is lowestCompValue: ", lowestCompValue)
 
 	// Step 3: Determine if the ph range is high enough to be competitive, if not the most competitive value from step 2 takes precedence
 	phRange := opponentPlant.CalculatePhRange()
 
 	if phRange > 25 && lowestCompValue.Int() >= 5 {
 		return "ph_range"
-	} else if lowestCompValueName != "null" {
+	} else if lowestCompValueName != "null" && lowestCompValue.Int() <= 5 {
 		return lowestCompValueName
 	}
 	// Step 4: Check if year is competitive, there is a random chance of it's being returned if so, otherwise return either ph range, light, soil nutriments or atmospheric humidity, depending on what was found the most competitive value 
@@ -201,28 +202,29 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 	return randomValue
 }
 
+// This function checks the three card fields that win by being lower than their opponent
+// It will return a string referring to the lowest (and therefore most competitive) value
 func bestLow(opponent_card *models.Plant) string {
+	// Step 1: Define the name of the varibale we want to return
 	var lowest string 
-	if opponent_card.Light < opponent_card.SoilNutriments && opponent_card.Light < opponent_card.AtmosphericHumidity {     
-		// checks if light is lowest value                  
-		lowest = "light"	
 
-	} else if opponent_card.SoilNutriments < opponent_card.Light && opponent_card.SoilNutriments < opponent_card.AtmosphericHumidity{ 
-		// checks if soil nutirments is lowest value       
-		lowest = "soil_nutriments"
+	// Step 2: Create a map containing the three values we want to check
+	checkValues := make(map[string]int)
 
-	} else if opponent_card.AtmosphericHumidity < opponent_card.SoilNutriments && opponent_card.AtmosphericHumidity < opponent_card.Light{   
-		// checks if atmospheric humidity is lowest value
-		lowest = "atmospheric_humidity"
-
-	} else if opponent_card.Light == opponent_card.SoilNutriments && opponent_card.Light == opponent_card.AtmosphericHumidity {
-		// Checks if all fields are equal, returns one randomly if they are all equal and lower than four
-		fields := [3]string{"light", "soil_nutriments", "atmospheric_humidity"} 
-		rand.Shuffle((3), func(i, j int) {
-			fields[i], fields[j] = fields[j], fields[i]
-		})
-		lowest = fields[0]   
-	}
+	checkValues["light"] = opponent_card.Light
+	checkValues["soil_nutriments"] = opponent_card.SoilNutriments
+	checkValues["atmospheric_humidity"] = opponent_card.AtmosphericHumidity
+	
+	// Step 3: Loop through the map to find the lowest value
+	// This method allows for situations in which all values are equal or 
+	// the two lowest values being the same
+	for key, val := range checkValues {
+		if lowest == "" {
+			lowest = key
+		} else if val < checkValues[lowest]{
+			lowest = key
+		}
+	}  
 
 	return lowest
 }
