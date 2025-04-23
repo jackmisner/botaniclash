@@ -44,7 +44,6 @@ Follow the instructions here: https://go.dev/doc/install
 ### Set up your project
 
 1. Have one team member fork this repository
-2. Rename the fork to `acebook-<team name>`
 3. Every team member clone the fork to their local machine
 4. Install dependencies for both the `frontend` and `api` applications:
    ```
@@ -63,13 +62,13 @@ Follow the instructions here: https://go.dev/doc/install
 
 7. Create your databases:
    ```
-   createdb acebook
-   createdb acebook_test
+   createdb botaniclash
+   createdb botaniclash_test
    ```
 
 ### Setting up environment variables.
 
-We need to create two `.env` files, one in the frontend and one in the api.
+We need to create two `.env` files, one in the frontend and one in the api (and also a .env.test file for the api)
 
 #### Frontend
 
