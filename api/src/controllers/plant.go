@@ -39,6 +39,8 @@ type PhLevels struct {
 	PhAverage float64 `json:"ph_average"`
 }
 
+// --------------- Fetch all plants from DB, shuffle them and return twenty random cards ----------------//
+
 func GetAllPlants(c *gin.Context) {
 	// Fetch all plants from the database
 	plants, err := models.FetchAllPlants()
@@ -89,6 +91,8 @@ type ComparisonSruct struct {
 	StatToCompare string `json:"stat_to_compare"`
 }
 
+// --------------- Compare player and opponent plants based on stat to compare and return the winner ----------------//
+
 func ComparePlants(c *gin.Context) {
 	// Step 1: Grabbing plant IDs & stat to compare
 	var requestBody ComparisonSruct
@@ -109,8 +113,6 @@ func ComparePlants(c *gin.Context) {
 		statToCompare = computerChooseCompetitiveStat(opponentPlant)
 	}
 
-	
-
 	// Step 4: Calculate who wins (or draws) using the helper function
 	winner := DeterminePlantWinner(playerPlant, opponentPlant, statToCompare)
 
@@ -124,6 +126,8 @@ func ComparePlants(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"winner": winner, "stat": statToCompare})
 }
+
+// --------------- Compares two plants based on statToCompare and returns a string saying who has won ----------------//
 
 func DeterminePlantWinner(playerPlant, opponentPlant *models.Plant, statToCompare string) string {
 	if statToCompare == "edible" {
@@ -162,31 +166,35 @@ func DeterminePlantWinner(playerPlant, opponentPlant *models.Plant, statToCompar
 	}
 }
 
+// --------------- Choose a competitive stat to play if it is the computer's turn ----------------//
+
 func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
-	// Step 0:  We're going to be using random choice twice in this function so we set it up here
+	// Step 0: Create new rand to be used throughout function
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	// Step 1: Determine if plant is edible, if the plant is edible there is a random chance this will be the return value
 	if r.Intn(10) % 2 == 0 && opponentPlant.Edible  {
 			return "edible"	
 	}
-	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which is the lowest and therefore most competitive 
-	fieldName, value := bestLow(opponentPlant)
-	
 
-	// Step 3: Determine if the ph range is high enough to be competitive, if not the most competitive value from step 2 takes precedence
+	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which has the lowest score 
+	fieldName, score := findLowestScore(opponentPlant)
+	
+	// Step 3: Calculate ph range, compare ph range to the result of findLowestScore to see which is the most competitive
 	phRange := opponentPlant.CalculatePhRange()
 
-	if phRange > 25 && value >= 5 {
+	if phRange > 25 && score >= 5 {
 		return "ph_range"
-	} else if fieldName != "null" && value <= 5 {
+	} else if fieldName != "null" && score <= 5 {
 		return fieldName
 	}
-	// Step 4: Check if year is competitive, there is a random chance of it's being returned if so, otherwise return either ph range, light, soil nutriments or atmospheric humidity, depending on what was found the most competitive value 
+
+	// Step 4: Check if the value of year is competitive
 	if opponentPlant.Year <= 1753 {
 		return "year"
 	}
 
-	// Step 5: If all the comaprisons fail then we just give up and pick something at random
+	// Step 5: If all the comparisons fail a stat is returned at random
 	var randomValue string
 	possiblevalues := [6]string{"year", "edible", "light", "nutriments_required", "humidity_level", "ph_range"}
 	rand.Shuffle((3), func(i, j int) {
@@ -198,10 +206,11 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 	return randomValue
 }
 
-// This function checks the three card fields that win by being lower than their opponent
-// It will return a string referring to the lowest (and therefore most competitive) value
-func bestLow(opponent_card *models.Plant) (string, int) {
-	// Step 1: Define the name of the varibale we want to return
+
+// --------------- Find the value with the lowest score, returns the name and score of lowest value ----------------//
+
+func findLowestScore(opponent_card *models.Plant) (string, int) {
+	// Step 1: Define the name of the variables we want to return
 	var lowestFieldName string 
 	var fieldValue int
 
@@ -212,9 +221,7 @@ func bestLow(opponent_card *models.Plant) (string, int) {
 	checkValues["soil_nutriments"] = opponent_card.SoilNutriments
 	checkValues["atmospheric_humidity"] = opponent_card.AtmosphericHumidity
 	
-	// Step 3: Loop through the map to find the lowest value
-	// This method allows for situations in which all values are equal or 
-	// the two lowest values being the same
+	// Step 3: Loop through the map to find value with lowest score
 	for key, val := range checkValues {
 		if lowestFieldName == "" {
 			lowestFieldName = key
@@ -224,9 +231,11 @@ func bestLow(opponent_card *models.Plant) (string, int) {
 			fieldValue = val
 		}
 	}  
-
+	
 	return lowestFieldName, fieldValue
 }
+
+// -- Converts snake case strings taken from JSON data into a format that can be used to index struct values using the reflect package ----------------//
 
 func convertSnakeToPascal(statToCompare string) string {
 		// Convert snake_case (json) to PascalCase (needed for struct field access)
