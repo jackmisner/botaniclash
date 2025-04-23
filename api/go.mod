@@ -1,6 +1,8 @@
 module github.com/makersacademy/go-react-acebook-template/api
 
-go 1.21.5
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/gin-contrib/cors v1.7.1
@@ -8,6 +10,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.10.0
+	golang.org/x/crypto v0.37.0
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.8
 )
@@ -41,11 +44,10 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.7.0 // indirect
-	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
-	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/sync v0.13.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/text v0.24.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
