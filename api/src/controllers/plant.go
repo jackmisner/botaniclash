@@ -170,20 +170,16 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 			return "edible"	
 	}
 	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which is the lowest and therefore most competitive 
-	lowestCompValueName := bestLow(opponentPlant)
-	fmt.Println("Here is lowestCompValueName: ", lowestCompValueName)
-	fieldName := convertSnakeToPascal(lowestCompValueName)
-	fmt.Println("Here is fieldName: ", fieldName)
-	lowestCompValue :=reflect.ValueOf(*opponentPlant).FieldByName(fieldName)
-	fmt.Println("Here is lowestCompValue: ", lowestCompValue)
+	fieldName, value := bestLow(opponentPlant)
+	
 
 	// Step 3: Determine if the ph range is high enough to be competitive, if not the most competitive value from step 2 takes precedence
 	phRange := opponentPlant.CalculatePhRange()
 
-	if phRange > 25 && lowestCompValue.Int() >= 5 {
+	if phRange > 25 && value >= 5 {
 		return "ph_range"
-	} else if lowestCompValueName != "null" && lowestCompValue.Int() <= 5 {
-		return lowestCompValueName
+	} else if fieldName != "null" && value <= 5 {
+		return fieldName
 	}
 	// Step 4: Check if year is competitive, there is a random chance of it's being returned if so, otherwise return either ph range, light, soil nutriments or atmospheric humidity, depending on what was found the most competitive value 
 	if opponentPlant.Year <= 1753 {
@@ -204,9 +200,10 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 
 // This function checks the three card fields that win by being lower than their opponent
 // It will return a string referring to the lowest (and therefore most competitive) value
-func bestLow(opponent_card *models.Plant) string {
+func bestLow(opponent_card *models.Plant) (string, int) {
 	// Step 1: Define the name of the varibale we want to return
-	var lowest string 
+	var lowestFieldName string 
+	var fieldValue int
 
 	// Step 2: Create a map containing the three values we want to check
 	checkValues := make(map[string]int)
@@ -219,14 +216,16 @@ func bestLow(opponent_card *models.Plant) string {
 	// This method allows for situations in which all values are equal or 
 	// the two lowest values being the same
 	for key, val := range checkValues {
-		if lowest == "" {
-			lowest = key
-		} else if val < checkValues[lowest]{
-			lowest = key
+		if lowestFieldName == "" {
+			lowestFieldName = key
+			fieldValue = val
+		} else if val < checkValues[lowestFieldName]{
+			lowestFieldName = key
+			fieldValue = val
 		}
 	}  
 
-	return lowest
+	return lowestFieldName, fieldValue
 }
 
 func convertSnakeToPascal(statToCompare string) string {
