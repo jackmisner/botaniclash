@@ -18,49 +18,49 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	// Setup the test database
+	// 1) Setup the test database
 	err := models_test.SetupTestDatabase()
 	if err != nil {
 		fmt.Println("Error setting up test database:", err)
 		os.Exit(1)
 	}
 
-	// Run the tests
+	// 2) Run the tests
 	code := m.Run()
 
-	// Cleanup the test database
+	// 3) Cleanup the test database
 	err = models_test.TeardownTestDatabase()
 	if err != nil {
 		fmt.Println("Error tearing down test database:", err)
 		os.Exit(1)
 	}
 
-	// Exit the tests
+	// 4) Exit the tests
 	os.Exit(code)
 }
 
+// Use the below test as a template for writing more tests (follow the same pattern)
 func TestGetAllPlants(t *testing.T) {
-	// Create a test Gin router
+	// ========= Part 1 - Set-up =========
+	// 1) Create a test Gin router
 	router := gin.Default()
 
-	// Setup route with authentication middleware
+	// 2) Setup route with authentication middleware
 	router.GET("/plants", middleware.AuthenticationMiddleware, controllers.GetAllPlants)
 
-	// Create a test user ID and generate JWT token
-	testUserID := "test-user-123"
+	// 3) Create a test user ID and generate JWT token
+	testUserID := "1"
 	token, err := auth.GenerateToken(testUserID)
 	assert.NoError(t, err, "Failed to generate token")
 
-	// Create a new HTTP request
+	// 4) Create a new HTTP request & add the JWT token to the Authorization header
 	req, _ := http.NewRequest("GET", "/plants", nil)
-
-	// Add the JWT token to the Authorization header
 	req.Header.Set("Authorization", "Bearer "+token)
 
-	// Create a new HTTP recorder
+	// 5) Create a new HTTP recorder
 	w := httptest.NewRecorder()
 
-	// Seed the database with some test plant data
+	// 6) Seed the database with some test plant data
 	plant1 := models.Plant{
 		CommonName:          "Alfalfa",
 		ScientificName:      "Medicago sativa",
@@ -88,12 +88,13 @@ func TestGetAllPlants(t *testing.T) {
 		AtmosphericHumidity: 4,
 	}
 
-	// Create the plants in the database
 	models.Database.Create(&plant1)
 	models.Database.Create(&plant2)
 
-	// Serve the request through the router, which will use the middleware
+	// 7) Serve the request through the router, which will use the middleware
 	router.ServeHTTP(w, req)
+
+	// ======= Part 2 - Assertions =======
 
 	// Check the response status code is 200
 	assert.Equal(t, http.StatusOK, w.Code, "GET /plants should return a 200 status code")

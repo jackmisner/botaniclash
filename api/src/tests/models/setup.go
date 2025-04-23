@@ -1,14 +1,23 @@
 package models_test
 
 import (
+	"os"
+
+	"github.com/joho/godotenv"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func SetupTestDatabase() error {
-	// Setup the postgres database connection string & connect to the database
-	connString := "postgres://lukehoweth:postgres@localhost:5432/botaniclash_test?sslmode=disable"
+	// Load environment variables from .env.test (from the root of api/)
+	err := godotenv.Load("../../../.env.test")
+	if err != nil {
+		return err
+	}
+
+	// Get the POSTGRES_URL from environment variables
+	connString := os.Getenv("POSTGRES_URL")
 	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
 	if err != nil {
 		return err
