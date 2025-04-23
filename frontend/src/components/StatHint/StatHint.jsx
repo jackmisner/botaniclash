@@ -1,3 +1,13 @@
+/**
+ * A component that displays a hint for a specific plant statistic.
+ * @component
+ * @param {Object} props - The component props
+ * @param {string} props.stat - The plant statistic key to display a hint for.
+ *                             Possible values: 'year', 'light', 'ph_range', 'soil_nutriments',
+ *                             'atmospheric_humidity', 'edible'
+ * @returns {JSX.Element} A div containing the hint text for the specified stat
+ */
+
 import "./StatHint.css";
 
 export const StatHint = ({ stat }) => {
