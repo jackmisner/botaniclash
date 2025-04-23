@@ -47,5 +47,4 @@ Currently, the seeding process populates the following tables:
 
 ## Notes
 
-- The trefle.io API token is hardcoded in the `plantseed.go` file. In a production environment, this should be stored in an environment variable.
 - The seeding process can take some time as it makes multiple API calls. 

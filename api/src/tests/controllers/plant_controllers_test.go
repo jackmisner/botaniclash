@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -127,4 +128,87 @@ func TestGetAllPlants(t *testing.T) {
 
 	assert.True(t, foundAlfalfa, "Response should include Alfalfa")
 	assert.True(t, foundHawthorn, "Response should include Hawthorn")
+}
+
+func TestComparePlants(t *testing.T) {
+	// ========= Part 1 - Set-up =========
+	// 1) Create a test Gin router
+	router := gin.Default()
+
+	// 2) Setup route with authentication middleware
+	router.POST("/plants", middleware.AuthenticationMiddleware, controllers.ComparePlants)
+
+	// 3) Create a test user ID and generate JWT token
+	testUserID := "1"
+	token, err := auth.GenerateToken(testUserID)
+	assert.NoError(t, err, "Failed to generate token")
+
+	// 4) Create two test plants with different stats
+	plant1 := models.Plant{
+		CommonName:          "Alfalfa",
+		ScientificName:      "Medicago sativa",
+		ImageUrl:            "https://example.com/alfalfa.jpg",
+		Year:                2020,
+		Observations:        "Test plant 1",
+		Edible:              true,
+		PhMinimum:           60,
+		PhMaximum:           80,
+		Light:               8,
+		SoilNutriments:      7,
+		AtmosphericHumidity: 5,
+	}
+	plant2 := models.Plant{
+		CommonName:          "Hawthorn",
+		ScientificName:      "Crataegus monogyna",
+		ImageUrl:            "https://example.com/hawthorn.jpg",
+		Year:                2022,
+		Observations:        "Test plant 2",
+		Edible:              true,
+		PhMinimum:           55,
+		PhMaximum:           75,
+		Light:               7,
+		SoilNutriments:      6,
+		AtmosphericHumidity: 4,
+	}
+
+	models.Database.Create(&plant1)
+	models.Database.Create(&plant2)
+
+	// 5) Create request body with plant IDs and stat to compare
+	requestBody := fmt.Sprintf(`{
+		"player_card": %d,
+		"opponent_card": %d,
+		"stat_to_compare": "light"
+	}`, plant1.ID, plant2.ID)
+
+	// 6) Create a new HTTP request & add the JWT token to the Authorization header
+	req, _ := http.NewRequest("POST", "/plants", strings.NewReader(requestBody))
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	// 7) Create a new HTTP recorder
+	w := httptest.NewRecorder()
+
+	// 8) Serve the request through the router
+	router.ServeHTTP(w, req)
+
+	// ======= Part 2 - Assertions =======
+	// Check the response status code is 200
+	assert.Equal(t, http.StatusOK, w.Code, "POST /plants should return a 200 status code")
+
+	// Parse the response
+	var response struct {
+		Winner string `json:"winner"`
+		Token  string `json:"token"`
+	}
+	err = json.NewDecoder(w.Body).Decode(&response)
+	assert.NoError(t, err)
+
+	// Based on our test data, plant1 has light=8 and plant2 has light=7
+	// According to the logic in DeterminePlantWinner, for "light" the lower value wins
+	// So we expect "opponent" (plant2) to win
+	assert.Equal(t, "opponent", response.Winner, "Expected opponent to win when comparing light stat (8 vs 7)")
+
+	// Check that a new token was provided
+	assert.NotEmpty(t, response.Token, "Response should include a new JWT token")
 }

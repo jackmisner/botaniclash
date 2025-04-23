@@ -19,6 +19,11 @@ the application works.
 
 https://trello.com/b/KIUyGIWL/botaniclash-board
 
+### Credits
+This project is set up to use data from Trefle, a plants API. See their website here: https://trefle.io/ 
+
+Thank you Trefle!
+
 ### Quickstart
 
 ### Install Node.js
@@ -79,12 +84,14 @@ VITE_BACKEND_URL="http://localhost:8082"
 ```
 
 #### Backend
+You'll need to sign up for a trefle account to get an API key. You must keep this private. Never put your key in any file outside the .env!
 
 Create a file `api/.env` with the following contents:
 
 ```
 POSTGRES_URL="postgresql://localhost:5432/botaniclash"
 JWT_SECRET="secret"
+TREFLE_API_TOKEN="your api token here"
 ```
 
 #### Backend Test Environment
