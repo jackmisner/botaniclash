@@ -32,7 +32,7 @@
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState, useEffect } from "react";
 import { postPlantForComparison } from "../../services/plants";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
 import { preloadPlantImages } from "../../services/imagePreloader";
@@ -120,23 +120,6 @@ export const PlayGamePage = () => {
     setIsPlayersTurn((prev) => !prev);
   };
 
-  // const selectRandomStat = (latestCardsInPlay) => {
-  //   // Select random stat - computer turn
-  //   if (!isPlayersTurn) {
-  //     const POSSIBLE_STATS = [
-  //       "year",
-  //       "edible",
-  //       "ph_range",
-  //       "light",
-  //       "soil_nutriments",
-  //       "atmospheric_humidity",
-  //     ];
-  //     const randomStat =
-  //       POSSIBLE_STATS[Math.floor(Math.random() * POSSIBLE_STATS.length)];
-  //     selectStat(randomStat, latestCardsInPlay[0], latestCardsInPlay[1]);
-  //   }
-  // };
-
   const pickTopCards = async () => {
     if (playerHand.length === 0 || opponentHand.length === 0) return;
 
@@ -149,8 +132,6 @@ export const PlayGamePage = () => {
     setPlayerHand((prev) => prev.slice(1));
     setOpponentHand((prev) => prev.slice(1));
 
-    // Select random stat - computer turn
-    // selectRandomStat(latestCardsInPlay);
     if (!isPlayersTurn) {
       selectStat(null, latestCardsInPlay[0], latestCardsInPlay[1]);
     }
@@ -208,7 +189,14 @@ export const PlayGamePage = () => {
       <div className="hints-button-container" onClick={toggleHints}>
         <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
       </div>
-      {gameWinner && <h1>Winner --- {gameWinner}</h1>}
+      {gameWinner && (
+        <>
+          <h1>Winner --- {gameWinner}</h1>
+          <Link to="/setupgame" className="nav-link">
+            New Game?
+          </Link>
+        </>
+      )}
       {playerHand.length > 0 &&
         opponentHand.length > 0 &&
         cardsInPlay.length === 0 && (
