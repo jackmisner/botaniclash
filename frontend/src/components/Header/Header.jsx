@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import BotaniclashLogo from "/BotaniClashLogo.svg";
 import soundOff from "../../assets/soundOff.png"
 import soundOn from "../../assets/soundOn.png"
+import clickSound from "../../assets/soundFX/mouse-click.mp3"
 import "./Header.css";
 
 const Header = () => {
@@ -50,7 +51,20 @@ const Header = () => {
     setToken(null);
     // Dispatch custom event to notify other components
     window.dispatchEvent(new Event("authChange"));
+    if (localStorage.getItem("sound") === "true") {
+      const click = new Audio(clickSound);
+      click.volume = 0.3;
+      click.play();
+    }
   };
+
+  const playClickSound = () => {
+    if (localStorage.getItem("sound") === "true") {
+      const click = new Audio(clickSound);
+      click.volume = 0.3;
+      click.play();
+    }
+  }
 
   return (
     <>
@@ -63,12 +77,12 @@ const Header = () => {
           <img src={sound ? soundOn : soundOff}></img>
         </div>
           {!token && (
-            <Link to="/signup" className="nav-link">
+            <Link to="/signup" className="nav-link" onClick={playClickSound}>
               Signup
             </Link>
           )}
           {!token && (
-            <Link to="/login" className="nav-link">
+            <Link to="/login" className="nav-link" onClick={playClickSound}>
               Login
             </Link>
           )}

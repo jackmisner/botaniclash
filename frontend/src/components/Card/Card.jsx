@@ -20,6 +20,7 @@ import cardBackImage from "../../assets/card-back.png";
 import { getImageUrl } from "../../services/imagePreloader";
 import { StatHint } from "../StatHint/StatHint";
 import { useState } from "react";
+import clickSound from "../../assets/soundFX/mouse-click.mp3"
 
 // Helper component for stat containers
 const StatContainer = ({
@@ -36,6 +37,11 @@ const StatContainer = ({
   const handleClick = (event) => {
     if (isCardInPlay) {
       selectStat(event.target.dataset["stat"]);
+      if (localStorage.getItem("sound") === "true") {
+        const click = new Audio(clickSound);
+        click.volume = 0.3;
+        click.play();
+      }
     }
   };
 
@@ -146,7 +152,8 @@ export const Card = ({
       value: plant.atmospheric_humidity,
     },
   ];
-
+  // add 'if opponent card show', reduce width of card back to 0 and increase 
+  // width of card front to 100% with transition ease
   return (
     <>
       {plant.owner.trim() === "opponent" && !opponentCardShow ? (

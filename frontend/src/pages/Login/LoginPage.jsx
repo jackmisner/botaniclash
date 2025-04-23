@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../LoginSignupPage.css";
 import { login } from "../../services/authentication";
+import clickSound from "../../assets/soundFX/mouse-click.mp3"
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -19,6 +20,11 @@ export const LoginPage = () => {
     } catch (err) {
       console.error(err);
       navigate("/login");
+    }
+    if (localStorage.getItem("sound") === "true") {
+      const click = new Audio(clickSound);
+      click.volume = 0.3;
+      click.play();
     }
   };
 

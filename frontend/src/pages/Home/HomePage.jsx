@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./HomePage.css";
+import clickSound from "../../assets/soundFX/mouse-click.mp3"
 
 export const HomePage = () => {
   const [token, setToken] = useState();
@@ -31,17 +32,25 @@ export const HomePage = () => {
     };
   }, []);
 
+  const playClickSound = () => {
+    if (localStorage.getItem("sound") === "true") {
+      const click = new Audio(clickSound);
+      click.volume = 0.3;
+      click.play();
+    }
+  }
+
   return (
     <div className="home">
       <h1>Welcome to BotaniClash!</h1>
       <div className="homepage-nav">
         {token && (
-          <Link to="/setupgame" className="homepage-nav-link">
+          <Link to="/setupgame" className="homepage-nav-link" onClick={playClickSound}>
             Play game
           </Link>
         )}
 
-        <Link to="/leaderboard" className="homepage-nav-link">
+        <Link to="/leaderboard" className="homepage-nav-link" onClick={playClickSound}>
           Leaderboard
         </Link>
       </div>
