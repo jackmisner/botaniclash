@@ -14,7 +14,7 @@ export const LeaderboardPage = () => {
     },
     {
       Username: "Alec",
-      GamesPlayed: 19,
+      GamesPlayed: 20,
       GamesWon: 14,
     },
     {
