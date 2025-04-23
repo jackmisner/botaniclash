@@ -138,7 +138,7 @@ func ComparePlants(c *gin.Context) {
 
 	// Step 4: Generate a new token for the user & send a response
 	token, _ := auth.GenerateToken(userID)
-	c.JSON(http.StatusOK, gin.H{"winner": winner, "token": token})
+	c.JSON(http.StatusOK, gin.H{"winner": winner, "compared_stat": statToCompare, "token": token})
 
 }
 
