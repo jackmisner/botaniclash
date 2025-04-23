@@ -1,57 +1,72 @@
 package models
 
-import("gorm.io/gorm")
+import (
+	"errors"
+	"gorm.io/gorm"
+)
+
 type GameStats struct {
-	UserID      uint   `json:"user_id"`
-	Username    string `json:"username"`
-	GamesPlayed int    `json:"games_played"`
-	GamesWon    int    `json:"games_won"`
+	gorm.Model
+	UserID      uint   `gorm:"not null"`
+	User        User   `gorm:"foreignKey:UserID"`
+	GamesPlayed int    `gorm:"default:0"`
+	GamesWon    int    `gorm:"default:0"`
+	GamesLost   int    `gorm:"default:0"`
+	TotalScore  int    `gorm:"default:0"`
 }
 
-// Updates the game statistics for a user based on the result of a game
-func UpdateGameStatsBasedOnResult(userID uint, isWin bool) error {
-	// Declare a variable to hold the user's game statistics
-	var stats GameStats
+func CreateGameStats(userID uint) (*GameStats, error) {
+	gameStats := &GameStats{UserID: userID}
+	if err := Database.Create(gameStats).Error; err != nil {
+		return nil, err
+	}
+	return gameStats, nil
+}
 
-	// Retrieve the game statistics for the user from the database
-	if err := Database.Where("user_id = ?", userID).First(&stats).Error; err != nil {
-		// Return an error if the user's statistics cannot be found
-		return err
+func GetGameStatsByUserID(userID uint) (*GameStats, error) {
+	var gameStats GameStats
+	if err := Database.Where("user_id = ?", userID).First(&gameStats).Error; err != nil {
+		return nil, err
+	}
+	return &gameStats, nil
+}
+
+func UpdateGameStats(userID uint, gamesPlayed, gamesWon, gamesLost, totalScore int) (*GameStats, error) {
+	var gamestats GameStats
+
+	if err := Database.Where("user_id = ?", userID).First(&gamestats).Error; err != nil {
+		return nil, err
 	}
 
-	// Prepare a map of updates to apply to the game statistics
 	updates := map[string]interface{}{
-		"games_played": gorm.Expr("games_played + 1"), // Increment the games played count
-	}
-	if isWin {
-		// If the user won, increment the games won count
-		updates["games_won"] = gorm.Expr("games_won + 1")
+		"games_played": gorm.Expr("games_played + ?", gamesPlayed),
+		"games_won":    gorm.Expr("games_won + ?", gamesWon),
+		"games_lost":   gorm.Expr("games_lost + ?", gamesLost),
+		"total_score":  gorm.Expr("total_score + ?", totalScore),
 	}
 
-	// Apply the updates to the user's game statistics in the database
-	return Database.Model(&stats).Updates(updates).Error
+	if err := Database.Model(&gamestats).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+
+	return &gamestats, nil
 }
 
-// Retrieves all game statistics, including usernames, from the database
+func DeleteGameStats(userID uint) error {
+	result := Database.Where("user_id = ?", userID).Delete(&GameStats{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return errors.New("no game stats found for the given user ID")
+	}
+	return nil
+}
+
 func GetAllGameStats() ([]GameStats, error) {
-	// Declare a slice to hold the results
-	var results []GameStats
-
-	// Query the database to join game statistics with user information
-	err := Database.Table("game_stats").
-		Select("game_stats.user_id, users.username, game_stats.games_played, game_stats.games_won"). // Select relevant fields
-		Joins("JOIN users ON users.id = game_stats.user_id"). // Join with the users table to get usernames
-		Scan(&results).Error // Scan the results into the slice
-
-	// Return the results and any error encountered
-	return results, err
-}
-
-// Creates a new game statistics record for a new user
-func CreateGameStatsForNewUser(userID uint) error {
-	// Create a new GameStats instance with the provided user ID
-	stats := &GameStats{UserID: userID}
-
-	// Insert the new game statistics record into the database
-	return Database.Create(stats).Error
+	var gameStats []GameStats
+	if err := Database.Find(&gameStats).Error; err != nil {
+		return nil, err
+	}
+	return gameStats, nil
 }

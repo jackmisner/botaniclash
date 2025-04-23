@@ -2,48 +2,94 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
-	"github.com/makersacademy/go-react-acebook-template/api/src/utils"
 )
 
-type GameStatsController struct{} // Define an empty struct to act as the controller for game stats
+type GameStatsController struct{} //empty struct to handle the controller methods
 
-// UpdateStatsBasedOnGameResult handles updating game stats based on the game result
-func (g *GameStatsController) UpdateStatsBasedOnGameResult(ctx *gin.Context) {
-	userID, err := utils.GetUserIDFromJWT(ctx) // Extract the user ID from the JWT in the request
-	if err != nil { // If there's an error extracting the user ID
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or missing JWT"}) // Respond with an unauthorized error
-		return // Exit the function
+func (g *GameStatsController) CreateGameStats(ctx *gin.Context) {
+	var input struct {
+		UserID uint `json:"user_id" binding:"required"`
 	}
 
-	var input struct { // Define a struct to parse the JSON input
-		Winner string `json:"winner" binding:"required"` // Expect a "winner" field in the JSON input
-	}
-	// Bind the JSON input to the struct and validate the "winner" field
-	if err := ctx.ShouldBindJSON(&input); err != nil || (input.Winner != "player" && input.Winner != "opponent") {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid winner"}) // Respond with a bad request error if validation fails
-		return // Exit the function
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	isWin := input.Winner == "player" // Determine if the player won based on the "winner" field
-	// Update the game stats in the database based on the result
-	err = models.UpdateGameStatsBasedOnResult(userID, isWin)
-	if err != nil { // If there's an error updating the stats
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()}) // Respond with an internal server error
-		return // Exit the function
+	gameStats, err := models.CreateGameStats(input.UserID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "Game stats updated"}) // Respond with a success message
+	ctx.JSON(http.StatusCreated, gin.H{"game_stats": gameStats})
 }
 
-// GetAllGameStats handles retrieving all game stats
-func (g *GameStatsController) GetAllGameStats(ctx *gin.Context) {
-	stats, err := models.GetAllGameStats() // Fetch all game stats from the database
-	if err != nil { // If there's an error fetching the stats
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()}) // Respond with an internal server error
-		return // Exit the function
+func (g *GameStatsController) GetGameStatsByUserID(ctx *gin.Context) {
+	userID, err := strconv.ParseUint(ctx.Param("user_id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID must be a number"})
+		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"game_stats": stats}) // Respond with the retrieved game stats
+	gameStats, err := models.GetGameStatsByUserID(uint(userID))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "GameStats not found"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"game_stats": gameStats})
+}
+
+func (g *GameStatsController) UpdateGameStats(ctx *gin.Context) {
+	userID, err := strconv.ParseUint(ctx.Param("user_id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID must be a number"})
+		return
+	}
+
+	var input struct {
+		GamesPlayed int `json:"games_played"`
+		GamesWon    int `json:"games_won"`
+		GamesLost   int `json:"games_lost"`
+		TotalScore  int `json:"total_score"`
+	}
+
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	gameStats, err := models.UpdateGameStats(uint(userID), input.GamesPlayed, input.GamesWon, input.GamesLost, input.TotalScore)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"game_stats": gameStats})
+}
+
+func (g *GameStatsController) DeleteGameStats(ctx *gin.Context) {
+	userID, err := strconv.ParseUint(ctx.Param("user_id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID must be a number"})
+		return
+	}
+
+	err = models.DeleteGameStats(uint(userID))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "GameStats not found"})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, gin.H{"message": "GameStats deleted successfully"})
+}
+
+func (g *GameStatsController) GetAllGameStats(ctx *gin.Context) {
+	gameStats, err := models.GetAllGameStats()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"game_stats": gameStats})
 }
