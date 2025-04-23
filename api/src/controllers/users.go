@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
 )
 
 func CreateUser(ctx *gin.Context) {
@@ -21,6 +22,9 @@ func CreateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Must supply username and password"})
 		return
 	}
+
+	// Hash the password before saving
+	newUser.Password = passwordhashing.HashPassword(newUser.Password)
 
 	savedUser, err := newUser.Save()
 	if err != nil {

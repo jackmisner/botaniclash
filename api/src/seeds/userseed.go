@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,7 @@ import (
 func UserSeeds(db *gorm.DB) {
 	fmt.Println("Seeding users...")
 
-	// sample users
+	// sample users with plain text passwords
 	users := []models.User{
 		{Username: "luke", Password: "password123"},
 		{Username: "imogen", Password: "password123"},
@@ -25,8 +26,11 @@ func UserSeeds(db *gorm.DB) {
 		{Username: "testuser", Password: "password123"},
 	}
 
-	// Insert the users into the database using Gorm
+	// Insert the users into the database with hashed passwords
 	for i, user := range users {
+		// Hash the password before saving
+		user.Password = passwordhashing.HashPassword(user.Password)
+
 		result := db.Create(&user)
 		if result.Error != nil {
 			fmt.Printf("Error creating user %s: %v\n", user.Username, result.Error)
