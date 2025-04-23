@@ -58,6 +58,15 @@ export const PlayGamePage = () => {
     const [hintsOn, setHintsOn] = useState(true);
     const [roundWinner, setRoundWinner] = useState();
 
+    const ORIGINAL_STATS_NAMES = {
+        year: "Discovery published in",
+        edible: "edible",
+        ph_range: "Soil pH range",
+        light: "Light Level",
+        soil_nutriments: "Nutrients required",
+        atmospheric_humidity: "Humidity Level",
+    };
+
     const toggleHints = () => {
         setHintsOn(!hintsOn);
     };
@@ -110,13 +119,23 @@ export const PlayGamePage = () => {
                 (response) => {
                     if (response.winner === "player") {
                         playerOneWinsComparison([card1, card2]);
-                        setRoundWinner("Player wins");
+
+                        setRoundWinner([
+                            "Player wins stat compared: ",
+                            ORIGINAL_STATS_NAMES[response.compared_stat],
+                        ]);
                     } else if (response.winner === "opponent") {
                         playerTwoWinsComparison([card1, card2]);
-                        setRoundWinner("Opponent wins");
+                        setRoundWinner([
+                            "Opponent wins stat compared: ",
+                            ORIGINAL_STATS_NAMES[response.compared_stat],
+                        ]);
                     } else if (response.winner === "draw") {
                         drawOutcome([card1, card2]);
-                        setRoundWinner("Draw");
+                        setRoundWinner([
+                            "Draw stat compared: ",
+                            ORIGINAL_STATS_NAMES[response.compared_stat],
+                        ]);
                     }
                     // set a new token
                     localStorage.setItem("token", response.token);

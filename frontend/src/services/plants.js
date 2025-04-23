@@ -49,5 +49,10 @@ export const postPlantForComparison = async (
     }
     const jsonResponse = await response.json();
     // jsonResponse.winner
-    return { winner: jsonResponse.winner, token: jsonResponse.token };
+
+    return {
+        winner: jsonResponse.winner,
+        token: jsonResponse.token,
+        compared_stat: jsonResponse.compared_stat,
+    };
 };
