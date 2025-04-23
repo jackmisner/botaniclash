@@ -1,9 +1,15 @@
-#root {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+@font-face {
+  font-family: WonderLight;
+  src: url(../../../src/assets/Font/Wonder-Light.otf);
+}
 
-    margin: 0;
-    text-align: center;
+#root {
+  font-family: wonderlight, sans-serif;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin: 0;
+  text-align: center;
 }

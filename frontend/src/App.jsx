@@ -6,6 +6,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { SignupPage } from "./pages/Signup/SignupPage";
 import { PlayGamePage } from "./pages/PlayGamePage/PlayGamePage";
 import { GameSetupPage } from "./pages/GameSetupPage/GameSetupPage";
+import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage";
 import Layout from "../src/components/Header/Layout";
 
 // Root layout component that uses your Layout wrapper
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/setupgame",
         element: <GameSetupPage />,
+      },
+      {
+        path: "/leaderboard",
+        element: <LeaderboardPage />,
       },
     ],
   },
