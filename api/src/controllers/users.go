@@ -21,8 +21,17 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	_, err = newUser.Save()
+	savedUser, err := newUser.Save()
 	if err != nil {
+		SendInternalError(ctx, err)
+		return
+	}
+
+	gameStats := models.GameStats{
+		UserID:   savedUser.ID,
+		Username: savedUser.Username,
+	}
+	if err := models.Database.Create(&gameStats).Error; err != nil {
 		SendInternalError(ctx, err)
 		return
 	}
