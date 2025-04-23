@@ -34,7 +34,7 @@ describe("Plants API Functions", () => {
       // Mock fetch response
       global.fetch.mockResolvedValueOnce({
         status: 200,
-        json: async () => mockPlants,
+        json: async () => ({ data: mockPlants, token: mockToken }),
       });
 
       // Call the function with token
@@ -50,7 +50,7 @@ describe("Plants API Functions", () => {
           },
         }),
       );
-      expect(result).toEqual(mockPlants);
+      expect(result).toEqual({ data: mockPlants, token: mockToken });
     });
 
     it("should throw an error when fetch fails", async () => {
@@ -78,7 +78,7 @@ describe("Plants API Functions", () => {
       // Mock fetch response
       global.fetch.mockResolvedValueOnce({
         status: 200,
-        json: async () => ({ winner: expectedWinner }),
+        json: async () => ({ winner: expectedWinner, token: mockToken }),
       });
 
       // Call the function with token
@@ -105,7 +105,10 @@ describe("Plants API Functions", () => {
           }),
         },
       );
-      expect(result).toEqual(expectedWinner);
+      expect(result).toEqual({
+        winner: expectedWinner,
+        token: mockToken,
+      });
     });
 
     it("should throw an error when comparison post fails", async () => {

@@ -1,3 +1,34 @@
+/**
+ * A React component that implements the main game play interface.
+ *
+ * @component
+ * @description
+ * Manages the game state including player hands, cards in play, turns, and game winner.
+ * Handles card comparison logic, turn switching, and image preloading for smooth gameplay.
+ *
+ * @example
+ * return (
+ *   <PlayGamePage />
+ * )
+ *
+ * @requires {Component} CardContainer - Component for displaying cards in play
+ * @requires {Component} DeckInHand - Component for displaying player's deck
+ * @requires {Function} postPlantForComparison - API service for comparing plants
+ * @requires {Function} preloadPlantImages - Utility for preloading plant images
+ *
+ * @state {Array} playerHand - Current cards in player's hand
+ * @state {Array} opponentHand - Current cards in opponent's hand
+ * @state {Array} cardsInPlay - Cards currently being compared
+ * @state {string} gameWinner - Stores the winner of the game
+ * @state {boolean} opponentCardShow - Controls visibility of opponent's card
+ * @state {boolean} isPlayersTurn - Tracks whose turn it is
+ * @state {boolean} isLoading - Indicates if assets are still loading
+ * @state {number} loadingProgress - Tracks image loading progress
+ * @state {boolean} hintsOn - Controls visibility of gameplay hints
+ *
+ * @returns {JSX.Element} A game interface with card comparison and deck management
+ */
+
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState, useEffect } from "react";
 import { postPlantForComparison } from "../../services/plants";
@@ -5,6 +36,8 @@ import { useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
 import { preloadPlantImages } from "../../services/imagePreloader";
+import lightBulbOn from "../../assets/light-bulb-on.png";
+import lightBulbOff from "../../assets/light-bulb-off.png";
 
 export const PlayGamePage = () => {
   const location = useLocation();
@@ -20,6 +53,11 @@ export const PlayGamePage = () => {
   const [isPlayersTurn, setIsPlayersTurn] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [hintsOn, setHintsOn] = useState(true);
+
+  const toggleHints = () => {
+    setHintsOn(!hintsOn);
+  };
 
   // Preload all images when the component mounts
   useEffect(() => {
@@ -54,19 +92,24 @@ export const PlayGamePage = () => {
 
   const selectStat = (stat, card1 = cardsInPlay[0], card2 = cardsInPlay[1]) => {
     setOpponentCardShow(true);
+    const token = localStorage.getItem("token");
     setTimeout(() => {
-      postPlantForComparison(card1.id, card2.id, stat).then((response) => {
-        if (response === "player") {
-          playerOneWinsComparison([card1, card2]);
-          alert("You won - compared stat: " + stat);
-        } else if (response === "opponent") {
-          playerTwoWinsComparison([card1, card2]);
-          alert("Opponent won - compared stat: " + stat);
-        } else if (response === "draw") {
-          drawOutcome([card1, card2]);
-          alert("Draw - compared stat: " + stat);
-        }
-      });
+      postPlantForComparison(card1.id, card2.id, stat, token).then(
+        (response) => {
+          if (response.winner === "player") {
+            playerOneWinsComparison([card1, card2]);
+            alert("You won - compared stat: " + stat);
+          } else if (response.winner === "opponent") {
+            playerTwoWinsComparison([card1, card2]);
+            alert("Opponent won - compared stat: " + stat);
+          } else if (response.winner === "draw") {
+            drawOutcome([card1, card2]);
+            alert("Draw - compared stat: " + stat);
+          }
+          // set a new token
+          localStorage.setItem("token", response.token);
+        },
+      );
     }, 1000);
   };
 
@@ -77,22 +120,22 @@ export const PlayGamePage = () => {
     setIsPlayersTurn((prev) => !prev);
   };
 
-  const selectRandomStat = (latestCardsInPlay) => {
-    // Select random stat - computer turn
-    if (!isPlayersTurn) {
-      const POSSIBLE_STATS = [
-        "year",
-        "edible",
-        "ph_range",
-        "light",
-        "soil_nutriments",
-        "atmospheric_humidity",
-      ];
-      const randomStat =
-        POSSIBLE_STATS[Math.floor(Math.random() * POSSIBLE_STATS.length)];
-      selectStat(randomStat, latestCardsInPlay[0], latestCardsInPlay[1]);
-    }
-  };
+  // const selectRandomStat = (latestCardsInPlay) => {
+  //   // Select random stat - computer turn
+  //   if (!isPlayersTurn) {
+  //     const POSSIBLE_STATS = [
+  //       "year",
+  //       "edible",
+  //       "ph_range",
+  //       "light",
+  //       "soil_nutriments",
+  //       "atmospheric_humidity",
+  //     ];
+  //     const randomStat =
+  //       POSSIBLE_STATS[Math.floor(Math.random() * POSSIBLE_STATS.length)];
+  //     selectStat(randomStat, latestCardsInPlay[0], latestCardsInPlay[1]);
+  //   }
+  // };
 
   const pickTopCards = async () => {
     if (playerHand.length === 0 || opponentHand.length === 0) return;
@@ -107,7 +150,10 @@ export const PlayGamePage = () => {
     setOpponentHand((prev) => prev.slice(1));
 
     // Select random stat - computer turn
-    selectRandomStat(latestCardsInPlay);
+    // selectRandomStat(latestCardsInPlay);
+    if (!isPlayersTurn) {
+      selectStat(null, latestCardsInPlay[0], latestCardsInPlay[1]);
+    }
   };
 
   const playerOneWinsComparison = (cards) => {
@@ -158,7 +204,10 @@ export const PlayGamePage = () => {
   }
 
   return (
-    <>
+    <div className="background-image">
+      <div className="hints-button-container" onClick={toggleHints}>
+        <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
+      </div>
       {gameWinner && <h1>Winner --- {gameWinner}</h1>}
       {playerHand.length > 0 &&
         opponentHand.length > 0 &&
@@ -180,6 +229,7 @@ export const PlayGamePage = () => {
           isCardInPlay={true}
           opponentCardShow={opponentCardShow}
           selectStat={selectStat}
+          hints={hintsOn}
         />
       )}
       <div className="decks-in-hand-container">
@@ -196,6 +246,6 @@ export const PlayGamePage = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };

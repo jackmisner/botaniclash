@@ -1,0 +1,22 @@
+.stat-hint {
+  position: absolute;
+  background-color: #f1dcac;
+  color: #543c24;
+  border: 1px solid #67733e;
+  border-radius: 6px;
+  padding: 8px;
+  width: 220px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none;
+  bottom: 100%; /* Position above the container */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  margin-bottom: 5px; /* Small gap between hint and container */
+}
+
+.stat-hint p {
+  margin: 0;
+}

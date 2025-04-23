@@ -1,3 +1,34 @@
+/**
+ * GameSetupPage component handles the initial game setup process, including card distribution and player hand selection.
+ *
+ * @component
+ * @example
+ * <GameSetupPage />
+ *
+ * @returns {JSX.Element} A React component that renders the game setup interface
+ *
+ * The component manages several states:
+ * - playerInitialTenCards: Array of cards initially dealt to player
+ * - opponentHand: Array of cards dealt to opponent
+ * - twoCardsChoice: Array of two cards currently being presented for selection
+ * - playerHand: Array of cards selected by player
+ * - isLoading: Boolean indicating if data is being fetched
+ * - loadingProgress: Number indicating image preloading progress (0-100)
+ * - error: String containing error message if any
+ *
+ * Features:
+ * - Authenticates user with token
+ * - Fetches and distributes plant cards
+ * - Preloads card images with progress tracking
+ * - Implements card selection mechanism
+ * - Provides navigation to game page once setup is complete
+ *
+ * Dependencies:
+ * - Requires React Router for navigation
+ * - Expects token in localStorage for authentication
+ * - Requires CardContainer component for rendering cards
+ */
+
 import { useEffect, useState } from "react";
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { Link } from "react-router-dom";
@@ -27,7 +58,11 @@ export const GameSetupPage = () => {
 
           // Get plants from API
           const data = await getPlants(token);
-          const cards = data.cards;
+          const cards = data.data.cards;
+          console.log("data", data);
+
+          // Set a new token
+          localStorage.setItem("token", data.token);
 
           // Prepare player and opponent hands
           const shuffledCardsPlayer = cards.slice(0, 10).map((card) => ({

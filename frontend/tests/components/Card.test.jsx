@@ -54,8 +54,10 @@ describe("Card", () => {
     const pYear = screen.getByTestId("year-text");
     const pEdible = screen.getByTestId("edible-text");
     const pLight = screen.getByTestId("light-text");
-    const pWater = screen.getByTestId("water-text");
-    const pNutrients = screen.getByTestId("nutrients-text");
+    const pAtmosphericHumidity = screen.getByTestId(
+      "atmospheric_humidity-text",
+    );
+    const pSoilNutriments = screen.getByTestId("soil_nutriments-text");
     const pAveragePh = screen.getByTestId("average-ph-text");
     expect(pCommonName.textContent).toBe("Common Dandelion");
     expect(pScientificName.textContent).toBe("Taraxacum officinale");
@@ -65,8 +67,8 @@ describe("Card", () => {
     expect(pYear.textContent).toBe("1990");
     expect(pEdible.textContent).toBe("Yes");
     expect(pLight.textContent).toBe("8");
-    expect(pWater.textContent).toBe("high");
-    expect(pNutrients.textContent).toBe("medium");
+    expect(pAtmosphericHumidity.textContent).toBe("high");
+    expect(pSoilNutriments.textContent).toBe("medium");
     expect(pAveragePh.textContent).toBe("6.1");
   });
 
@@ -156,12 +158,14 @@ describe("Card", () => {
       </MemoryRouter>,
     );
 
-    const pNutrients = screen.getByTestId("nutrients-text");
-    const pWater = screen.getByTestId("water-text");
+    const pSoilNutriments = screen.getByTestId("soil_nutriments-text");
+    const pAtmosphericHumidity = screen.getByTestId(
+      "atmospheric_humidity-text",
+    );
     const pAveragePh = screen.getByTestId("average-ph-text");
 
-    expect(pNutrients.textContent).toBe("");
-    expect(pWater.textContent).toBe("");
+    expect(pSoilNutriments.textContent).toBe("");
+    expect(pAtmosphericHumidity.textContent).toBe("");
     expect(pAveragePh.textContent).toBe("");
   });
 });
@@ -272,10 +276,12 @@ describe("Card - Additional Tests", () => {
     fireEvent.click(screen.getByTestId("light-text").parentElement);
     expect(mockSelectStat).toHaveBeenCalledWith("light");
 
-    fireEvent.click(screen.getByTestId("nutrients-text").parentElement);
+    fireEvent.click(screen.getByTestId("soil_nutriments-text").parentElement);
     expect(mockSelectStat).toHaveBeenCalledWith("soil_nutriments");
 
-    fireEvent.click(screen.getByTestId("water-text").parentElement);
+    fireEvent.click(
+      screen.getByTestId("atmospheric_humidity-text").parentElement,
+    );
     expect(mockSelectStat).toHaveBeenCalledWith("atmospheric_humidity");
   });
 
