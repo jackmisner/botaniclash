@@ -1,0 +1,132 @@
+/* LoginSignup.css - Styling for login and signup pages */
+
+:root {
+  --header-bg: #f1dcac;
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --text-color: #543c24;
+  --primary-color: #67733e;
+  --secondary-color: #5a7743;
+  --hover-color: rgba(180, 165, 0, 0.2);
+  --card-bg: #f1dcac;
+}
+
+.auth-container {
+  font-family: "WonderLight", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  color: var(--text-color);
+}
+
+.auth-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 28px;
+  text-align: center;
+}
+
+.auth-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-container label {
+  font-size: 18px;
+  margin-bottom: 0.25rem;
+}
+
+.auth-container input[type="text"],
+.auth-container input[type="password"] {
+  padding: 0.75rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #fff;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.auth-container input[type="text"]:focus,
+.auth-container input[type="password"]:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 5px rgba(90, 119, 67, 0.4);
+}
+
+.auth-container input[type="submit"] {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "WonderLight", sans-serif;
+}
+
+.auth-container input[type="submit"]:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-link {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 16px;
+}
+
+.auth-link a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.auth-link a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #b35252;
+  background-color: rgba(179, 82, 82, 0.1);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .auth-container {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    max-width: 95%;
+    padding: 1rem;
+  }
+
+  .auth-container h2 {
+    font-size: 24px;
+  }
+
+  .auth-container input[type="text"],
+  .auth-container input[type="password"],
+  .auth-container input[type="submit"] {
+    padding: 0.6rem;
+  }
+}

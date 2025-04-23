@@ -1,28 +1,8 @@
-.nav-link {
-  display: block;
-  margin: 20px auto;
-  padding: 10px 20px;
-  background-color: #5a7743;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-family: "WonderLight";
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100px;
+@font-face {
+  font-family: WonderLight;
+  src: url(../../../src/assets/Font/Wonder-Light.otf);
 }
 
-.nav-link:hover {
-  background-color: #415632;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.nav-link:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
 .loading-container {
   display: flex;
   flex-direction: column;

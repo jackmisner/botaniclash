@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 )
 
@@ -42,6 +43,10 @@ type PhLevels struct {
 // --------------- Fetch all plants from DB, shuffle them and return twenty random cards ----------------//
 
 func GetAllPlants(c *gin.Context) {
+	// Extract userID from the context (set by AuthenticationMiddleware)
+	val, _ := c.Get("userID")
+	userID := val.(string)
+
 	// Fetch all plants from the database
 	plants, err := models.FetchAllPlants()
 	if err != nil {
@@ -79,10 +84,10 @@ func GetAllPlants(c *gin.Context) {
 			AtmosphericHumidity: p.AtmosphericHumidity,
 		})
 	}
-	response := PlantCards{ // creates a new plant cards object and adds the random cards slice to it
-		Cards: randomCards,
-	}
-	c.JSON(http.StatusOK, response) // Sends a JSON response with the status code 200 OK alongside the plant data needed
+
+	// Sends a ressponse (w/ token)
+	token, _ := auth.GenerateToken(userID)
+	c.JSON(http.StatusOK, gin.H{"data": PlantCards{Cards: randomCards}, "token": token})
 }
 
 type ComparisonSruct struct {
@@ -94,6 +99,10 @@ type ComparisonSruct struct {
 // --------------- Compare player and opponent plants based on stat to compare and return the winner ----------------//
 
 func ComparePlants(c *gin.Context) {
+	// Extract userID from the context (set by AuthenticationMiddleware)
+	val, _ := c.Get("userID")
+	userID := val.(string)
+
 	// Step 1: Grabbing plant IDs & stat to compare
 	var requestBody ComparisonSruct
 	err := c.BindJSON(&requestBody)
@@ -126,7 +135,11 @@ func ComparePlants(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"winner": winner, "stat": statToCompare})
+
+	// Step 4: Generate a new token for the user & send a response
+	token, _ := auth.GenerateToken(userID)
+	c.JSON(http.StatusOK, gin.H{"winner": winner, "token": token})
+
 }
 
 // --------------- Compares two plants based on statToCompare and returns a string saying who has won ----------------//

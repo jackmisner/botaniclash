@@ -12,7 +12,9 @@ vi.stubGlobal("import.meta", {
 });
 
 describe("Plants API Functions", () => {
-  // Set up fetch mock
+  // Set up fetch mock and test token
+  const mockToken = "test-auth-token";
+
   beforeEach(() => {
     global.fetch = vi.fn();
   });
@@ -22,7 +24,7 @@ describe("Plants API Functions", () => {
   });
 
   describe("getPlants", () => {
-    it("should fetch plants successfully", async () => {
+    it("should fetch plants successfully with token", async () => {
       // Mock data
       const mockPlants = [
         { id: 1, name: "Venus Flytrap", attack: 5, defense: 3 },
@@ -32,20 +34,23 @@ describe("Plants API Functions", () => {
       // Mock fetch response
       global.fetch.mockResolvedValueOnce({
         status: 200,
-        json: async () => mockPlants,
+        json: async () => ({ data: mockPlants, token: mockToken }),
       });
 
-      // Call the function
-      const result = await getPlants();
+      // Call the function with token
+      const result = await getPlants(mockToken);
 
       // Assertions
       expect(global.fetch).toHaveBeenCalledWith(
         expect.stringContaining("/plants"),
         expect.objectContaining({
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${mockToken}`,
+          },
         }),
       );
-      expect(result).toEqual(mockPlants);
+      expect(result).toEqual({ data: mockPlants, token: mockToken });
     });
 
     it("should throw an error when fetch fails", async () => {
@@ -56,7 +61,9 @@ describe("Plants API Functions", () => {
       });
 
       // Expect the function to throw an error
-      await expect(getPlants()).rejects.toThrow("Unable to fetch plants");
+      await expect(getPlants(mockToken)).rejects.toThrow(
+        "Unable to fetch plants",
+      );
     });
   });
 
@@ -71,14 +78,15 @@ describe("Plants API Functions", () => {
       // Mock fetch response
       global.fetch.mockResolvedValueOnce({
         status: 200,
-        json: async () => ({ winner: expectedWinner }),
+        json: async () => ({ winner: expectedWinner, token: mockToken }),
       });
 
-      // Call the function
+      // Call the function with token
       const result = await postPlantForComparison(
         playerCardId,
         opponentCardId,
         statToCompare,
+        mockToken,
       );
 
       // Assertions
@@ -88,6 +96,7 @@ describe("Plants API Functions", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${mockToken}`,
           },
           body: JSON.stringify({
             player_card: playerCardId,
@@ -96,7 +105,10 @@ describe("Plants API Functions", () => {
           }),
         },
       );
-      expect(result).toEqual(expectedWinner);
+      expect(result).toEqual({
+        winner: expectedWinner,
+        token: mockToken,
+      });
     });
 
     it("should throw an error when comparison post fails", async () => {
@@ -108,7 +120,7 @@ describe("Plants API Functions", () => {
 
       // Expect the function to throw an error
       await expect(
-        postPlantForComparison("123", "456", "attack"),
+        postPlantForComparison("123", "456", "attack", mockToken),
       ).rejects.toThrow("Unable to send cards to compare");
     });
 
@@ -124,7 +136,12 @@ describe("Plants API Functions", () => {
       const opponentCardId = "opponent456";
       const statToCompare = "defense";
 
-      await postPlantForComparison(playerCardId, opponentCardId, statToCompare);
+      await postPlantForComparison(
+        playerCardId,
+        opponentCardId,
+        statToCompare,
+        mockToken,
+      );
 
       // Check the request body was formatted correctly
       const expectedBody = JSON.stringify({
@@ -137,6 +154,9 @@ describe("Plants API Functions", () => {
         expect.any(String),
         expect.objectContaining({
           body: expectedBody,
+          headers: expect.objectContaining({
+            Authorization: `Bearer ${mockToken}`,
+          }),
         }),
       );
     });

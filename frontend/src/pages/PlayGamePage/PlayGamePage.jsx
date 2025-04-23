@@ -1,10 +1,44 @@
+/**
+ * A React component that implements the main game play interface.
+ *
+ * @component
+ * @description
+ * Manages the game state including player hands, cards in play, turns, and game winner.
+ * Handles card comparison logic, turn switching, and image preloading for smooth gameplay.
+ *
+ * @example
+ * return (
+ *   <PlayGamePage />
+ * )
+ *
+ * @requires {Component} CardContainer - Component for displaying cards in play
+ * @requires {Component} DeckInHand - Component for displaying player's deck
+ * @requires {Function} postPlantForComparison - API service for comparing plants
+ * @requires {Function} preloadPlantImages - Utility for preloading plant images
+ *
+ * @state {Array} playerHand - Current cards in player's hand
+ * @state {Array} opponentHand - Current cards in opponent's hand
+ * @state {Array} cardsInPlay - Cards currently being compared
+ * @state {string} gameWinner - Stores the winner of the game
+ * @state {boolean} opponentCardShow - Controls visibility of opponent's card
+ * @state {boolean} isPlayersTurn - Tracks whose turn it is
+ * @state {boolean} isLoading - Indicates if assets are still loading
+ * @state {number} loadingProgress - Tracks image loading progress
+ * @state {boolean} hintsOn - Controls visibility of gameplay hints
+ *
+ * @returns {JSX.Element} A game interface with card comparison and deck management
+ */
+
 import { CardContainer } from "../../components/CardContainer/CardContainer";
 import { useState, useEffect } from "react";
 import { postPlantForComparison } from "../../services/plants";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./PlayGamePage.css";
 import { DeckInHand } from "../../components/DeckInHand/DeckInHand";
 import { preloadPlantImages } from "../../services/imagePreloader";
+import lightBulbOn from "../../assets/light-bulb-on.png";
+import lightBulbOff from "../../assets/light-bulb-off.png";
+import { postWinner } from "../../services/userStats";
 
 export const PlayGamePage = () => {
   const location = useLocation();
@@ -20,6 +54,11 @@ export const PlayGamePage = () => {
   const [isPlayersTurn, setIsPlayersTurn] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [hintsOn, setHintsOn] = useState(true);
+  console.log("gameWinner:", gameWinner);
+  const toggleHints = () => {
+    setHintsOn(!hintsOn);
+  };
 
   // Preload all images when the component mounts
   useEffect(() => {
@@ -54,19 +93,24 @@ export const PlayGamePage = () => {
 
   const selectStat = (stat, card1 = cardsInPlay[0], card2 = cardsInPlay[1]) => {
     setOpponentCardShow(true);
+    const token = localStorage.getItem("token");
     setTimeout(() => {
-      postPlantForComparison(card1.id, card2.id, stat).then((response) => {
-        if (response === "player") {
-          playerOneWinsComparison([card1, card2]);
-          alert("You won - compared stat: " + stat);
-        } else if (response === "opponent") {
-          playerTwoWinsComparison([card1, card2]);
-          alert("Opponent won - compared stat: " + stat);
-        } else if (response === "draw") {
-          drawOutcome([card1, card2]);
-          alert("Draw - compared stat: " + stat);
-        }
-      });
+      postPlantForComparison(card1.id, card2.id, stat, token).then(
+        (response) => {
+          if (response.winner === "player") {
+            playerOneWinsComparison([card1, card2]);
+            alert("You won - compared stat: " + stat);
+          } else if (response.winner === "opponent") {
+            playerTwoWinsComparison([card1, card2]);
+            alert("Opponent won - compared stat: " + stat);
+          } else if (response.winner === "draw") {
+            drawOutcome([card1, card2]);
+            alert("Draw - compared stat: " + stat);
+          }
+          // set a new token
+          localStorage.setItem("token", response.token);
+        },
+      );
     }, 1000);
   };
 
@@ -75,23 +119,6 @@ export const PlayGamePage = () => {
       setOpponentCardShow(false);
     }
     setIsPlayersTurn((prev) => !prev);
-  };
-
-  const selectRandomStat = (latestCardsInPlay) => {
-    // Select random stat - computer turn
-    if (!isPlayersTurn) {
-      const POSSIBLE_STATS = [
-        "year",
-        "edible",
-        "ph_range",
-        "light",
-        "soil_nutriments",
-        "atmospheric_humidity",
-      ];
-      const randomStat =
-        POSSIBLE_STATS[Math.floor(Math.random() * POSSIBLE_STATS.length)];
-      selectStat(randomStat, latestCardsInPlay[0], latestCardsInPlay[1]);
-    }
   };
 
   const pickTopCards = async () => {
@@ -106,12 +133,17 @@ export const PlayGamePage = () => {
     setPlayerHand((prev) => prev.slice(1));
     setOpponentHand((prev) => prev.slice(1));
 
-    // Select random stat - computer turn
-    selectRandomStat(latestCardsInPlay);
+    if (!isPlayersTurn) {
+      selectStat(null, latestCardsInPlay[0], latestCardsInPlay[1]);
+    }
   };
 
   const playerOneWinsComparison = (cards) => {
-    if (opponentHand.length === 0) setGameWinner("Player1");
+    const token = localStorage.getItem("token");
+    if (opponentHand.length === 0) {
+      setGameWinner("Player");
+      postWinner(token, "player");
+    }
 
     setPlayerHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -124,7 +156,12 @@ export const PlayGamePage = () => {
   };
 
   const playerTwoWinsComparison = (cards) => {
-    if (playerHand.length === 0) setGameWinner("Player2");
+    const token = localStorage.getItem("token");
+
+    if (playerHand.length === 0) {
+      setGameWinner("Opponent");
+      postWinner(token, "opponent");
+    }
 
     setOpponentHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -157,44 +194,60 @@ export const PlayGamePage = () => {
     );
   }
 
-  return (
+  return gameWinner ? (
     <>
-      {gameWinner && <h1>Winner --- {gameWinner}</h1>}
-      {playerHand.length > 0 &&
-        opponentHand.length > 0 &&
-        cardsInPlay.length === 0 && (
-          <button
-            onClick={() => {
-              pickTopCards();
-              onClickNextRoundHandle();
-            }}
-            className="next-round-button"
-          >
-            Next Round
-          </button>
+      <h1>{gameWinner} wins!</h1>
+      <Link to="/setupgame" className="new-game-link">
+        New Game?
+      </Link>
+      <CardContainer
+        plants={gameWinner === "Player" ? playerHand : opponentHand}
+        opponentCardShow={true}
+      ></CardContainer>
+    </>
+  ) : (
+    <>
+      <div className="background-image">
+        <div className="hints-button-container" onClick={toggleHints}>
+          <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
+        </div>
+        {playerHand.length > 0 &&
+          opponentHand.length > 0 &&
+          cardsInPlay.length === 0 && (
+            <button
+              onClick={() => {
+                pickTopCards();
+                onClickNextRoundHandle();
+              }}
+              className="next-round-button"
+            >
+              Next Round
+            </button>
+          )}
+        {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
+        {cardsInPlay.length > 0 && (
+          <CardContainer
+            plants={cardsInPlay}
+            isCardInPlay={true}
+            opponentCardShow={opponentCardShow}
+            selectStat={selectStat}
+            hints={hintsOn}
+          />
         )}
-      {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
-      {cardsInPlay.length > 0 && (
-        <CardContainer
-          plants={cardsInPlay}
-          isCardInPlay={true}
-          opponentCardShow={opponentCardShow}
-          selectStat={selectStat}
-        />
-      )}
-      <div className="decks-in-hand-container">
-        {playerHand && playerHand.length > 0 && (
-          <div className="deck-cards">
-            <h1>Player Hand</h1>
-            <DeckInHand plants={playerHand} />
-          </div>
-        )}
-        {opponentHand && opponentHand.length > 0 && (
-          <div className="deck-cards">
-            <h1>Opponent Hand</h1>
-            <DeckInHand plants={opponentHand} />
-          </div>
-        )}
+        <div className="decks-in-hand-container">
+          {playerHand && playerHand.length > 0 && (
+            <div className="deck-cards">
+              <h1>Player Hand</h1>
+              <DeckInHand plants={playerHand} />
+            </div>
+          )}
+          {opponentHand && opponentHand.length > 0 && (
+            <div className="deck-cards">
+              <h1>Opponent Hand</h1>
+              <DeckInHand plants={opponentHand} />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

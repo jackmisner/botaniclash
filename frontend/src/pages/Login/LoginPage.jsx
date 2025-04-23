@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "../LoginSignupPage.css";
 import { login } from "../../services/authentication";
 
 export const LoginPage = () => {
@@ -13,6 +13,8 @@ export const LoginPage = () => {
     try {
       const token = await login(username, password);
       localStorage.setItem("token", token);
+      // Dispatch custom event to notify Header component
+      window.dispatchEvent(new Event("authChange"));
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -29,7 +31,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <>
+    <div className="auth-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
@@ -48,6 +50,6 @@ export const LoginPage = () => {
         />
         <input role="submit-button" id="submit" type="submit" value="Submit" />
       </form>
-    </>
+    </div>
   );
 };
