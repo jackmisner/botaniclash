@@ -1,0 +1,113 @@
+@font-face {
+  font-family: WonderLight;
+  src: url(../../../src/assets/Font/Wonder-Light.otf);
+}
+
+.leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  font-family: "WonderLight", sans-serif;
+  color: var(--text-color, #543c24);
+}
+
+.leaderboard-title {
+  text-align: center;
+  color: var(--text-color, #543c24);
+  font-size: 28px;
+  margin-bottom: 1.5rem;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--card-bg, #f1dcac);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px var(--shadow-color, rgba(0, 0, 0, 0.15));
+}
+
+.leaderboard-table th {
+  background-color: var(--primary-color, #67733e);
+  color: #fff;
+  text-align: left;
+  padding: 1rem;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+.leaderboard-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(84, 60, 36, 0.2);
+}
+
+.leaderboard-table tbody tr:nth-child(even) {
+  background-color: rgba(180, 165, 0, 0.1);
+}
+
+.leaderboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.leaderboard-table tbody tr:hover {
+  background-color: var(--hover-color, rgba(180, 165, 0, 0.2));
+  transition: background-color 0.3s ease;
+}
+
+.rank-cell {
+  font-weight: bold;
+  text-align: center;
+  font-size: 20px;
+}
+
+/* Top 3 rankings special styling */
+.leaderboard-table tbody tr:nth-child(1) .rank-cell {
+  color: #d4af37; /* Gold */
+  font-size: 22px;
+}
+
+.leaderboard-table tbody tr:nth-child(2) .rank-cell {
+  color: #c0c0c0; /* Silver */
+}
+
+.leaderboard-table tbody tr:nth-child(3) .rank-cell {
+  color: #cd7f32; /* Bronze */
+}
+
+.win-rate {
+  font-weight: bold;
+  color: var(--secondary-color, #5a7743);
+}
+
+@media (max-width: 768px) {
+  .leaderboard-table {
+    font-size: 14px;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .rank-cell {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leaderboard-table {
+    font-size: 12px;
+  }
+
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.5rem;
+  }
+
+  .leaderboard-title {
+    font-size: 24px;
+  }
+}
