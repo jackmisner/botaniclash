@@ -10,11 +10,18 @@ import (
 
 type GameStatsController struct{}
 
+// GameStatsResponse is a simplified struct with only the required fields
+type GameStatsResponse struct {
+	UserID      uint   `json:"UserID"`
+	Username    string `json:"Username"`
+	GamesPlayed int    `json:"GamesPlayed"`
+	GamesWon    int    `json:"GamesWon"`
+}
+
 // CreateGameStats handles the creation of new game stats
 func (g *GameStatsController) CreateGameStats(ctx *gin.Context) {
 	var input struct {
-		UserID   uint   `json:"user_id" binding:"required"`
-		Username string `json:"username" binding:"required"`
+		UserID uint `json:"user_id" binding:"required"`
 	}
 
 	// Bind JSON input
@@ -23,10 +30,9 @@ func (g *GameStatsController) CreateGameStats(ctx *gin.Context) {
 		return
 	}
 
-	// Initialize game stats
+	// Initialise game stats
 	gameStats := &models.GameStats{
 		UserID:      input.UserID,
-		Username:    input.Username,
 		GamesPlayed: 0,
 		GamesWon:    0,
 	}
@@ -42,10 +48,18 @@ func (g *GameStatsController) CreateGameStats(ctx *gin.Context) {
 
 // UpdateGameStats updates game stats for a specific user
 func (g *GameStatsController) UpdateGameStats(ctx *gin.Context) {
-	// Parse user ID from URL parameter
-	userID, err := strconv.ParseUint(ctx.Param("user_id"), 10, 64)
+	// Extract userID from the context (set by AuthenticationMiddleware)
+	val, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in token"})
+		return
+	}
+
+	// Convert string userID to uint
+	userIDStr := val.(string)
+	userID, err := strconv.ParseUint(userIDStr, 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID must be a number"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID format"})
 		return
 	}
 
@@ -66,7 +80,22 @@ func (g *GameStatsController) UpdateGameStats(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"game_stats": gameStats})
+	// Get the username from the User model
+	user, err := models.FindUser(userIDStr)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get username"})
+		return
+	}
+
+	// Create response
+	statsResponse := GameStatsResponse{
+		UserID:      gameStats.UserID,
+		Username:    user.Username,
+		GamesPlayed: gameStats.GamesPlayed,
+		GamesWon:    gameStats.GamesWon,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"game_stats": statsResponse})
 }
 
 // GetAllGameStats retrieves all game stats
@@ -78,5 +107,24 @@ func (g *GameStatsController) GetAllGameStats(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"game_stats": gameStats})
+	// Create a slice to hold game stats responses
+	statsResponse := make([]GameStatsResponse, 0, len(gameStats))
+
+	// For each game stat, get the corresponding username
+	for _, stats := range gameStats {
+		userIDStr := strconv.FormatUint(uint64(stats.UserID), 10)
+		user, err := models.FindUser(userIDStr)
+
+		// If user is found, add the game stats with username to response
+		if err == nil {
+			statsResponse = append(statsResponse, GameStatsResponse{
+				UserID:      stats.UserID,
+				Username:    user.Username,
+				GamesPlayed: stats.GamesPlayed,
+				GamesWon:    stats.GamesWon,
+			})
+		}
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"game_stats": statsResponse})
 }

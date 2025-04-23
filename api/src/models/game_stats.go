@@ -6,10 +6,9 @@ import (
 
 type GameStats struct {
 	gorm.Model
-	UserID      uint   `gorm:"uniqueIndex;not null"`
-	Username    string `gorm:"not null"`
-	GamesPlayed int    `gorm:"default:0"`
-	GamesWon    int    `gorm:"default:0"`
+	UserID      uint `gorm:"uniqueIndex;not null"`
+	GamesPlayed int  `gorm:"default:0"`
+	GamesWon    int  `gorm:"default:0"`
 }
 
 func GetGameStatsByUserID(userID uint) (*GameStats, error) {
@@ -29,11 +28,11 @@ func UpdateGameStats(userID uint, winner string) (*GameStats, error) {
 	}
 
 	// Increment the games played count
-	gamestats.GamesPlayed++
+	gamestats.GamesPlayed = gamestats.GamesPlayed + 1
 
 	// Increment the games won count if the player is the winner
 	if winner == "player" {
-		gamestats.GamesWon++
+		gamestats.GamesWon = gamestats.GamesWon + 1
 	}
 
 	// Save the updated game stats back to the database
