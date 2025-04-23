@@ -54,7 +54,7 @@ export const PlayGamePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [hintsOn, setHintsOn] = useState(true);
-
+  console.log("gameWinner:", gameWinner);
   const toggleHints = () => {
     setHintsOn(!hintsOn);
   };
@@ -138,7 +138,7 @@ export const PlayGamePage = () => {
   };
 
   const playerOneWinsComparison = (cards) => {
-    if (opponentHand.length === 0) setGameWinner("Player1");
+    if (opponentHand.length === 0) setGameWinner("Player");
 
     setPlayerHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -151,7 +151,7 @@ export const PlayGamePage = () => {
   };
 
   const playerTwoWinsComparison = (cards) => {
-    if (playerHand.length === 0) setGameWinner("Player2");
+    if (playerHand.length === 0) setGameWinner("Opponent");
 
     setOpponentHand((prev) => {
       const updatedCards = cards.map((card) => ({
@@ -184,56 +184,61 @@ export const PlayGamePage = () => {
     );
   }
 
-  return (
-    <div className="background-image">
-      <div className="hints-button-container" onClick={toggleHints}>
-        <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
+  return gameWinner ? (
+    <>
+      <h1>{gameWinner} wins!</h1>
+      <Link to="/setupgame" className="new-game-link">
+        New Game?
+      </Link>
+      <CardContainer
+        plants={gameWinner === "Player" ? playerHand : opponentHand}
+        opponentCardShow={true}
+      ></CardContainer>
+    </>
+  ) : (
+    <>
+      <div className="background-image">
+        <div className="hints-button-container" onClick={toggleHints}>
+          <img src={hintsOn ? lightBulbOn : lightBulbOff}></img>
+        </div>
+        {playerHand.length > 0 &&
+          opponentHand.length > 0 &&
+          cardsInPlay.length === 0 && (
+            <button
+              onClick={() => {
+                pickTopCards();
+                onClickNextRoundHandle();
+              }}
+              className="next-round-button"
+            >
+              Next Round
+            </button>
+          )}
+        {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
+        {cardsInPlay.length > 0 && (
+          <CardContainer
+            plants={cardsInPlay}
+            isCardInPlay={true}
+            opponentCardShow={opponentCardShow}
+            selectStat={selectStat}
+            hints={hintsOn}
+          />
+        )}
+        <div className="decks-in-hand-container">
+          {playerHand && playerHand.length > 0 && (
+            <div className="deck-cards">
+              <h1>Player Hand</h1>
+              <DeckInHand plants={playerHand} />
+            </div>
+          )}
+          {opponentHand && opponentHand.length > 0 && (
+            <div className="deck-cards">
+              <h1>Opponent Hand</h1>
+              <DeckInHand plants={opponentHand} />
+            </div>
+          )}
+        </div>
       </div>
-      {gameWinner && (
-        <>
-          <h1>Winner --- {gameWinner}</h1>
-          <Link to="/setupgame" className="nav-link">
-            New Game?
-          </Link>
-        </>
-      )}
-      {playerHand.length > 0 &&
-        opponentHand.length > 0 &&
-        cardsInPlay.length === 0 && (
-          <button
-            onClick={() => {
-              pickTopCards();
-              onClickNextRoundHandle();
-            }}
-            className="next-round-button"
-          >
-            Next Round
-          </button>
-        )}
-      {cardsInPlay.length > 0 && <h1>Cards in Play</h1>}
-      {cardsInPlay.length > 0 && (
-        <CardContainer
-          plants={cardsInPlay}
-          isCardInPlay={true}
-          opponentCardShow={opponentCardShow}
-          selectStat={selectStat}
-          hints={hintsOn}
-        />
-      )}
-      <div className="decks-in-hand-container">
-        {playerHand && playerHand.length > 0 && (
-          <div className="deck-cards">
-            <h1>Player Hand</h1>
-            <DeckInHand plants={playerHand} />
-          </div>
-        )}
-        {opponentHand && opponentHand.length > 0 && (
-          <div className="deck-cards">
-            <h1>Opponent Hand</h1>
-            <DeckInHand plants={opponentHand} />
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 };

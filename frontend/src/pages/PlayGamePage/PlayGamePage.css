@@ -44,7 +44,24 @@
   height: 50px;
 }
 
-/* .background-image {
-    background-image: url("../../assets/backgroundImage.jpg");
-    width: 100%;
-} */
+.new-game-link {
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 20px;
+  background-color: var(--primary-color, #67733e);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "WonderLight", sans-serif;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.new-game-link:hover {
+  background-color: var(--secondary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
