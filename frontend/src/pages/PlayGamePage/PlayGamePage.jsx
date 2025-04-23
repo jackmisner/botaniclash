@@ -141,7 +141,7 @@ export const PlayGamePage = () => {
   const playerOneWinsComparison = (cards) => {
     const token = localStorage.getItem("token");
     if (opponentHand.length === 0) {
-      setGameWinner("Player1");
+      setGameWinner("Player");
       postWinner(token, "player");
     }
 
@@ -159,7 +159,7 @@ export const PlayGamePage = () => {
     const token = localStorage.getItem("token");
 
     if (playerHand.length === 0) {
-      setGameWinner("Player2");
+      setGameWinner("Opponent");
       postWinner(token, "opponent");
     }
 
