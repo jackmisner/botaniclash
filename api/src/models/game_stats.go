@@ -22,7 +22,7 @@ func GetGameStatsByUserID(userID uint) (*GameStats, error) {
 func UpdateGameStats(userID uint, winner string) (*GameStats, error) {
 	var gamestats GameStats
 
-	// Retrieve the game stats for the given user ID
+	// Retrieve the game stats
 	if err := Database.Where("user_id = ?", userID).First(&gamestats).Error; err != nil {
 		return nil, err
 	}
