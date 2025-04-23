@@ -15,12 +15,13 @@
   align-items: center;
   padding: 0.5rem 2rem;
 
-  width: 100%;
+  width: 93vw;
   transition: all 0.3s ease;
 }
 
 .logo {
-  /* position:absolute; */
+  position: relative;
+
   display: flex;
   left: 50%;
   transform: translateX(-50%);
@@ -34,6 +35,8 @@
 }
 
 .nav {
+  position: relative;
+  right: 0;
   display: flex;
   gap: 1rem;
 }
@@ -54,6 +57,7 @@
 
 .nav-link:hover {
   background-color: var(--secondary-color);
+  color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
