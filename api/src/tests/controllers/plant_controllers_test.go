@@ -10,11 +10,11 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
-	"github.com/makersacademy/go-react-acebook-template/api/src/controllers"
-	"github.com/makersacademy/go-react-acebook-template/api/src/middleware"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
-	models_test "github.com/makersacademy/go-react-acebook-template/api/src/tests/models"
+	"github.com/jackmisner/botaniclash/src/auth"
+	"github.com/jackmisner/botaniclash/src/controllers"
+	"github.com/jackmisner/botaniclash/src/middleware"
+	"github.com/jackmisner/botaniclash/src/models"
+	models_test "github.com/jackmisner/botaniclash/src/tests/models"
 	"github.com/stretchr/testify/assert"
 )
 

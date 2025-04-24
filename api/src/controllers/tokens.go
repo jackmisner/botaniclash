@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
-	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
+	"github.com/jackmisner/botaniclash/src/auth"
+	"github.com/jackmisner/botaniclash/src/models"
+	"github.com/jackmisner/botaniclash/src/passwordhashing"
 )
 
 type CreateTokenRequestBody struct {

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
+	"github.com/jackmisner/botaniclash/src/auth"
 )
 
 func AuthenticationMiddleware(ctx *gin.Context) {

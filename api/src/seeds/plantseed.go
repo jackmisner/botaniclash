@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/jackmisner/botaniclash/src/models"
 	"gorm.io/gorm"
 )
 
