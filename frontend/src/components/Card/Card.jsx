@@ -32,9 +32,11 @@ const StatContainer = ({
   hoveredStats,
   onStatHover,
   onStatHoverLeave,
+  isPlayersTurn,
+  roundWinner,
 }) => {
   const handleClick = (event) => {
-    if (isCardInPlay) {
+    if (isCardInPlay && !isPlayersTurn && !roundWinner) {
       selectStat(event.target.dataset["stat"]);
     }
   };
@@ -79,6 +81,8 @@ export const Card = ({
   selectStat,
   opponentCardShow,
   hints,
+  isPlayersTurn,
+  roundWinner,
 }) => {
   // Track hover state for each stat separately
   const [hoveredStats, setHoveredStats] = useState({
@@ -186,6 +190,8 @@ export const Card = ({
               hoveredStats={hoveredStats}
               onStatHover={onStatHover}
               onStatHoverLeave={onStatHoverLeave}
+              isPlayersTurn={isPlayersTurn}
+              roundWinner={roundWinner}
             />
           ))}
         </article>
