@@ -13,6 +13,7 @@ import (
 	"github.com/makersacademy/go-react-acebook-template/api/src/controllers"
 	"github.com/makersacademy/go-react-acebook-template/api/src/middleware"
 	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -28,11 +29,11 @@ func TestGetAllGameStats(t *testing.T) {
 	// 3) Create test users and their game stats
 	user1 := models.User{
 		Username: "testuser1",
-		Password: "password123",
+		Password: passwordhashing.HashPassword("password123"),
 	}
 	user2 := models.User{
 		Username: "testuser2",
-		Password: "password123",
+		Password: passwordhashing.HashPassword("password123"),
 	}
 	models.Database.Create(&user1)
 	models.Database.Create(&user2)
@@ -102,7 +103,7 @@ func TestUpdateGameStats(t *testing.T) {
 	// 3) Create a test user and generate JWT token
 	testUser := models.User{
 		Username: "gamestatsuser",
-		Password: "password123",
+		Password: passwordhashing.HashPassword("password123"),
 	}
 	models.Database.Create(&testUser)
 
