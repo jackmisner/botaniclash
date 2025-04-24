@@ -1,4 +1,4 @@
-module github.com/makersacademy/go-react-acebook-template/api
+module github.com/jackmisner/botaniclash
 
 go 1.23.0
 

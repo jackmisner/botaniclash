@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/jackmisner/botaniclash/src/models"
 )
 
 type GameStatsController struct{}

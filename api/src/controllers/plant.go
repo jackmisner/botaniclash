@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/auth"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/jackmisner/botaniclash/src/auth"
+	"github.com/jackmisner/botaniclash/src/models"
 )
 
 // PlantCards represents a collection of plant data cards.
@@ -91,8 +91,8 @@ func GetAllPlants(c *gin.Context) {
 }
 
 type ComparisonSruct struct {
-	PlayerCard    uint   `json:"player_card"`
-	OpponentCard  uint   `json:"opponent_card"`
+	PlayerCard    uint    `json:"player_card"`
+	OpponentCard  uint    `json:"opponent_card"`
 	StatToCompare *string `json:"stat_to_compare"`
 }
 
@@ -112,13 +112,12 @@ func ComparePlants(c *gin.Context) {
 	}
 	statToCompare := requestBody.StatToCompare
 
-	
 	// Step 2: Grabbing those plants from the DB
 	playerPlant, _ := models.FetchPlantById(requestBody.PlayerCard)
 	opponentPlant, _ := models.FetchPlantById(requestBody.OpponentCard)
-	
-	// Step 3: Checking if it is the user or computer's turn 
-	
+
+	// Step 3: Checking if it is the user or computer's turn
+
 	if statToCompare == nil {
 		computerChoice := computerChooseCompetitiveStat(opponentPlant)
 		statToCompare = &computerChoice
@@ -134,7 +133,6 @@ func ComparePlants(c *gin.Context) {
 		})
 		return
 	}
-
 
 	// Step 4: Generate a new token for the user & send a response
 	token, _ := auth.GenerateToken(userID)
@@ -188,13 +186,13 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	// Step 1: Determine if plant is edible, if the plant is edible there is a random chance this will be the return value
-	if r.Intn(10) % 2 == 0 && opponentPlant.Edible  {
-			return "edible"	
+	if r.Intn(10)%2 == 0 && opponentPlant.Edible {
+		return "edible"
 	}
 
-	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which has the lowest score 
+	// Step 2: Compare light, soil nutriments and atmospheric humidity to determine which has the lowest score
 	fieldName, score := findLowestScore(opponentPlant)
-	
+
 	// Step 3: Calculate ph range, compare ph range to the result of findLowestScore to see which is the most competitive
 	phRange := opponentPlant.CalculatePhRange()
 
@@ -221,12 +219,11 @@ func computerChooseCompetitiveStat(opponentPlant *models.Plant) string {
 	return randomValue
 }
 
-
 // --------------- Find the value with the lowest score, returns the name and score of lowest value ----------------//
 
 func findLowestScore(opponent_card *models.Plant) (string, int) {
 	// Step 1: Define the name of the variables we want to return
-	var lowestFieldName string 
+	var lowestFieldName string
 	var fieldValue int
 
 	// Step 2: Create a map containing the three values we want to check
@@ -235,39 +232,39 @@ func findLowestScore(opponent_card *models.Plant) (string, int) {
 	checkValues["light"] = opponent_card.Light
 	checkValues["soil_nutriments"] = opponent_card.SoilNutriments
 	checkValues["atmospheric_humidity"] = opponent_card.AtmosphericHumidity
-	
+
 	// Step 3: Loop through the map to find value with lowest score
 	for key, val := range checkValues {
 		if lowestFieldName == "" {
 			lowestFieldName = key
 			fieldValue = val
-		} else if val < checkValues[lowestFieldName]{
+		} else if val < checkValues[lowestFieldName] {
 			lowestFieldName = key
 			fieldValue = val
 		}
-	}  
-	
+	}
+
 	return lowestFieldName, fieldValue
 }
 
 // -- Converts snake case strings taken from JSON data into a format that can be used to index struct values using the reflect package ----------------//
 
 func convertSnakeToPascal(statToCompare string) string {
-		// Convert snake_case (json) to PascalCase (needed for struct field access)
-		fieldMap := map[string]string{
-			"year":                 "Year",
-			"light":                "Light",
-			"soil_nutriments":      "SoilNutriments",
-			"atmospheric_humidity": "AtmosphericHumidity",
-			"ph_minimum":           "PhMinimum",
-			"ph_maximum":           "PhMaximum",
-		}
+	// Convert snake_case (json) to PascalCase (needed for struct field access)
+	fieldMap := map[string]string{
+		"year":                 "Year",
+		"light":                "Light",
+		"soil_nutriments":      "SoilNutriments",
+		"atmospheric_humidity": "AtmosphericHumidity",
+		"ph_minimum":           "PhMinimum",
+		"ph_maximum":           "PhMaximum",
+	}
 
-		// Get the correct field name
-		fieldName, exists := fieldMap[statToCompare]
-		if !exists {
-			return "" // Invalid stat
-		}
+	// Get the correct field name
+	fieldName, exists := fieldMap[statToCompare]
+	if !exists {
+		return "" // Invalid stat
+	}
 
-		return fieldName
+	return fieldName
 }
