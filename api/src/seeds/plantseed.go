@@ -141,7 +141,7 @@ func PlantSeeds(db *gorm.DB) {
 		return token
 	}
 
-	// Iterate through pages 1-18 (although we should hit 300 plants before this)
+	// Iterate through pages 1-18 (although we should hit 283 plants before this)
 	for page := 1; page <= 18; page++ {
 		// Break the loop if we've already created enough plants
 		if plantCount >= maxPlants {
