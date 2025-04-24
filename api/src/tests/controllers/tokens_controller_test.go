@@ -8,8 +8,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/makersacademy/go-react-acebook-template/api/src/controllers"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/jackmisner/botaniclash/src/controllers"
+	"github.com/jackmisner/botaniclash/src/models"
+	"github.com/jackmisner/botaniclash/src/passwordhashing"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +25,7 @@ func TestCreateToken(t *testing.T) {
 	// 3) Create a test user in the database
 	testUser := models.User{
 		Username: "plantboi117",
-		Password: "password123",
+		Password: passwordhashing.HashPassword("password123"),
 	}
 	models.Database.Create(&testUser)
 
@@ -72,7 +73,7 @@ func TestCreateTokenWithInvalidCredentials(t *testing.T) {
 	// 3) Create a test user in the database
 	testUser := models.User{
 		Username: "leafmealone",
-		Password: "password123",
+		Password: passwordhashing.HashPassword("password123"),
 	}
 	models.Database.Create(&testUser)
 

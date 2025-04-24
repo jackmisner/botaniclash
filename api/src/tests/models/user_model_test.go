@@ -5,7 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
+	"github.com/jackmisner/botaniclash/src/models"
+	"github.com/jackmisner/botaniclash/src/passwordhashing"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -37,7 +38,7 @@ func TestFindUserByUsername(t *testing.T) {
 	// 1) Create a test user
 	testUser := &models.User{
 		Username: "GardenLover",
-		Password: "123Plant",
+		Password: passwordhashing.HashPassword("123Plant"),
 	}
 
 	// 2) Save the test user
@@ -50,5 +51,8 @@ func TestFindUserByUsername(t *testing.T) {
 
 	// 4) Compare the user we created to the data we retrieved
 	assert.Equal(t, savedUser.Username, fetchedUser.Username)
-	assert.Equal(t, savedUser.Password, fetchedUser.Password) // This may need to be rewritten if password hashing is introduced
+	// Don't compare passwords directly as they're now hashed
+	assert.NotEmpty(t, fetchedUser.Password, "Password should not be empty")
+	// Verify that we can authenticate with the correct password
+	assert.True(t, passwordhashing.VerifyPassword(fetchedUser.Password, "123Plant"), "Should be able to verify with correct password")
 }

@@ -3,8 +3,8 @@ package models_test
 import (
 	"os"
 
+	"github.com/jackmisner/botaniclash/src/models"
 	"github.com/joho/godotenv"
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

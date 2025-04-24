@@ -3,8 +3,8 @@ package seeds
 import (
 	"fmt"
 
-	"github.com/makersacademy/go-react-acebook-template/api/src/models"
-	"github.com/makersacademy/go-react-acebook-template/api/src/passwordhashing"
+	"github.com/jackmisner/botaniclash/src/models"
+	"github.com/jackmisner/botaniclash/src/passwordhashing"
 	"gorm.io/gorm"
 )
 
