@@ -46,6 +46,24 @@ var ediblePlants = []string{
 	"Water avens",
 	"Wheat",
 	"Common lilac",
+	"Common bird's-foot trefoil",
+	"Cowgrass clover",
+	"Common vetch",
+	"Greater bird's-foot trefoil",
+	"Cow vetch",
+	"Alsike clover",
+	"Strawberry clover",
+	"Pear",
+	"Wild plum",
+	"Pomegranate",
+	"Sunflower",
+	"Meadowsweet",
+	"India mustard",
+	"Annual yellow lupin",
+	"Mediterranean white lupin",
+	"Arrowleaf clover",
+	"Snail medic",
+	"Tickseed-sunflower",
 }
 
 // PlantData represents the structure of data from the first API endpoint
@@ -87,28 +105,53 @@ type PlantDetails struct {
 func PlantSeeds(db *gorm.DB) {
 	fmt.Println("Seeding plants...")
 
-	// Get API token from environment variables
-	token := os.Getenv("TREFLE_API_TOKEN")
-	if token == "" {
-		fmt.Println("Error: TREFLE_API_TOKEN environment variable not set")
-		return
+	// Get API tokens from environment variables
+	var tokens []string
+	for i := 1; i <= 3; i++ {
+		tokenKey := fmt.Sprintf("TREFLE_API_TOKEN%d", i)
+		token := os.Getenv(tokenKey)
+		if token != "" {
+			tokens = append(tokens, token)
+		}
 	}
+
+	if len(tokens) == 0 {
+		// Try fallback to the original token name for backward compatibility
+		if token := os.Getenv("TREFLE_API_TOKEN"); token != "" {
+			tokens = append(tokens, token)
+		} else {
+			fmt.Println("Error: No Trefle API tokens found in environment variables")
+			return
+		}
+	}
+
+	fmt.Printf("Found %d API tokens to use\n", len(tokens))
 
 	// Count of plants created so far
 	plantCount := 0
 	// Max number of plants to create
-	maxPlants := 100
+	maxPlants := 283
+	// Current token index for rotation
+	tokenIndex := 0
 
-	// Iterate through pages 1-5
-	for page := 1; page <= 6; page++ {
+	// Get next token in rotation
+	getNextToken := func() string {
+		token := tokens[tokenIndex]
+		tokenIndex = (tokenIndex + 1) % len(tokens)
+		return token
+	}
+
+	// Iterate through pages 1-18 (although we should hit 283 plants before this)
+	for page := 1; page <= 18; page++ {
 		// Break the loop if we've already created enough plants
 		if plantCount >= maxPlants {
 			break
 		}
 
 		// ================ Step 1: Get list of plants from API endpoint for current page ================
+		token := getNextToken()
 		plantsURL := fmt.Sprintf("https://trefle.io/api/v1/species?token=%s&filter_not[nitrogen_fixation]=null&filter_not[edible]=null&filter_not[year]=null&filter_not[light]=null&filter_not[growth_rate]=null&page=%d", token, page)
-		fmt.Printf("Fetching plants from page %d...\n", page)
+		fmt.Printf("Fetching plants from page %d using token %d...\n", page, tokenIndex+1)
 
 		response, err := http.Get(plantsURL)
 		if err != nil {
@@ -139,7 +182,8 @@ func PlantSeeds(db *gorm.DB) {
 				break
 			}
 
-			// Get detailed plant information
+			// Get detailed plant information using the next token in rotation
+			token := getNextToken()
 			plantDetailsURL := fmt.Sprintf("https://trefle.io/api/v1/species/%d?token=%s", plant.ID, token)
 
 			// get the detailed info
@@ -197,7 +241,7 @@ func PlantSeeds(db *gorm.DB) {
 				fmt.Printf("Error creating plant record for %s: %v\n", newPlant.CommonName, result.Error)
 			} else {
 				plantCount++
-				fmt.Printf("Created plant %d/%d: %s\n", plantCount, maxPlants, newPlant.CommonName)
+				fmt.Printf("Created plant %d/%d: %s (using token %d)\n", plantCount, maxPlants, newPlant.CommonName, tokenIndex+1)
 			}
 		}
 	}
