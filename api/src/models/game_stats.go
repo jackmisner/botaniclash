@@ -6,7 +6,7 @@ import (
 
 type GameStats struct {
 	gorm.Model
-	UserID      uint `gorm:"uniqueIndex;not null"`
+	UserID      uint `gorm:"uniqueIndex;not null;references:users(id);constraint:OnDelete:CASCADE;"`
 	GamesPlayed int  `gorm:"default:0"`
 	GamesWon    int  `gorm:"default:0"`
 }

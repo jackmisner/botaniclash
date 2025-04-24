@@ -6,9 +6,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `json:"username" gorm:"uniqueIndex;not null;size:50;required"`
-	Password string `json:"password" gorm:"required"`
-	GameStats *GameStats `json:"game_stats" gorm:"foreignKey:UserID"`
+	Username  string     `json:"username" gorm:"uniqueIndex;not null;size:50;required"`
+	Password  string     `json:"password" gorm:"required"`
+	GameStats *GameStats `json:"game_stats" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 }
 
 func (user *User) Save() (*User, error) {
