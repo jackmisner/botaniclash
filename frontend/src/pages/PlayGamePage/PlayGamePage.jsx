@@ -109,7 +109,9 @@ export const PlayGamePage = () => {
     const selectStat = (
         stat,
         card1 = cardsInPlay[0],
-        card2 = cardsInPlay[1]
+        card2 = cardsInPlay[1],
+        playerHandSize = playerHand.length,
+        opponentHandSize = opponentHand.length
     ) => {
         setOpponentCardShow(true);
 
@@ -118,14 +120,17 @@ export const PlayGamePage = () => {
             postPlantForComparison(card1.id, card2.id, stat, token).then(
                 (response) => {
                     if (response.winner === "player") {
-                        playerOneWinsComparison([card1, card2]);
+                        playerOneWinsComparison(
+                            [card1, card2],
+                            opponentHandSize
+                        );
 
                         setRoundWinner([
                             "Player wins stat compared: ",
                             ORIGINAL_STATS_NAMES[response.compared_stat],
                         ]);
                     } else if (response.winner === "opponent") {
-                        playerTwoWinsComparison([card1, card2]);
+                        playerTwoWinsComparison([card1, card2], playerHandSize);
                         setRoundWinner([
                             "Opponent wins stat compared: ",
                             ORIGINAL_STATS_NAMES[response.compared_stat],
@@ -157,6 +162,8 @@ export const PlayGamePage = () => {
         if (playerHand.length === 0 || opponentHand.length === 0) return;
 
         const latestCardsInPlay = [playerHand[0], opponentHand[0]];
+        const remainingPlayerCards = playerHand.length - 1;
+        const remainingOpponentCards = opponentHand.length - 1;
 
         // Ensure these cards' images are loaded before displaying them
         await preloadPlantImages(latestCardsInPlay);
@@ -166,13 +173,19 @@ export const PlayGamePage = () => {
         setOpponentHand((prev) => prev.slice(1));
 
         if (!isPlayersTurn) {
-            selectStat(null, latestCardsInPlay[0], latestCardsInPlay[1]);
+            selectStat(
+                null,
+                latestCardsInPlay[0],
+                latestCardsInPlay[1],
+                remainingPlayerCards,
+                remainingOpponentCards
+            );
         }
     };
 
-    const playerOneWinsComparison = (cards) => {
+    const playerOneWinsComparison = (cards, opponentHandSize) => {
         const token = localStorage.getItem("token");
-        if (opponentHand.length === 0) {
+        if (opponentHandSize === 0) {
             setGameWinner("Player");
             postWinner(token, "player");
         }
@@ -187,10 +200,10 @@ export const PlayGamePage = () => {
         });
     };
 
-    const playerTwoWinsComparison = (cards) => {
+    const playerTwoWinsComparison = (cards, playerHandSize) => {
         const token = localStorage.getItem("token");
 
-        if (playerHand.length === 0) {
+        if (playerHandSize === 0) {
             setGameWinner("Opponent");
             postWinner(token, "opponent");
         }
