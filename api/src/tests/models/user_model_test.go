@@ -19,6 +19,13 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
+	// Make sure tables are clean before starting tests
+	err = TeardownTestDatabase()
+	if err != nil {
+		fmt.Println("Error cleaning test database before tests:", err)
+		os.Exit(1)
+	}
+
 	// 2) Run the tests
 	code := m.Run()
 
