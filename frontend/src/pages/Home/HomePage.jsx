@@ -34,17 +34,6 @@ export const HomePage = () => {
   return (
     <div className="home">
       <h1>Welcome to BotaniClash!</h1>
-      <div className="homepage-nav">
-        {token && (
-          <Link to="/setupgame" className="homepage-nav-link">
-            Play game
-          </Link>
-        )}
-
-        <Link to="/leaderboard" className="homepage-nav-link">
-          Leaderboard
-        </Link>
-      </div>
     </div>
   );
 };
