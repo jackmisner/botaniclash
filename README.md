@@ -187,7 +187,7 @@ Thank you Trefle!
 
 ## 👥 Contributors
 - [@jackmisner](https://github.com/jackmisner)
-- [@lukehoweth](LukeHoweth)
+- [@lukehoweth](https://github.com/LukeHoweth)
 - [@abbiefinlayson1](https://github.com/abbiefinlayson1)
 - [@Michal-P-1](https://github.com/Michal-P-1)
 - [@AMcGill3](https://github.com/AMcGill3)
