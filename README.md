@@ -1,32 +1,33 @@
-### Structure
+# 🌿 BotaniClash
+
+A plant-based card game where players battle with plant stats! Players collect plant cards and compete by comparing various attributes like soil pH range, light requirements, and nutrient needs.
+
+## 🎮 About the Game
+
+BotaniClash is a strategic card game using real plant data from the Trefle API. Players:
+- Battle with cards representing different plant species
+- Choose which plant attribute to compare in each round
+- Win cards from opponents when their plant has better stats
+- Track their game statistics on the leaderboard
+
+## 🏗️ Project Structure
 
 This repo contains two applications:
 
-- A frontend React App
-- A backend api server
+- 🖥️ A frontend React App - User interface for the game
+- 🔌 A backend API server - Go-based server handling game logic and plant data
 
-These two applications will communicate through HTTP requests, and need to be
-run separately.
+These two applications communicate through HTTP requests and need to be run separately.
 
-### Documentation
+## 📋 Requirements
 
-[More documentation of the codebase and its architecture can be found here.](./DOCUMENTATION.md)
-It's recommended you all read the suggested docs _after making sure the whole
-setup below worked for everyone_. Then work together on a diagram describing how
-the application works.
+- Node.js (v20+) 
+- Go (latest version)
+- PostgreSQL
 
-### Card wall
+## 🚀 Quickstart
 
-https://trello.com/b/KIUyGIWL/botaniclash-board
-
-### Credits
-This project is set up to use data from Trefle, a plants API. See their website here: https://trefle.io/ 
-
-Thank you Trefle!
-
-### Quickstart
-
-### Install Node.js
+### 📥 Install Node.js
 
 If you haven't already, make sure you have node and NVM installed.
 
@@ -36,42 +37,41 @@ If you haven't already, make sure you have node and NVM installed.
    ```
    Then follow the instructions to update your `~/.bash_profile`.
 2. Open a new terminal
-3. Install the latest version of [Node.js](https://nodejs.org/en/), (`20.5.0` at
-   time of writing).
+3. Install the latest version of Node.js
    ```
    nvm install 20
    ```
 
-### Install Go
+### 📥 Install Go
 
 Follow the instructions here: https://go.dev/doc/install
 
-### Set up your project
+### 🛠️ Set up your project
 
 1. Have one team member fork this repository
-3. Every team member clone the fork to their local machine
-4. Install dependencies for both the `frontend` and `api` applications:
+2. Every team member clone the fork to their local machine
+3. Install dependencies for both the `frontend` and `api` applications:
    ```
    cd frontend
    npm install
    cd ../api
    go get .
    ```
-5. Install an ESLint plugin for your editor, for example
+4. Install an ESLint plugin for your editor, for example
    [ESLint for VSCode](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-6. Start Postgresql
+5. Start PostgreSQL
 
    ```
    brew services start postgresql
    ```
 
-7. Create your databases:
+6. Create your databases:
    ```
    createdb botaniclash
    createdb botaniclash_test
    ```
 
-### Setting up environment variables.
+### ⚙️ Setting up environment variables
 
 We need to create two `.env` files, one in the frontend and one in the api (and also a .env.test file for the api)
 
@@ -105,54 +105,61 @@ JWT_SECRET="test_secret"
 
 This separate test database ensures your tests don't interfere with your development data.
 
-For an explanation of these environment variables, see the documentation.
+## 🏃‍♂️ Running the Application
 
-### How to run the server and use the app
-
-1. Start the server application (in the `api` directory) in dev mode:
+1. Start the server application (in the `api` directory):
 
 ```
-; cd api
-; go run main.go
+cd api
+go run main.go
 ```
 
 2. Start the front end application (in the `frontend` directory)
 
-In a new terminal session...
+In a new terminal session:
 
 ```
-; cd frontend
-; npm run dev
+cd frontend
+npm run dev
 ```
 
-You should now be able to open your browser and go to the
-`http://localhost:5173/signup` to create a new user.
+You should now be able to open your browser and go to `http://localhost:5173/signup` to create a new user.
 
-Then, after signing up, you should be able to log in by going to
-`http://localhost:5173/login`.
+After signing up, you can log in by going to `http://localhost:5173/login` and start playing!
 
-After logging in, you won't see much but you can create posts using PostMan and
-they should then show up in the browser if you refresh the page.
+## 🧪 Running Tests
 
-### Running Tests
+To run the Go backend tests:
 
-To run the Go backend tests, you can use the following `go test ./...` from the `tests` directory (otherwise go will give you a bunch of "no tests found" logs for all the directories other than tests):
+```
+cd api
+go test ./... | grep -v '\[no test files\]'
+```
 
-Or alternatively, you can run these nice fancy commands directly from the `api/` root directory.
+For verbose output:
 
-1. Run all tests (filtering out packages with no test files):
-   ```
-   go test ./... | grep -v '\[no test files\]'
-   ```
+```
+go test -v ./... | grep -v '\[no test files\]'
+```
 
-2. Run all tests with verbose output:
-   ```
-   go test -v ./... | grep -v '\[no test files\]'
-   ```
+To force running tests instead of using cached results:
 
-3. Run all tests, ignoring cached test results:
-   ```
-   go test -count=1 ./... | grep -v '\[no test files\]'
-   ```
+```
+go test -count=1 ./... | grep -v '\[no test files\]'
+```
 
-The `-count=1` flag forces Go to execute the tests instead of using cached results, which is useful during development when we're making frequent changes.
+## 🙏 Credits
+This project uses data from Trefle, a plants API. See their website here: https://trefle.io/
+
+Thank you Trefle!
+
+## 📌 Card Wall
+- [link here](https://trello.com/b/KIUyGIWL/botaniclash-board)
+
+## 👥 Contributors
+- [@jackmisner](https://github.com/jackmisner)
+- [@lukehoweth](LukeHoweth)
+- [@abbiefinlayson1](https://github.com/abbiefinlayson1)
+- [@Michal-P-1](https://github.com/Michal-P-1)
+- [@AMcGill3](https://github.com/AMcGill3)
+- [@I-Lovell](https://github.com/I-Lovell)
