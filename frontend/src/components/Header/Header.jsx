@@ -46,6 +46,9 @@ const Header = () => {
           <img src={BotaniclashLogo} alt="BotaniClash Logo" />
         </Link>
         <nav className="nav">
+          <Link to="/leaderboard" className="nav-link">
+            Leaderboard
+          </Link>
           {!token && (
             <Link to="/signup" className="nav-link">
               Signup
@@ -57,6 +60,11 @@ const Header = () => {
             </Link>
           )}
 
+          {token && (
+            <Link to="/setupgame" className="homepage-nav-link">
+              Play game
+            </Link>
+          )}
           {token && (
             <Link to="/" onClick={handleLogout} className="nav-link">
               Logout
