@@ -105,6 +105,34 @@ JWT_SECRET="test_secret"
 
 This separate test database ensures your tests don't interfere with your development data.
 
+## 🌱 Seeding the Database
+
+Before running the application for the first time, you need to seed the database with plant data:
+
+1. Make sure you're in the `api` directory:
+```
+cd api
+```
+
+2. Seed the database using either method:
+```
+go run main.go seed
+```
+
+OR
+
+```
+go build
+./api seed
+```
+
+This process will:
+- Drop existing tables (if any)
+- Create fresh tables
+- Populate them with plant data from the Trefle API
+
+**Warning:** Running this command will erase any existing data in your database. Only use it when setting up for the first time or if you want to reset all data.
+
 ## 🏃‍♂️ Running the Application
 
 1. Start the server application (in the `api` directory):
@@ -126,6 +154,7 @@ npm run dev
 You should now be able to open your browser and go to `http://localhost:5173/signup` to create a new user.
 
 After signing up, you can log in by going to `http://localhost:5173/login` and start playing!
+
 
 ## 🧪 Running Tests
 

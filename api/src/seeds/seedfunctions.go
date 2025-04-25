@@ -11,8 +11,6 @@ func SeedDatabase(db *gorm.DB) {
 	fmt.Println("Seeding database...")
 
 	// Call all seed functions here
-	UserSeeds(db)
-	GameStatsSeeds(db)
 	PlantSeeds(db)
 }
 
