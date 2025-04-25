@@ -9,7 +9,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  background: linear-gradient(to bottom right, #f5f5dc, #e6e0c3);
+  height: 130vh;
   margin: 0;
   text-align: center;
 }
